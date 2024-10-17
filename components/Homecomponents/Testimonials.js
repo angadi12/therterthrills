@@ -36,8 +36,8 @@ export default function TestimonialGrid() {
           </h2>
           <h3 className="text-3xl font-bold mb-6">from our customers!</h3>
           <p className="text-gray-600 mb-8">
-            We take pride in delivering exceptional experiences tailored to your needs. Here's what some of our satisfied clients have to say about their time at The Theatre Thrills
-          </p>
+{`            We take pride in delivering exceptional experiences tailored to your needs. Here's what some of our satisfied clients have to say about their time at The Theatre Thrills
+`}          </p>
           <div className="flex space-x-2">
             <Button variant="outline" isIconOnly className="rounded-full text-blue-600 ring-1 ring-blue-600">
               <ChevronLeft className="w-4 h-4" />

@@ -27,9 +27,9 @@ export default function ExperienceSection() {
                 Exclusive Event Space
               </h3>
               <p className="text-gray-600 mb-6">
-                Whether it's a movie night with friends or a family gathering,
+              {`  Whether it's a movie night with friends or a family gathering,
                 enjoy the privacy of your own theatre room. We provide a fully
-                customized setup to ensure an intimate and unforgettable time.
+                customized setup to ensure an intimate and unforgettable time.`}
               </p>
             </div>
           </div>

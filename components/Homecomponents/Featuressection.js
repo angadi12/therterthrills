@@ -50,7 +50,7 @@ export default function FeaturesSection() {
 function FeatureItem({ icon, title }) {
   return (
     <div className="flex gap-2 items-center">
-      <Image src={icon} className="mr-4 object-contain"/>
+      <Image src={icon} alt='icon' className="mr-4 object-contain"/>
       <span className="text-lg font-bold">{title}</span>
     </div>
   )
