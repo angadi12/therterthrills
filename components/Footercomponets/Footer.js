@@ -71,7 +71,7 @@ export default function Footer() {
             <h2 className="text-2xl font-bold text-white mb-4">
             The Theatre Thrills
             </h2>
-            <p className="text-sm leading-6">{`At The Theatre Thrills, we provide private theatre spaces for a personalized entertainment experience. Whether you're hosting a movie time, birthday, or party, we make it unforgettable with our state-of-the-art theatres and event customization.`}</p>
+            <p className="text-sm leading-6">{`At The Theatre Thrills, we provide private theatre spaces for a personalized entertainment experience. Whether you're hosting a movie time, birthday, or party, we make it unforgettable with our state of the art theatres and event customization.`}</p>
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">

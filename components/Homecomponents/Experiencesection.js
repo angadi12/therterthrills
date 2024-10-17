@@ -10,7 +10,7 @@ export default function ExperienceSection() {
     <section className="py-16 bg-white">
       <div className="w-11/12 mx-auto ">
         <div className="grid grid-cols-1 lg:grid-cols-2 justify-center place-content-center items-stretch gap-8">
-          <div className="flex flex-col gap-2 justify-center">
+          <div className="flex flex-col gap-2 justify-center w-full">
             <div>
               <h2 className="text-4xl font-bold mb-2">
                 Choose us for your ultimate
@@ -20,13 +20,13 @@ export default function ExperienceSection() {
                   Private Theatre Experience!
                 </span>
               </h2>
+              <Divider className="w-3/4 mr-auto"/>
             </div>
-            <Divider className="w-3/4 mr-auto"/>
-            <div>
-              <h3 className="text-2xl font-semibold mb-4">
+            <div className="mt-4">
+              <h3 className="text-2xl font-semibold mb-2">
                 Exclusive Event Space
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 mb-6 text-wrap w-3/4">
               {`  Whether it's a movie night with friends or a family gathering,
                 enjoy the privacy of your own theatre room. We provide a fully
                 customized setup to ensure an intimate and unforgettable time.`}

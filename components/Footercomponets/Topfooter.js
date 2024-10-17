@@ -8,13 +8,13 @@ import Logo from "@/public/asset/Logo.png";
 
 const Topfooter = () => {
   return (
-    <div className="w-full p-0 bg-[#F30278] relative h-16">
-      <div className=" mx-auto  flex flex-col md:flex-row items-center w-full">
+    <div className="w-full p-0 bg-[#F30278] relative h-24 flex">
+      <div className=" mx-auto  flex flex-col md:flex-row items-center justify-between w-full">
         <div className="p-0 absolute left-0 top-0">
-          <Image src={Back} alt="The Theatre Thrills" className="h-16" />
-          <Image src={Logo} alt="Logo" className="object-contain absolute -top-6 left-14 h-20 " />
+          <Image src={Back} alt="The Theatre Thrills" className="h-24" />
+          <Image src={Logo} alt="Logo" className="object-contain absolute -top-14 left-24  " />
         </div>
-        <div className=" w-full md:w-full px-4 py-2 flex flex-col md:flex-row items-center justify-center md:justify-end gap-4 space-y-2 md:space-y-0 md:space-x-4">
+        <div className="w-full px-4 py-2 flex flex-col md:flex-row items-center justify-center md:justify-end gap-12 lg:gap-20 space-y-2 md:space-y-0 md:space-x-4">
           <div className="flex items-center space-x-2">
             <div className="bg-white flex justify-center items-center rounded-full h-12 w-12">
               <IoMail className="h-5 w-5 text-[#F30278]" />

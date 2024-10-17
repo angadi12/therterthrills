@@ -11,7 +11,7 @@ export default function FeaturesSection() {
     <section className="py-16 bg-gray-50">
       <div className="w-11/12  mx-auto ">
         <div className="flex flex-col md:flex-row items-center">
-          <div className="w-full md:w-1/2 mb-8 md:mb-0">
+          <div className="w-full md:w-1/2 mb-8 md:mb-0 ">
           <Image src={Hall} alt='cinemaHall'/>
           </div>
           <div className="w-full md:w-1/2 md:pl-12">
