@@ -1,3 +1,4 @@
+"use client"
 import Link from 'next/link'
 import Logo from "@/public/asset/Logo.png"
 import Insta from "@/public/asset/Insta.png"
@@ -8,8 +9,73 @@ import Image from 'next/image'
 import { IoMail } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from 'react'
 
 export default function Navbar() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const active = " font-medium text-[#F30278]";
+  const unactive = " text-gray-800 font-medium hover:text-[#F30278]";
+  const [activeitem, setactiveitem] = useState();
+
+  const handleredirect = (link) => {
+    switch (link) {
+      case "home":
+        router.push("/");
+        break;
+      case "blogs":
+        router.push("/blogs");
+        break;
+      case "bookings":
+        router.push("/bookings");
+        break;
+      case "contact":
+        router.push("/contact");
+        break;
+      case "gallery":
+        router.push("/gallery");
+        break;
+      case "services":
+        router.push("/services");
+        break;
+      case "about":
+        router.push("/about");
+        break;
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    switch (pathname) {
+      case "/":
+        setactiveitem("home");
+        break;
+      case "/bookings":
+        setactiveitem("bookings");
+        break;
+      case "/blogs":
+        setactiveitem("blogs");
+        break;
+      case "/contact":
+        setactiveitem("contact");
+        break;
+      case "/about":
+        setactiveitem("about");
+        break;
+      case "/gallery":
+        setactiveitem("gallery");
+        break;
+      case "/services":
+        setactiveitem("services");
+        break;
+      default:
+        setactiveitem("");
+    }
+  }, [pathname]);
+  
   return (
     <header className="w-full bg-white">
       <div className="bg-[#F30278] w-[85%] ml-auto rounded-l-full text-white py-2 px-4 flex justify-evenly items-center text-sm relative overflow-hidden">
@@ -42,13 +108,13 @@ export default function Navbar() {
           <Image src={Logo} alt="Theatre Thrills Logo" className="h-24 w-24 top-0 left-12 absolute object-contain" />
         </Link>
         <div className="flex gap-3 items-center space-x-8">
-          <Link href="/" className="text-gray-800 font-medium hover:text-[#F30278]">Home</Link>
-          <Link href="/about" className="text-gray-800 font-medium hover:text-[#F30278]">About Us</Link>
-          <Link href="/services" className="text-gray-800 font-medium hover:text-[#F30278]">Our Services</Link>
-          <Link href="/bookings" className="text-gray-800 font-medium hover:text-[#F30278]">My Bookings</Link>
-          <Link href="/gallery" className="text-gray-800 font-medium hover:text-[#F30278]">Gallery</Link>
-          <Link href="/contact" className="text-gray-800 font-medium hover:text-[#F30278]">Contact Us</Link>
-          <Link href="/blogs" className="text-gray-800 font-medium hover:text-[#F30278]">Blogs</Link>
+          <Link href="/"  className={activeitem === "home" ? active : unactive}>Home</Link>
+          <Link href="/about"  className={activeitem === "about" ? active : unactive}>About Us</Link>
+          <Link href="/services"  className={activeitem === "services" ? active : unactive}>Our Services</Link>
+          <Link href="/bookings"  className={activeitem === "bookings" ? active : unactive}>My Bookings</Link>
+          <Link href="/gallery"  className={activeitem === "gallery" ? active : unactive}>Gallery</Link>
+          <Link href="/contact"  className={activeitem === "contact" ? active : unactive}>Contact Us</Link>
+          <Link href="/blogs"  className={activeitem === "blogs" ? active : unactive}>Blogs</Link>
           <Button className="px-8 py-0.5 rounded-none w-48  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] ">
           Book Now
 </Button>
