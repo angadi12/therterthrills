@@ -1,0 +1,55 @@
+import Link from 'next/link'
+import Logo from "@/public/asset/Logo.png"
+import Insta from "@/public/asset/Insta.png"
+import Facebook from "@/public/asset/Facebook.png"
+import Youtube from "@/public/asset/Youtube.png"
+import { Button } from "@nextui-org/react"
+import Image from 'next/image'
+import { IoMail } from "react-icons/io5";
+import { FaPhoneAlt } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
+
+export default function Navbar() {
+  return (
+    <header className="w-full bg-white">
+      <div className="bg-[#F30278] w-3/4 ml-auto rounded-l-full text-white py-2 px-4 flex justify-evenly items-center text-sm relative overflow-hidden">
+        <div className="flex items-center space-x-8 ml-6 relative z-10">
+          <div className="flex items-center">
+            <IoMail className="w-4 h-4 mr-2" />
+            <span>info@theatrethrills.in</span>
+          </div>
+          <div className="flex items-center">
+            <FaPhoneAlt className="w-4 h-4 mr-2" />
+            <span>+91 8363802949</span>
+          </div>
+          <div className="flex items-center">
+            <FaLocationDot className="w-4 h-4 mr-2" />
+            <span>Hyderabad, India</span>
+          </div>
+        </div>
+        <div className="flex items-center space-x-2 relative z-10">
+          <Image src={Insta} alt='insta' className="w-6 h-6 object-contain" />
+          <Image src={Facebook} alt='Facebook' className="w-6 h-6 object-contain" />
+          <Image src={Youtube} alt='Youtube' className="w-6 h-6 object-contain" />
+        </div>
+      </div>
+      <nav className="bg-white py-4 px-8 flex justify-between items-center ">
+        <Link href="/" className="flex items-center space-x-2 ">
+          <Image src={Logo} alt="Theatre Thrills Logo" className="h-24 w-24 top-0 left-12 absolute" />
+        </Link>
+        <div className="flex items-center space-x-8">
+          <Link href="/" className="text-gray-800 font-medium hover:text-[#F30278]">Home</Link>
+          <Link href="/about" className="text-gray-800 font-medium hover:text-[#F30278]">About Us</Link>
+          <Link href="/services" className="text-gray-800 font-medium hover:text-[#F30278]">Our Services</Link>
+          <Link href="/bookings" className="text-gray-800 font-medium hover:text-[#F30278]">My Bookings</Link>
+          <Link href="/gallery" className="text-gray-800 font-medium hover:text-[#F30278]">Gallery</Link>
+          <Link href="/contact" className="text-gray-800 font-medium hover:text-[#F30278]">Contact Us</Link>
+          <Link href="/blogs" className="text-gray-800 font-medium hover:text-[#F30278]">Blogs</Link>
+          <Button className="px-8 py-0.5 rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] ">
+          Book Now
+</Button>
+        </div>
+      </nav>
+    </header>
+  )
+}
