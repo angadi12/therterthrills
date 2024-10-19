@@ -32,9 +32,9 @@ export default function Bookingcard({
           <h2 className="text-xl font-bold">{type}</h2>
           <span className="text-xl font-bold text-[#F30278]">{price}</span>
         </div>
-        <Divider className="my-2 w-11/12 mx-auto"/>
-        <div className="bg-[#F30278] text-white p-3 rounded-lg mb-4">
-          <div className="grid grid-cols-2 gap-2">
+        <Divider className="my-2 w-full mx-auto"/>
+        <div className="bg-[#F30278] text-white p-3 rounded-md mb-4">
+          <div className="grid grid-cols-2 gap-4">
             <div className="flex items-center">
               <MapPin className="w-4 h-4 mr-2" />
               <span className="text-sm">{location}</span>

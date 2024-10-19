@@ -13,7 +13,7 @@ export default function Branchselect() {
       <div className="w-full ">
         <h2 className="text-2xl font-bold mb-4">Choose Branch</h2>
         <Select>
-          <SelectTrigger className="w-3/4">
+          <SelectTrigger className="w-3/4 h-12">
             <SelectValue placeholder="Select a branch" />
           </SelectTrigger>
           <SelectContent>
