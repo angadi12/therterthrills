@@ -18,7 +18,7 @@ export default function Contactform() {
       <div className="">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 justify-center place-content-center items-stretch">
           <div className="space-y-4">
-            <h1 className="text-3xl font-medium">Let's Plan Something Epic?</h1>
+            <h1 className="text-3xl font-medium">{`Let's Plan Something Epic?`}</h1>
             <h2 className="text-4xl font-semibold">
               <span className="bg-clip-text inline-block text-transparent bg-gradient-to-r from-[#004AAD] via-[#F30278] to-[#E2B600]">
                 Contact Us Today!{" "}
