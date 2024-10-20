@@ -12,6 +12,14 @@ import { FaLocationDot } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import {
+  motion,
+  AnimatePresence,
+  stagger,
+  animate,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 
 export default function Navbar() {
   const router = useRouter();
@@ -19,6 +27,23 @@ export default function Navbar() {
   const active = " font-medium text-[#F30278]";
   const unactive = " text-gray-800 font-medium hover:text-[#F30278]";
   const [activeitem, setactiveitem] = useState();
+  const { scrollY } = useScroll();
+  const [prevScrollY, setPrevScrollY] = useState(0);
+  const [hidden, setHidden] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (scrollY.get() > prevScrollY) {
+        setHidden(true);
+      } else {
+        setHidden(false);
+      }
+      setPrevScrollY(scrollY.get());
+    };
+
+    const unsubscribe = scrollY.on("change", handleScroll);
+    return () => unsubscribe();
+  }, [scrollY, prevScrollY]);
 
   const handleredirect = (link) => {
     switch (link) {
@@ -77,7 +102,12 @@ export default function Navbar() {
   }, [pathname]);
 
   return (
-    <header className="w-full bg-white sticky top-0 z-30 border-gray-200 border-b-2">
+    <motion.header
+      initial={{ y: 0 }}
+      animate={{ y: hidden ? -140 : 0 }}
+      transition={{ duration: 0.5 }}
+      className="w-full bg-white  sticky top-0 z-30 border-gray-200 border-b-2"
+    >
       <div className="bg-[#F30278] w-[85%] ml-auto rounded-l-full text-white py-2 px-4 flex justify-evenly items-center text-sm relative overflow-hidden">
         <div className="flex items-center space-x-8 ml-6 relative z-10">
           <div className="flex items-center">
@@ -160,11 +190,14 @@ export default function Navbar() {
             Blogs
           </Link>
 
-          <Button onPress={()=>router.push("/booknow")} className="px-8 py-0.5 rounded-sm w-48  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] ">
+          <Button
+            onPress={() => router.push("/booknow")}
+            className="px-8 py-0.5 rounded-sm w-48  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+          >
             Book Now
           </Button>
         </div>
       </nav>
-    </header>
+    </motion.header>
   );
 }
