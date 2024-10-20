@@ -47,28 +47,28 @@ export default function ExperienceSection() {
             </div>
           </div>
           <div className="grid grid-cols-3 gap-4 h-80">
-            <div className={`relative ${currentIndex===0?`col-span-2 transition-all duration-700 w-full grayscale-0 `:" grayscale "} ${currentIndex===2?"h-20 col-span-2":""} ${currentIndex===3?`h-20 `:""}  overflow-hidden  rounded-lg h-full`}>
+            <div className={`relative ${currentIndex===0?`col-span-2 transition-all duration-700 w-full grayscale-0 `:" grayscale "} ${currentIndex===2 && "h-20 col-span-2"} ${currentIndex===3 && `h-20 `}  overflow-hidden  rounded-lg h-full`}>
               <Image
                 src={grid1}
                 alt={"alt"}
                 className={`object-cover w-full  h-full`}
               />
             </div>
-            <div className={`relative ${currentIndex===3?`col-span-2 h-20 `:""} ${currentIndex===2?`h-20`:""} ${currentIndex===1?`col-span-2 transition-all duration-700 h-full grayscale-0 `:" grayscale "}  overflow-hidden  rounded-lg w-full`}>
+            <div className={`relative ${currentIndex===3 && `col-span-2 h-20 `} ${currentIndex===2 && `h-20`} ${currentIndex===1?`col-span-2 transition-all duration-700 h-full grayscale-0 `:" grayscale "}  overflow-hidden  rounded-lg h-full`}>
               <Image
                 src={grid2}
                 alt={"alt"}
                 className="object-cover w-full h-full "
               />
             </div>
-            <div className={`relative ${currentIndex===2?`col-span-2 transition-all duration-700 w-full grayscale-0 `:" grayscale "} ${currentIndex===0?"h-20 col-span-2":""} ${currentIndex===1?"h-20 ":""} overflow-hidden  rounded-lg h-full` }>
+            <div className={`relative ${currentIndex===2?`col-span-2 transition-all duration-700 w-full grayscale-0 `:" grayscale "} ${currentIndex===0 && "h-20 col-span-2"} ${currentIndex===1 && "h-20 "} overflow-hidden  rounded-lg h-full` }>
               <Image
                 src={grid3}
                 alt={"alt"}
                 className="object-cover w-full h-full "
               />
             </div>
-            <div className={`relative ${currentIndex===3?`col-span-2 transition-all duration-700 w-full grayscale-0 `:" grayscale "}  ${currentIndex===1?"h-20 col-span-2 ":""} ${currentIndex===0?"h-20 ":""}  overflow-hidden  rounded-lg w-full` }>
+            <div className={`relative ${currentIndex===3?`col-span-2 transition-all duration-700 w-full grayscale-0 `:" grayscale "}  ${currentIndex===1 && "h-20 col-span-2 "} ${currentIndex===0 && "h-20 "}  overflow-hidden  rounded-lg h-full` }>
               <Image
                 src={grid4}
                 alt={"alt"}
