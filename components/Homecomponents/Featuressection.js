@@ -6,7 +6,9 @@ import Privatespace from "@/public/asset/Privatespace.png";
 import Hall from "@/public/asset/Hall.png";
 import Curtanleft from "@/public/asset/Curtanleft.png";
 import Curtanright from "@/public/asset/Curtanright.png";
-import { motion } from "framer-motion"
+import Whitecircle from "@/public/asset/Whitecircle.png";
+import Shooticon from "@/public/asset/Shooticon.png";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -22,25 +24,50 @@ export default function FeaturesSection() {
             onMouseLeave={() => setIsHovered(false)}
             className="w-full md:w-1/2 mb-8 md:mb-0 overflow-hidden relative"
           >
-            <Image src={Hall} alt="cinemaHall" className="z-0" />
+            <Image src={Hall} alt="cinemaHall" className="z-0 w-full" />
             <div className="absolute grid grid-cols-2 justify-center items-center top-0 right-0 bottom-0 left-0 w-full  h-full">
+              {/* <motion.div
+                animate={{ x: isHovered ? -200  :0 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+              
+                className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 z-30 "
+              >
+                <div className="flex justify-center items-center relative">
+                  <Image src={Whitecircle} alt="circle" />
+                  <Image src={Shooticon} alt="shoot" className="absolute" />
+                </div>
+              </motion.div> */}
               <motion.div
                 animate={{ x: isHovered ? "-100%" : "0%" }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
-                className=" left-0  relative w-96 h-full  z-20"
+                className="relative  w-full   h-full  z-20"
               >
                 <Image
                   src={Curtanleft}
                   alt="Curtanleft"
-                  className="object-fill w-96"
+                  className="w-full h-full"
                 />
+                <div
+              
+              
+                className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2  w-full   z-30 "
+              >
+                <div className="flex justify-center items-center relative -right-1/2">
+                  <Image src={Whitecircle} alt="circle" className="w-36 h-36 rounded-full"/>
+                  <Image src={Shooticon} alt="shoot" className="absolute h-20 w-20" />
+                </div>
+              </div>
               </motion.div>
               <motion.div
                 animate={{ x: isHovered ? "100%" : "0%" }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
                 className="h-full w-full z-10"
               >
-                <Image src={Curtanright} alt="Curtanright" />
+                <Image
+                  src={Curtanright}
+                  alt="Curtanright"
+                  className="h-full w-full"
+                />
               </motion.div>
             </div>
           </div>
