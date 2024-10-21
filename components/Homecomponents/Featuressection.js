@@ -22,7 +22,7 @@ export default function FeaturesSection() {
           <div
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className="w-full md:w-1/2 mb-8 md:mb-0 overflow-hidden relative"
+            className="w-full md:w-1/2 mb-8 md:mb-0 overflow-hidden relative cursor-grab"
           >
             <Image src={Hall} alt="cinemaHall" className="z-0 w-full" />
             <div className="absolute grid grid-cols-2 justify-center items-center top-0 right-0 bottom-0 left-0 w-full  h-full">
@@ -38,7 +38,7 @@ export default function FeaturesSection() {
                 </div>
               </motion.div> */}
               <motion.div
-                animate={{ x: isHovered ? "-100%" : "0%" }}
+                animate={{ x:isHovered? "-100%" :"0%" }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
                 className="relative  w-full   h-full  z-20"
               >

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Image from "next/image";
 import grid1 from "@/public/asset/grid1.png";
 import grid2 from "@/public/asset/grid2.png";
@@ -10,7 +10,6 @@ import { useEffect, useState } from "react";
 export default function ExperienceSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % 4);
@@ -21,8 +20,9 @@ export default function ExperienceSection() {
 
   return (
     <section className="py-16 bg-white">
-      <div className="w-11/12 mx-auto ">
-        <div className="grid grid-cols-1 lg:grid-cols-2 justify-center place-content-center items-stretch gap-8">
+      <div className="w-11/12 mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Text and Intro */}
           <div className="flex flex-col gap-2 justify-center w-full">
             <div>
               <h2 className="text-4xl font-bold mb-2">
@@ -40,45 +40,31 @@ export default function ExperienceSection() {
                 Exclusive Event Space
               </h3>
               <p className="text-gray-600 mb-6 text-wrap w-3/4">
-                {`  Whether it's a movie night with friends or a family gathering,
+                {`Whether it's a movie night with friends or a family gathering,
                 enjoy the privacy of your own theatre room. We provide a fully
                 customized setup to ensure an intimate and unforgettable time.`}
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-4 h-80">
-            <div className={`relative ${currentIndex===0?`col-span-2 transition-all duration-700 w-full grayscale-0 `:" grayscale "} ${currentIndex===2 && "h-20 col-span-2"} ${currentIndex===3 && `h-20 `}  overflow-hidden  rounded-lg h-full`}>
-              <Image
-                src={grid1}
-                alt={"alt"}
-                className={`object-cover w-full  h-full`}
-              />
-            </div>
-            <div className={`relative ${currentIndex===3 && `col-span-2 h-20 `} ${currentIndex===2 && `h-20`} ${currentIndex===1?`col-span-2 transition-all duration-700 h-full grayscale-0 `:" grayscale "}  overflow-hidden  rounded-lg h-full`}>
-              <Image
-                src={grid2}
-                alt={"alt"}
-                className="object-cover w-full h-full "
-              />
-            </div>
-            <div className={`relative ${currentIndex===2?`col-span-2 transition-all duration-700 w-full grayscale-0 `:" grayscale "} ${currentIndex===0 && "h-20 col-span-2"} ${currentIndex===1 && "h-20 "} overflow-hidden  rounded-lg h-full` }>
-              <Image
-                src={grid3}
-                alt={"alt"}
-                className="object-cover w-full h-full "
-              />
-            </div>
-            <div className={`relative ${currentIndex===3?`col-span-2 transition-all duration-700 w-full grayscale-0 `:" grayscale "}  ${currentIndex===1 && "h-20 col-span-2 "} ${currentIndex===0 && "h-20 "}  overflow-hidden  rounded-lg h-full` }>
-              <Image
-                src={grid4}
-                alt={"alt"}
-                className="object-cover w-full h-full "
-              />
-            </div>
+          {/* Image Section */}
+          <div className="grid grid-cols-2 gap-2">
+            {[grid1, grid2, grid3, grid4].map((imageSrc, index) => (
+              <div
+                key={index}
+                className={`relative  overflow-hidden rounded-lg `}
+              >
+                <Image
+                  src={imageSrc}
+                  alt={`Experience ${index + 1}`}
+                  className={`object-cover transition-transform duration-700 rounded-lg w-full h-full ${
+                  currentIndex === index ? "scale-105 grayscale-0" : "scale-95 grayscale"
+                }`}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>
     </section>
   );
 }
-
