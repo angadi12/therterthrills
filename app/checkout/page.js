@@ -229,7 +229,7 @@ export default function CheckoutOnboarding() {
         )}
 
        {currentStep ===2 && <div className="md:col-span-2">
-          <div className="bg-white p-6 rounded-lg shadow">
+          <div className="bg-white ring-1 ring-gray-300 p-6 rounded-md shadow">
             <h2 className="text-xl font-semibold mb-4">Decorations</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
               {decorations.map((decoration) => (
