@@ -8,7 +8,7 @@ const [loading, Setloading] = useState(true)
 
 setTimeout(() => {
   Setloading(false)
-}, 5000);
+}, 1000);
 
 
 if(loading){
