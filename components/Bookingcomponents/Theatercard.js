@@ -111,7 +111,7 @@ const [currentImage, setCurrentImage] = useState(0)
             <h4 className="font-bold mb-2">Theatre Overview</h4>
             <div className="flex justify-start items-start gap-2 w-full flex-col text-xs">
               {(overview ?? []).map((item, index) => (
-                <div className="flex gap-2 justify-start items-center">
+                <div key={index} className="flex gap-2 justify-start items-center">
                 <Image src={item.icon} alt={item.icon} className="object-contain "/> 
                 <p className="text-[#7A7A7A] font-medium " key={index}>
                  {item.title}
