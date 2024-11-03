@@ -58,7 +58,7 @@ export function NextuiProviderWrapper({ children }) {
       setConfirmationResult(result);
       setShowLoginModal(false);
       openOtpModal();
-      setTimeout(() => setOtpRequestCooldown(false), 60000);
+      setTimeout(() => setOtpRequestCooldown(false), 2000);
     } catch (error) {
       console.error("Error sending OTP:", error);
       setOtpRequestCooldown(false);
@@ -101,6 +101,10 @@ export function NextuiProviderWrapper({ children }) {
     return <Loading />;
   }
 
+const Editnumber=()=>{
+  
+}
+
   return (
     <NextUIProvider>
       {children}
@@ -128,7 +132,7 @@ export function NextuiProviderWrapper({ children }) {
           <ModalHeader className="text-2xl text-center">Enter your OTP!</ModalHeader>
           <ModalBody>
             <p className="text-center text-sm text-muted-foreground">
-              Code sent to (+91-{phoneNumber}) - <Button variant="link" className="text-pink-600" onPress={openLoginModal}>Edit Number</Button>
+              Code sent to (+91-{phoneNumber}) - <Button variant="link" className="text-pink-600" onPress={Editnumber}>Edit Number</Button>
             </p>
             <div className="flex justify-center gap-2">
               {otp.map((digit, index) => (

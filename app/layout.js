@@ -4,6 +4,7 @@ import { NextuiProviderWrapper } from "./provider";
 import { Roboto } from 'next/font/google'
 import Footer from "@/components/Footercomponets/Footer";
 import Topfooter from "@/components/Footercomponets/Topfooter";
+import { Providers } from "@/lib/Redux/provider";
 
 const inter = Roboto({
   weight:['100', '400',"300","500","700","900"],
@@ -18,6 +19,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    <Providers>
+
     <html lang="en">
       <body
         className={inter.className}
@@ -30,5 +33,6 @@ export default function RootLayout({ children }) {
        </NextuiProviderWrapper>
       </body>
     </html>
+    </Providers>
   );
 }

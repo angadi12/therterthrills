@@ -12,6 +12,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Info } from "lucide-react"
+import { Switch } from "@/components/ui/switch"
+import { Card } from "@/components/ui/card"
 
 import Birthdayicon from "@/public/asset/Birthdayicon.png";
 import GlassWater from "@/public/asset/GlassWater.png";
@@ -44,7 +47,13 @@ import Cakes4 from "@/public/asset/Cakes4.png";
 
 import Image from "next/image";
 
-const steps = ["Booking Details", "Occasion","Cakes", "Add-Ons", "Confirmation"];
+const steps = [
+  "Booking Details",
+  "Occasion",
+  "Cakes",
+  "Add-Ons",
+  "Confirmation",
+];
 
 const occasions = [
   { name: "Birthday", icon: Birthdayicon },
@@ -70,11 +79,12 @@ const decorations = [
 ];
 
 const cakes = [
-  { name: "Option 1", image: Cakes1 },
-  { name: "Option 2", image: Cakes2 },
-  { name: "Option 3", image: Cakes3 },
-  { name: "Option 4", image: Cakes4 },
-];
+  { id: 1, name: "Vanilla", price: 499, image: Cakes1 },
+  { id: 2, name: "Strawberry", price: 549, image: Cakes2 },
+  { id: 3, name: "Butterscotch", price: 549, image: Cakes3 },
+  { id: 4, name: "Chocolate", price: 599, image: Cakes4 },
+ 
+]
 
 const photography = [
   { name: "20 Pictures", image: Photography1 },
@@ -87,12 +97,14 @@ export default function CheckoutOnboarding() {
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedOccasion, setSelectedOccasion] = useState("Birthday");
   const [selectedDecorations, setSelectedDecorations] = useState([]);
-  const [selectedCake, setSelectedCake] = useState("");
   const [cakeText, setCakeText] = useState("");
   const [selectedPhotography, setSelectedPhotography] = useState("");
   const [couponCode, setCouponCode] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [nickname, setNickname] = useState("");
+  const [selectedCake, setSelectedCake] = useState(null)
+  const [quantity, setQuantity] = useState(1)
+  const [isEggless, setIsEggless] = useState(false)
 
   const handleApplyCoupon = () => {
     // Logic to apply coupon code
@@ -126,6 +138,13 @@ export default function CheckoutOnboarding() {
     );
   };
 
+  const handleQuantityChange = (change) => {
+    const newQuantity = quantity + change
+    if (newQuantity >= 1 && newQuantity <= 10) {
+      setQuantity(newQuantity)
+    }
+  }
+
   return (
     <div className="w-11/12 mx-auto px-6 py-20">
       <div className="mb-8">
@@ -139,7 +158,7 @@ export default function CheckoutOnboarding() {
             >
               <div className="flex flex-col justify-center items-center gap-1">
                 <div
-                  className={`flex items-center justify-center w-8 h-8 rounded-full ${
+                  className={`flex items-center justify-center w-4 h-4 rounded-full ${
                     index <= currentStep ? "bg-[#004AAD]" : "bg-gray-300"
                   }`}
                 >
@@ -148,7 +167,7 @@ export default function CheckoutOnboarding() {
                       index <= currentStep ? "text-white" : "text-gray-500"
                     }`}
                   >
-                    {index + 1}
+                   
                   </span>
                 </div>
                 <span
@@ -197,15 +216,18 @@ export default function CheckoutOnboarding() {
                   <Input placeholder="Whatsapp Number" className="h-12" />
                 </div>
                 <Input placeholder="Email Id" type="email" className="h-12" />
-                <Select>
-                  <SelectTrigger className="h-12">
-                    <SelectValue placeholder="Do you want to add decorations to your event? (Extra Charge)" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="yes">Yes</SelectItem>
-                    <SelectItem value="no">No</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div>
+                  <p className="text-sm text-gray-600 mb-2">{`Do you want to add decorations to your event? (Extra Charge)`}</p>
+                  <Select>
+                    <SelectTrigger className="h-12">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="yes">Yes</SelectItem>
+                      <SelectItem value="no">No</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
           </div>
@@ -263,9 +285,95 @@ export default function CheckoutOnboarding() {
             </div>
           </div>
         )}
-        {
-          currentStep===2 && <p>cakes</p>
-        }
+        {currentStep === 2 && (
+          <div className="md:col-span-2">
+          <div  className="bg-white ring-1 ring-gray-300 p-6 rounded-md shadow flex flex-col justify-start items-start gap-8 w-full">
+            <div className="bg-pink-50 text-pink-600 p-2 text-sm rounded-lg mb-6 flex items-center gap-2">
+              <Info className="h-4 w-4" />
+              Images Are For Demonstration Purposes Only. Actual Cake May Look
+              Different.
+            </div>
+
+            <div className="flex justify-between items-center mb-6 w-full">
+              <h1 className="text-2xl font-bold">Select Cakes</h1>
+              <div className="flex items-center gap-2">
+                <span className="text-[#F30278]">Eggless</span>
+                <Switch checked={isEggless} onCheckedChange={setIsEggless} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+              {cakes.map((cake) => (
+                <Card
+                  key={cake.id}
+                  className={`p-4 cursor-pointer relative transition-all ${
+                    selectedCake === cake.id
+                      ? "ring-2 ring-pink-500  border-0 bg-pink-100"
+                      : ""
+                  }`}
+                  onClick={() => setSelectedCake(cake.id)}
+                >
+                  <div className="aspect-square relative mb-4 rounded-full overflow-hidden">
+                    <Image
+                      src={cake.image}
+                      alt={cake.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="text-center">
+                    <h3 className="font-semibold mb-2">{cake.name}</h3>
+                    <p className="text-gray-600">{cake.price}/-</p>
+
+                    {selectedCake === cake.id && (
+                      <div className="mt-4 absolute rounded-full bg-[#F30278] w-11/12 mx-auto left-0 right-0  top-1/2  flex items-center justify-center gap-2">
+                        <Button
+                          variant="solid"
+                            isIconOnly
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleQuantityChange(-1);
+                          }}
+                          className=" bg-[#F30278] font-bold text-white"
+                        >
+                          -
+                        </Button>
+                        <span className="w-auto font-bold text-white text-center">{quantity}</span>
+                        <Button
+                          variant="solid"
+                          isIconOnly
+                                                    onClick={(e) => {
+                            e.stopPropagation();
+                            handleQuantityChange(1);
+                          }}
+                          className=" bg-[#F30278] font-bold text-white"
+                        >
+                          +
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            <div className="bg-pink-50 text-pink-600 p-2 text-sm rounded-lg mb-6 flex items-start gap-2">
+              <Info className="h-6 w-6" />
+            {`For photoclippings, our team will reach out to you on the day of booking. You need to send 16 soft copies of the photos you want to place inside the theater.`}
+            </div>
+
+            <div className="mb-6 w-full">
+                <Input
+                  type="text"
+                  placeholder="Type the text to be on the cake"
+                  value={cakeText}
+                  onChange={(e) => setCakeText(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+            </div>
+          </div>
+        )}
 
         {currentStep === 3 && (
           <div className="md:col-span-2">
@@ -294,7 +402,7 @@ export default function CheckoutOnboarding() {
                 ))}
               </div>
 
-              <h2 className="text-xl font-semibold mb-4">Cakes</h2>
+              <h2 className="text-xl font-semibold mb-4">Rose</h2>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
                 {cakes.map((cake) => (
                   <Button
@@ -313,18 +421,9 @@ export default function CheckoutOnboarding() {
                       height={80}
                       className="mb-2 rounded"
                     />
-                    <span className="text-sm">{cake.name}</span>
+                    <span className="text-sm">Single Rose</span>
                   </Button>
                 ))}
-              </div>
-              <div className="mb-6">
-                <Input
-                  type="text"
-                  placeholder="Type the text to be on the cake"
-                  value={cakeText}
-                  onChange={(e) => setCakeText(e.target.value)}
-                  className="w-full"
-                />
               </div>
 
               <h2 className="text-xl font-semibold mb-4">Photography</h2>
@@ -354,7 +453,6 @@ export default function CheckoutOnboarding() {
           </div>
         )}
 
-       
         {currentStep === 4 && (
           <div className="md:col-span-2">
             <div className="bg-[#2076E80D] p-6 rounded-md ring-1 ring-[#004AAD] shadow mb-6">
@@ -441,7 +539,6 @@ export default function CheckoutOnboarding() {
           </div>
         )}
 
-
         <div>
           <div className="bg-white p-4 rounded-md shadow ring-1 ring-gray-300">
             <h2 className="text-xl font-semibold mb-4">Booking Summary</h2>
@@ -475,7 +572,7 @@ export default function CheckoutOnboarding() {
               <span className="text-white">4468/-</span>
             </Button>
           </div>
-          { (
+          {
             <div className="mt-6 flex items-center">
               <Input
                 type="text"
@@ -491,7 +588,7 @@ export default function CheckoutOnboarding() {
                 Apply
               </Button>
             </div>
-          )}
+          }
         </div>
       </div>
 
