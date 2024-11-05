@@ -119,7 +119,7 @@ const Occasion = () => {
                   htmlFor="partnerNickname"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Partner's Nickname (Person 2)
+                 {` Partner's Nickname (Person 2)`}
                 </label>
                 <div className="flex space-x-2 items-center">
                   <Input
