@@ -3,6 +3,7 @@ import { NextUIProvider, Modal, ModalContent, ModalHeader, ModalBody, ModalFoote
 import Loading from "./loading";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Toaster } from "@/components/ui/toaster"
 
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
@@ -108,6 +109,7 @@ const Editnumber=()=>{
   return (
     <NextUIProvider>
       {children}
+      <Toaster/>
       <div id="recaptcha-container"></div>
       {/* Login Modal */}
       <Modal isDismissable={false} isKeyboardDismissDisabled={true} backdrop="opaque" isOpen={showLoginModal} onOpenChange={setShowLoginModal}>
