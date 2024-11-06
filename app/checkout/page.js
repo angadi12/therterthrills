@@ -19,16 +19,22 @@ import AddOns from "@/components/Checkoutcomponents/AddOns";
 import Confirmation from "@/components/Checkoutcomponents/Confirmation";
 import Cart from "@/components/Checkoutcomponents/Cart";
 
+
 export default function CheckoutOnboarding() {
   const { toast } = useToast();
   const dispatch = useDispatch();
-  const { currentStep, cart } = useSelector((state) => state.checkout);
+  const { currentStep, nickname,partnerNickname ,selectedOccasion} = useSelector((state) => state.checkout);
   const { bookingDetails, validationErrors } = useSelector(
     (state) => state.checkout
   );
+  const cakeText = useSelector((state) => state.cakes.cakeText);
+
   const addDecorations = useSelector(
     (state) => state.checkout.bookingDetails.addDecorations
   );
+
+  const selectedCakes = useSelector((state) => state.cakes.selectedCakes);
+
 
   const steps =
     addDecorations === "yes"
@@ -72,6 +78,17 @@ export default function CheckoutOnboarding() {
       errors.whatsappNumber = "WhatsApp number must be 10 digits.";
     if (!bookingDetails.email.match(/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/))
       errors.email = "Email is invalid.";
+
+    if (currentStep === 1 && selectedOccasion !== "Business Meet") {
+      if (!nickname) errors.nickname = "Nickname is required.";
+    }
+
+
+    
+    if(currentStep === 2 && Object.keys(selectedCakes).length){
+      if (!cakeText) errors.cakeText = "Cake text is required.";
+
+    }
 
     return errors;
   };

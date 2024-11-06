@@ -7,121 +7,150 @@ import PartyProps from "@/public/asset/PartyProps.png";
 import HBDLetters from "@/public/asset/HBDLetters.png";
 import CandlePath from "@/public/asset/CandlePath.png";
 
-import Cakes1 from "@/public/asset/Cakes1.png";
-import Cakes2 from "@/public/asset/Cakes2.png";
-import Cakes3 from "@/public/asset/Cakes3.png";
-import Cakes4 from "@/public/asset/Cakes4.png";
+import Singlerose from "@/public/asset/Singlerose.png";
+import RoseBouquet from "@/public/asset/RoseBouquet.png";
 
 import Photography1 from "@/public/asset/Photography1.png";
 import Photography2 from "@/public/asset/Photography2.png";
 import Photography3 from "@/public/asset/Photography3.png";
 import Photography4 from "@/public/asset/Photography4.png";
+import {
+  addDecoration,
+  removeDecoration,
+  addRose,
+  removeRose,
+  togglePhotography,
+  selectAddOns,
+  selectTotalAmount,
+} from "@/lib/Redux/addOnsSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 
 const AddOns = () => {
-    const [selectedDecorations, setSelectedDecorations] = useState([]);
-    const [selectedCake, setSelectedCake] = useState(null);
-    const [selectedPhotography, setSelectedPhotography] = useState("");
+  const dispatch = useDispatch();
+  const { decorations, roses, photography } = useSelector(selectAddOns);
 
 
-    const toggleDecoration = (name) => {
-        setSelectedDecorations((prev) =>
-          prev.includes(name) ? prev.filter((d) => d !== name) : [...prev, name]
-        );
-      };
-    
-
-  const decorations = [
-    { name: "Fog Effects", image: FogEffects },
-    { name: "Party Props", image: PartyProps },
-    { name: "HBD Letters", image: HBDLetters },
-    { name: "Candle Path", image: CandlePath },
+  const decorationItems  = [
+    { name: "Fog Effects", price: 499, image: FogEffects },
+    { name: "Party Props", price: 449, image: PartyProps },
+    { name: "HBD Letters", price: 199, image: HBDLetters },
+    { name: "Candle Path", price: 99, image: CandlePath },
   ];
 
-  const cakes = [
-    { id: 1, name: "Vanilla", price: 499, image: Cakes1 },
-    { id: 2, name: "Strawberry", price: 549, image: Cakes2 },
-    { id: 3, name: "Butterscotch", price: 549, image: Cakes3 },
-    { id: 4, name: "Chocolate", price: 599, image: Cakes4 },
+  const roseItems  = [
+    { name: "Single Rose", price: 49, image: Singlerose },
+    { name: "Rose Bouquet", price: 349, image: RoseBouquet },
   ];
-  
-  const photography = [
-    { name: "20 Pictures", image: Photography1 },
-    { name: "30 Pictures", image: Photography2 },
-    { name: "40 Pictures", image: Photography3 },
-    { name: "50 Pictures", image: Photography4 },
+
+  const photographyItems  = [
+    { name: "20 Pictures", price: 299, image: Photography1 },
+    { name: "30 Pictures", price: 499, image: Photography2 },
+    { name: "40 Pictures", price: 699, image: Photography3 },
+    { name: "50 Pictures", price: 999, image: Photography4 },
   ];
+
+  const toggleQuantitySelection = (item, setSelected, selectedItems) => {
+    setSelected((prev) => ({
+      ...prev,
+      [item.name]: prev[item.name] ? prev[item.name] + 1 : 1,
+    }));
+  };
+
+  const decreaseQuantity = (item, setSelected, selectedItems) => {
+    setSelected((prev) => {
+      const currentQuantity = prev[item.name] || 0;
+      if (currentQuantity <= 1) {
+        const updatedItems = { ...prev };
+        delete updatedItems[item.name];
+        return updatedItems;
+      }
+      return { ...prev, [item.name]: currentQuantity - 1 };
+    });
+  };
+
+  const togglePhotographySelection = (name) => {
+    setSelectedPhotography((prev) =>
+      prev.includes(name)
+        ? prev.filter((photo) => photo !== name)
+        : [...prev, name]
+    );
+  };
 
   return (
     <div className="md:col-span-2">
       <div className="bg-white ring-1 ring-gray-300 p-6 rounded-md shadow">
         <h2 className="text-xl font-semibold mb-4">Decorations</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-          {decorations.map((decoration) => (
-            <Button
-              key={decoration.name}
-              className={`flex flex-col items-center justify-center h-32 w-28 bg-white p-1 rounded-lg transition-colors ${
-                selectedDecorations.includes(decoration.name)
-                  ? "bg-pink-100 text-[#F30278] ring-1 ring-[#F30278]"
-                  : " text-gray-600 hover:bg-gray-200"
-              }`}
-              onClick={() => toggleDecoration(decoration.name)}
-            >
-              <Image
-                src={decoration.image}
-                alt={decoration.name}
-                width={80}
-                height={80}
-                className="mb-2 rounded-full"
-              />
-              <span className="text-sm">{decoration.name}</span>
-            </Button>
+          {decorationItems.map((decoration) => (
+            <div key={decoration.name} className="flex flex-col items-center relative">
+              <Button
+                className={`flex flex-col items-center justify-center h-40 w-32 bg-white p-1 rounded-lg ${
+                  decorations[decoration.name] ? "bg-pink-100 text-[#F30278] ring-1 ring-[#F30278]" : "text-gray-600 hover:bg-gray-200"
+                }`}
+                onClick={() => dispatch(addDecoration(decoration))}
+              >
+                <Image src={decoration.image} alt={decoration.name} width={80} height={80} className="mb-2 rounded-full" />
+                <span className="text-sm">{decoration.name}</span>
+                <span className="text-sm">{decoration.price}/-</span>
+              </Button>
+              {decorations[decoration.name] && (
+                <div className="absolute h-6 bg-[#F30278] w-1/2 mx-auto left-0 right-0 top-1/2 flex items-center justify-center gap-2">
+                  <Button variant="solid" isIconOnly className="bg-[#F30278] h-6 font-bold text-white" onClick={() => dispatch(removeDecoration(decoration))}>
+                    -
+                  </Button>
+                  <span className="px-2 text-white">{decorations[decoration.name]}</span>
+                  <Button variant="solid" isIconOnly className="bg-[#F30278] h-6 font-bold text-white" onClick={() => dispatch(addDecoration(decoration))}>
+                    +
+                  </Button>
+                </div>
+              )}
+            </div>
           ))}
         </div>
 
-        <h2 className="text-xl font-semibold mb-4">Rose</h2>
+        <h2 className="text-xl font-semibold mb-4">Roses</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
-          {cakes.map((cake) => (
-            <Button
-              key={cake.name}
-              className={`flex flex-col items-center justify-center bg-white h-32 w-28 p-1 rounded-lg transition-colors ${
-                selectedCake === cake.name
-                  ? "bg-pink-100 text-[#F30278] ring-1 ring-[#F30278]"
-                  : " text-gray-600 hover:bg-gray-200"
-              }`}
-              onClick={() => setSelectedCake(cake.name)}
-            >
-              <Image
-                src={cake.image}
-                alt={cake.name}
-                width={80}
-                height={80}
-                className="mb-2 rounded"
-              />
-              <span className="text-sm">Single Rose</span>
-            </Button>
+          {roseItems.map((rose) => (
+            <div key={rose.name} className="flex relative flex-col items-center">
+              <Button
+                className={`flex flex-col items-center justify-center h-40 w-32 bg-white p-1 rounded-lg ${
+                  roses[rose.name] ? "bg-pink-100 text-[#F30278] ring-1 ring-[#F30278]" : "text-gray-600 hover:bg-gray-200"
+                }`}
+                onClick={() => dispatch(addRose(rose))}
+              >
+                <Image src={rose.image} alt={rose.name} width={80} height={80} className="mb-2 rounded" />
+                <span className="text-sm">{rose.name}</span>
+                <span className="text-sm">{rose.price}/-</span>
+              </Button>
+              {roses[rose.name] && (
+                <div className="absolute h-6 bg-[#F30278] w-1/2 mx-auto left-0 right-0 top-1/2 flex items-center justify-center gap-2">
+                  <Button variant="solid" isIconOnly className="bg-[#F30278] h-6 font-bold text-white" onClick={() => dispatch(removeRose(rose))}>
+                    -
+                  </Button>
+                  <span className="px-2 text-white">{roses[rose.name]}</span>
+                  <Button variant="solid" isIconOnly className="bg-[#F30278] h-6 font-bold text-white" onClick={() => dispatch(addRose(rose))}>
+                    +
+                  </Button>
+                </div>
+              )}
+            </div>
           ))}
         </div>
 
         <h2 className="text-xl font-semibold mb-4">Photography</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {photography.map((option) => (
+          {photographyItems.map((option) => (
             <Button
               key={option.name}
-              className={`flex flex-col items-center justify-center p-1 h-32 w-28 bg-white rounded-lg transition-colors ${
-                selectedPhotography === option.name
-                  ? "bg-pink-100 text-[#F30278] ring-1 ring-[#F30278]"
-                  : " text-gray-600 hover:bg-gray-200"
+              className={`flex flex-col items-center justify-center p-1 h-40 w-32 bg-white rounded-lg ${
+                photography.includes(option.name) ? "bg-pink-100 text-[#F30278] ring-1 ring-[#F30278]" : "text-gray-600 hover:bg-gray-200"
               }`}
-              onClick={() => setSelectedPhotography(option.name)}
+              onClick={() => dispatch(togglePhotography(option))}
             >
-              <Image
-                src={option.image}
-                alt={option.name}
-                width={80}
-                height={80}
-                className="mb-2 rounded"
-              />
+              <Image src={option.image} alt={option.name} width={80} height={80} className="mb-2 rounded-full" />
               <span className="text-sm">{option.name}</span>
+              <span className="text-sm">{option.price}/-</span>
             </Button>
           ))}
         </div>
