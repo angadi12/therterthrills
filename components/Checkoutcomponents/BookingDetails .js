@@ -33,7 +33,7 @@ const BookingDetails = () => {
     <div className="md:col-span-2">
       <div className="bg-white p-6 rounded-md shadow ring-1 ring-gray-300">
         <h2 className="text-xl font-semibold mb-4">Booking Details</h2>
-        <div className="space-y-4">
+        <div className="space-y-7">
           <div className="grid grid-cols-2 justify-center items-center gap-4">
             <Input
               placeholder="Full Name"

@@ -4,15 +4,22 @@ import { Button } from "@nextui-org/react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useSelector } from "react-redux";
 import { selectAddOns } from "@/lib/Redux/addOnsSlice";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 const Confirmation = () => {
+  const { toast } = useToast();
   const [agreed, setAgreed] = useState(false);
   const addOns = useSelector(selectAddOns);
   const selectedCakes = useSelector((state) => state.cakes.selectedCakes);
 
   const handleProceedToPayment = () => {
     if (!agreed) {
-      alert("Please agree to the conditions before proceeding.");
+      toast({
+        title: "Accept All The Conditions",
+        description: "Please agree to the conditions before proceeding.",
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });
       return;
     }
     // Logic to proceed to payment
@@ -63,7 +70,7 @@ const Confirmation = () => {
         <div>
           <h3 className="font-semibold">Decorations</h3>
           {Object.entries(addOns.decorations).map(([name, count]) => (
-            <p key={name} className="text-xs">
+            <p key={name} className="text-sm">
               {name} x {count}
             </p>
           ))}
@@ -71,7 +78,7 @@ const Confirmation = () => {
         <div>
           <h3 className="font-semibold">Roses</h3>
           {Object.entries(addOns.roses).map(([name, count]) => (
-            <p className="text-xs" key={name}>
+            <p className="text-sm" key={name}>
               {name} x {count}
             </p>
           ))}
@@ -79,9 +86,9 @@ const Confirmation = () => {
         <div>
           <h3 className="font-semibold">Photography</h3>
           {addOns.photography.length > 0 ? (
-            addOns.photography.map((item) => <p className="text-xs" key={item}>{item}</p>)
+            addOns.photography.map((item) => <p className="text-sm" key={item}>{item}</p>)
           ) : (
-            <p className="text-xs">No photography selected</p>
+            <p className="text-sm">No photography selected</p>
           )}
         </div>
 
@@ -90,13 +97,13 @@ const Confirmation = () => {
           {Object.values(selectedCakes).length > 0 ? (
             Object.values(selectedCakes).map(({ id, name, quantity }) => (
               <div key={id}>
-                <p className="text-xs" >
+                <p className="text-sm" >
                   {name} x {quantity}
                 </p>
               </div>
             ))
           ) : (
-            <p className="text-xs" >No cakes selected</p>
+            <p className="text-sm" >No cakes selected</p>
           )}
         </div>
 

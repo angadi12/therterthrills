@@ -4,7 +4,7 @@ import Logo from "@/public/asset/Logo.png";
 import Insta from "@/public/asset/Insta.png";
 import Facebook from "@/public/asset/Facebook.png";
 import Youtube from "@/public/asset/Youtube.png";
-import { Button, Divider } from "@nextui-org/react";
+import { Divider } from "@nextui-org/react";
 import Image from "next/image";
 import { IoMail } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
@@ -20,6 +20,24 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
+import { LayoutDashboard, CalendarFold, LogOut, User } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+import { Button } from "@nextui-org/react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Navbar() {
   const router = useRouter();
@@ -165,12 +183,12 @@ export default function Navbar() {
           >
             Our Services
           </Link>
-          <Link
+          {/* <Link
             href="/bookings"
             className={activeitem === "bookings" ? active : unactive}
           >
             My Bookings
-          </Link>
+          </Link> */}
           <Link
             href="/gallery"
             className={activeitem === "gallery" ? active : unactive}
@@ -191,11 +209,48 @@ export default function Navbar() {
           </Link>
 
           <Button
-            onPress={() => router.push("/booknow")}
-            className="px-8 py-0.5 rounded-sm w-48  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+            onClick={() => router.push("/booknow")}
+            className="px-8 py-0.5 rounded-sm w-48  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
           >
             Book Now
           </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Avatar>
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  alt="@shadcn"
+                />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <User />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <CalendarFold strokeWidth={1.5} /> 
+                  <span>My Booking</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <LayoutDashboard strokeWidth={1.5} />
+                  <span>Dashboard</span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <LogOut />
+                <span>Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </nav>
     </motion.header>

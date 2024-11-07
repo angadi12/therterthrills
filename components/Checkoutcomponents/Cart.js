@@ -74,7 +74,7 @@ const Cart = () => {
           <Divider />
           <div className="flex justify-between">
             <span>Decoration</span>
-            <span>{decorationPrice}</span>
+            <span>{decorationPrice}/-</span>
           </div>
           <Divider />
           <div className="flex justify-between">
