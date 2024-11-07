@@ -20,10 +20,10 @@ import Confirmation from "@/components/Checkoutcomponents/Confirmation";
 import Cart from "@/components/Checkoutcomponents/Cart";
 
 
-export default function CheckoutOnboarding() {
+const CheckoutOnboarding = () => {
   const { toast } = useToast();
   const dispatch = useDispatch();
-  const { currentStep, nickname,partnerNickname ,selectedOccasion} = useSelector((state) => state.checkout);
+  const { currentStep, nickname,partnerNickname ,selectedOccasion,Occasionobject} = useSelector((state) => state.checkout);
   const { bookingDetails, validationErrors } = useSelector(
     (state) => state.checkout
   );
@@ -79,10 +79,18 @@ export default function CheckoutOnboarding() {
     if (!bookingDetails.email.match(/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/))
       errors.email = "Email is invalid.";
 
-    if (currentStep === 1 && selectedOccasion !== "Business Meet") {
-      if (!nickname) errors.nickname = "Nickname is required.";
+   
+    if (!Occasionobject?.noInput && currentStep === 1) {
+      if (!nickname) {
+        errors.nickname = "Nickname is required.";
+      }
+    
+      if (Occasionobject?.requiresPartner) {
+        if (!partnerNickname) {
+          errors.partnerNickname = "Partner's nickname is required.";
+        }
+      }
     }
-
 
     
     if(currentStep === 2 && Object.keys(selectedCakes).length){
@@ -178,3 +186,5 @@ export default function CheckoutOnboarding() {
     </div>
   );
 }
+
+export default CheckoutOnboarding

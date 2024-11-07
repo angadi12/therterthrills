@@ -68,8 +68,11 @@ const Cakes = () => {
                           />
                       </div>
                       <div className="text-center">
+                          <div className='flex flex-col justify-start'>
+
                           <h3 className="font-semibold ">{cake.name}</h3>
                           <p className="text-gray-600">{cake.price}/-</p>
+                          </div>
 
                           {selectedCakes[cake.id] && (
                               <div className="mt-8 absolute rounded-full bg-[#F30278] w-11/12 mx-auto left-0 right-0 top-1/2 flex items-center justify-center gap-2">

@@ -20,6 +20,7 @@ import Congratulations from "@/public/asset/Congratulations.png";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setOccasion,
+  setOccasionobject,
   setNickname,
   setPartnerNickname,
 } from "@/lib/Redux/checkoutSlice";
@@ -76,7 +77,8 @@ const Occasion = () => {
                   ? "bg-[#F302781A] font-semibold text-[#F30278] ring-1 ring-[#F30278]"
                   : " text-gray-600 hover:bg-gray-200"
               }`}
-              onClick={() => dispatch(setOccasion(occasion.name))}
+              onClick={() =>{ dispatch(setOccasion(occasion.name)),dispatch(setOccasionobject(occasion))}}
+
             >
               <Image
                 src={occasion.icon}

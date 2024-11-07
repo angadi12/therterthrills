@@ -29,6 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 const AddOns = () => {
   const dispatch = useDispatch();
   const { decorations, roses, photography } = useSelector(selectAddOns);
+  const { selectedCakes, isEggless, cakeText } = useSelector((state) => state.cakes);
 
 
   const decorationItems  = [
@@ -91,8 +92,10 @@ const AddOns = () => {
                 onClick={() => dispatch(addDecoration(decoration))}
               >
                 <Image src={decoration.image} alt={decoration.name} width={80} height={80} className="mb-2 rounded-full" />
+                <div className="flex flex-col justify-start">
                 <span className="text-sm">{decoration.name}</span>
                 <span className="text-sm">{decoration.price}/-</span>
+              </div>
               </Button>
               {decorations[decoration.name] && (
                 <div className="absolute h-6 bg-[#F30278] w-1/2 mx-auto left-0 right-0 top-1/2 flex items-center justify-center gap-2">
@@ -120,8 +123,11 @@ const AddOns = () => {
                 onClick={() => dispatch(addRose(rose))}
               >
                 <Image src={rose.image} alt={rose.name} width={80} height={80} className="mb-2 rounded" />
+                <div className="flex flex-col justify-start">
+
                 <span className="text-sm">{rose.name}</span>
                 <span className="text-sm">{rose.price}/-</span>
+                </div>
               </Button>
               {roses[rose.name] && (
                 <div className="absolute h-6 bg-[#F30278] w-1/2 mx-auto left-0 right-0 top-1/2 flex items-center justify-center gap-2">
@@ -149,8 +155,10 @@ const AddOns = () => {
               onClick={() => dispatch(togglePhotography(option))}
             >
               <Image src={option.image} alt={option.name} width={80} height={80} className="mb-2 rounded-full" />
+              <div className="flex flex-col justify-start">
               <span className="text-sm">{option.name}</span>
               <span className="text-sm">{option.price}/-</span>
+               </div>
             </Button>
           ))}
         </div>
