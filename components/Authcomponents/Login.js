@@ -29,6 +29,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { MdEmail } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
 import { useRouter,usePathname } from 'next/navigation';
+import {Sendotp,Verifyotp,Createuser} from "@/lib/API/Auth"
 
 const Login = ({ redirectTo }) => {
   const { toast } = useToast();
@@ -116,19 +117,28 @@ const Login = ({ redirectTo }) => {
       }
 
       try {
-        await axios.post("/api/send-email-otp", { email });
-        toast({
-          title: "Email Sent",
-          description: `An OTP has been sent to ${email}`,
-          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-        });
-        dispatch(closeLoginModal());
-        dispatch(openOtpModal());
+        const response = await Sendotp({ email });
+        if (response.status) {
+          setIsSendingOtp(false);
+          dispatch(closeLoginModal());
+          dispatch(openOtpModal());
+          toast({
+            title: "Email Sent",
+            description: `An OTP has been sent to ${email}`,
+            action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+          });
+        } else {
+          toast({
+            title: "Failed to send email OTP",
+            description: response?.message,
+            action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+          });
+        }
       } catch (error) {
         console.error(error);
         toast({
           title: "Failed to send email OTP",
-          description: error.response?.data?.message || error.message,
+          description: error.response?.message || error.message,
           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
       }
@@ -145,13 +155,30 @@ const Login = ({ redirectTo }) => {
           const result = await confirmationResult.confirm(otpString);
           const idToken = await result.user.getIdToken();
           Cookies.set("token", idToken);
-          toast({
-            title: "Login successfully",
-            action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-          });
-          dispatch(closeOtpModal());
-          dispatch(setIsAuthenticated());
-          router.push(path)
+          const userData = {
+            uid: result.user.uid,
+            phoneNumber: result.user.phoneNumber,
+            authType: "firebase",
+          };
+  
+          // Call Createuser endpoint
+          const response = await Createuser(userData);
+          if (response.status) {
+            Cookies.set("token", idToken);
+            toast({
+              title: "Login successfully",
+              action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+            });
+            dispatch(closeOtpModal());
+            dispatch(setIsAuthenticated());
+            router.push(path);
+          } else {
+            toast({
+              title: "User creation failed",
+              description: response.message,
+              action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+            });
+          }
         } catch (error) {
           console.error("Invalid OTP:", error);
           toast({
@@ -162,18 +189,48 @@ const Login = ({ redirectTo }) => {
         }
       } else if (loginMethod === "email") {
         try {
-          const response = await axios.post("/api/verify-email-otp", {
-            email,
-            otp: otpString,
-          });
-          Cookies.set("token", response.data.token);
-          dispatch(closeOtpModal());
-          router.push(redirectTo)
+          const otpString = otp.join(""); 
+          const response = await Verifyotp({ email, otp:otpString });
+          if (response.status) {
+            const userData = {
+              email,
+              authType: "emailOtp",
+            };
+  
+            // Call Createuser endpoint
+            const createUserResponse = await Createuser(userData);
+  
+            if (createUserResponse.status) {
+              Cookies.set("token", response.token);
+              toast({
+                title: "Login successfully",
+                action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+              });
+            dispatch(closeOtpModal());
+            dispatch(setIsAuthenticated());
+            router.push(path) 
+          } else {
+            toast({
+              title: "User creation failed",
+              description: createUserResponse.message,
+              action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+            });
+          }        
+           } else {
+            toast({
+              title: "Failed to verify OTP",
+              description: response.message,
+              action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+            });
+          }
+          // Cookies.set("token", response.data.token);
+          // dispatch(closeOtpModal());
+          // router.push(redirectTo)
         } catch (error) {
           console.error("Invalid OTP:", error);
           toast({
             title: "Failed to verify OTP",
-            description: error.response?.data?.message || error.message,
+            description: error.response?.message || error.message,
             action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
           });
         }
