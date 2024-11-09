@@ -38,6 +38,8 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Cookies from "js-cookie";
+import { useSelector } from "react-redux";
 
 export default function Navbar() {
   const router = useRouter();
@@ -48,6 +50,14 @@ export default function Navbar() {
   const { scrollY } = useScroll();
   const [prevScrollY, setPrevScrollY] = useState(0);
   const [hidden, setHidden] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isAuthenticated} = useSelector((state) => state.auth);
+
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    setIsLoggedIn(!!token);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -99,6 +109,9 @@ export default function Navbar() {
       case "/bookings":
         setactiveitem("bookings");
         break;
+      case "/Add-Ons":
+        setactiveitem("Add-Ons");
+        break;
       case "/blogs":
         setactiveitem("blogs");
         break;
@@ -118,6 +131,14 @@ export default function Navbar() {
         setactiveitem("");
     }
   }, [pathname]);
+
+
+  const handleLogout = () => {
+    Cookies.remove("token"); // Clear token from cookies
+    setIsLoggedIn(false);
+    router.push("/");
+  };
+
 
   return (
     <motion.header
@@ -183,12 +204,12 @@ export default function Navbar() {
           >
             Our Services
           </Link>
-          {/* <Link
-            href="/bookings"
+          <Link
+            href="/Add-Ons"
             className={activeitem === "bookings" ? active : unactive}
           >
-            My Bookings
-          </Link> */}
+           Add-Ons
+          </Link>
           <Link
             href="/gallery"
             className={activeitem === "gallery" ? active : unactive}
@@ -215,42 +236,42 @@ export default function Navbar() {
             Book Now
           </Button>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Avatar>
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="@shadcn"
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <User />
-                  <span>Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <CalendarFold strokeWidth={1.5} /> 
-                  <span>My Booking</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <LayoutDashboard strokeWidth={1.5} />
-                  <span>Dashboard</span>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <LogOut />
-                <span>Log out</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {isLoggedIn ? (
+            <>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Avatar>
+                    <AvatarImage
+                      src="https://github.com/shadcn.png"
+                      alt="@shadcn"
+                    />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      <User />
+                      <span>Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <CalendarFold />
+                      <span>Bookings</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          ) : (
+           ""
+          )}
         </div>
       </nav>
     </motion.header>
