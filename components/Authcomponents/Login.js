@@ -31,6 +31,7 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { useRouter,usePathname } from 'next/navigation';
 import {Sendotp,Verifyotp,Createuser} from "@/lib/API/Auth"
 
+
 const Login = ({ redirectTo }) => {
   const { toast } = useToast();
   const dispatch = useDispatch();
@@ -163,7 +164,7 @@ const Login = ({ redirectTo }) => {
   
           // Call Createuser endpoint
           const response = await Createuser(userData);
-          if (response.status) {
+          if (response.status==="success") {
             Cookies.set("token", idToken);
             toast({
               title: "Login successfully",
@@ -200,7 +201,7 @@ const Login = ({ redirectTo }) => {
             // Call Createuser endpoint
             const createUserResponse = await Createuser(userData);
   
-            if (createUserResponse.status) {
+            if (createUserResponse.status==="success") {
               Cookies.set("token", response.token);
               toast({
                 title: "Login successfully",
@@ -299,6 +300,7 @@ const Login = ({ redirectTo }) => {
                   <FaPhoneAlt size={30} className="text-[#F30278]"/>
 
                   <Input
+                    type="number"
                     label="Mobile Number"
                     placeholder="Enter your mobile number"
                     value={phoneNumber}
@@ -311,6 +313,7 @@ const Login = ({ redirectTo }) => {
                 <div className="flex items-center gap-2 w-full">
                 <MdEmail size={40} className="text-[#F30278]"/>
                 <Input
+                type="email"
                   label="Email"
                   placeholder="Enter your email"
                   value={email}

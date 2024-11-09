@@ -40,6 +40,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Cookies from "js-cookie";
 import { useSelector } from "react-redux";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogFooter,
+  DialogClose,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function Navbar() {
   const router = useRouter();
@@ -51,8 +61,7 @@ export default function Navbar() {
   const [prevScrollY, setPrevScrollY] = useState(0);
   const [hidden, setHidden] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { isAuthenticated} = useSelector((state) => state.auth);
-
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const token = Cookies.get("token");
@@ -132,13 +141,11 @@ export default function Navbar() {
     }
   }, [pathname]);
 
-
   const handleLogout = () => {
     Cookies.remove("token"); // Clear token from cookies
     setIsLoggedIn(false);
     router.push("/");
   };
-
 
   return (
     <motion.header
@@ -208,7 +215,7 @@ export default function Navbar() {
             href="/Add-Ons"
             className={activeitem === "bookings" ? active : unactive}
           >
-           Add-Ons
+            Add-Ons
           </Link>
           <Link
             href="/gallery"
@@ -258,19 +265,46 @@ export default function Navbar() {
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <CalendarFold />
-                      <span>Bookings</span>
+                      <span>My Bookings</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <LayoutDashboard />
+                      <span>Dashboard</span>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>
-                    <LogOut />
-                    <span>Log out</span>
+                  <DropdownMenuItem>
+                    <Dialog>
+                      <DialogTrigger>
+                        <LogOut />
+                        <span>Log out</span>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Are you absolutely sure?</DialogTitle>
+                          <DialogDescription>
+                            Do you want to LogOut
+                          </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter className="sm:justify-end">
+                          <DialogClose asChild>
+                            <Button
+                              onPress={handleLogout}
+                              variant="solid"
+                              className="text-white  h-8  bg-red-500 text-sm font-bold rounded-sm"
+                            >
+                              Logout
+                            </Button>
+                          </DialogClose>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </>
           ) : (
-           ""
+            ""
           )}
         </div>
       </nav>
