@@ -7,10 +7,17 @@ import Image from 'next/image';
 import { Button } from "@nextui-org/react";
 import { SquareDot } from 'lucide-react';
 
-import Cakes1 from "@/public/asset/Cakes1.png";
-import Cakes2 from "@/public/asset/Cakes2.png";
-import Cakes3 from "@/public/asset/Cakes3.png";
-import Cakes4 from "@/public/asset/Cakes4.png";
+import Vanilla from "@/public/asset/Vanilla.png";
+import Strawberry from "@/public/asset/Strawberry.png";
+import Butterscotch from "@/public/asset/Butterscotch.png";
+import Pineapple from "@/public/asset/Pineapple.png";
+import Mangocrush from "@/public/asset/Mangocrush.png";
+import Chocolate from "@/public/asset/Chocolate.png";
+import Darkchocolate from "@/public/asset/Darkchocolate.png";
+import Blackforest from "@/public/asset/Blackforest.png";
+import whiteforest from "@/public/asset/whiteforest.png";
+import Chocochips from "@/public/asset/Chocochips.png";
+
 import { Input } from "@/components/ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleEggless, updateCakeText, addCake, updateQuantity } from "@/lib/Redux/cakeSlice";
@@ -24,12 +31,18 @@ const Cakes = () => {
   const isEggless = useSelector((state) => state.cakes.isEggless);
   const cakeText = useSelector((state) => state.cakes.cakeText);
 
-    const cakes = [
-        { id: 1, name: "Vanilla", price: 499, image: Cakes1 },
-        { id: 2, name: "Strawberry", price: 549, image: Cakes2 },
-        { id: 3, name: "Butterscotch", price: 549, image: Cakes3 },
-        { id: 4, name: "Chocolate", price: 599, image: Cakes4 },
-    ];
+  const cakes = [
+    { id: 1, name: "Vanilla", price: 499, image: Vanilla },
+    { id: 2, name: "Strawberry", price: 549, image: Strawberry },
+    { id: 3, name: "Butterscotch", price: 549, image: Butterscotch },
+    { id: 4, name: "Pineapple", price: 549, image: Pineapple },
+    { id: 5, name: "Mango Crush", price: 549, image: Mangocrush },
+    { id: 6, name: "Chocolate", price: 599, image: Chocolate },
+    { id: 7, name: "Dark Chocolate", price: 599, image: Darkchocolate },
+    { id: 8, name: "Black Forest", price: 599, image: Blackforest },
+    { id: 9, name: "White Forest", price: 599, image: whiteforest },
+    { id: 10, name: "Chocochips", price: 599, image: Chocochips },
+]
 
   
 

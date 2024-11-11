@@ -155,7 +155,7 @@ const Login = ({ redirectTo }) => {
         try {
           const result = await confirmationResult.confirm(otpString);
           const idToken = await result.user.getIdToken();
-          Cookies.set("token", idToken);
+          // Cookies.set("token", idToken);
           const userData = {
             uid: result.user.uid,
             phoneNumber: result.user.phoneNumber,
@@ -175,7 +175,7 @@ const Login = ({ redirectTo }) => {
             router.push(path);
           } else {
             toast({
-              title: "User creation failed",
+              title: "Login failed",
               description: response.message,
               action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
             });
@@ -212,7 +212,7 @@ const Login = ({ redirectTo }) => {
             router.push(path) 
           } else {
             toast({
-              title: "User creation failed",
+              title: "Login failed",
               description: createUserResponse.message,
               action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
             });
