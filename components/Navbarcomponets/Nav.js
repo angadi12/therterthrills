@@ -217,10 +217,13 @@ export default function Navbar() {
                     <User />
                     <span>Profile</span>
                   </DropdownMenuItem>
+                  <Link href={"/bookings"}>
                   <DropdownMenuItem>
                     <CalendarFold />
                     <span>My Bookings</span>
                   </DropdownMenuItem>
+
+                  </Link>
                   <DropdownMenuItem>
                     <LayoutDashboard />
                     <span>Dashboard</span>
@@ -319,7 +322,7 @@ export default function Navbar() {
       <Modal
         isDismissable={false}
         isKeyboardDismissDisabled={true}
-        backdrop="blur"
+        backdrop="opaque"
         isOpen={isdelete}
         onOpenChange={Setisdelete}
       >
@@ -338,7 +341,7 @@ export default function Navbar() {
                     handleLogout();
                     onClose();
                   }}
-                  className="px-8 py-0.5 rounded-sm w-48  border-none hover:bg-[#004AAD] bg-[#F30278] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#004AAD,1px_1px_#004AAD,1px_1px_#004AAD,2px_2px_#004AAD,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                  className="px-8 py-0.5 rounded-sm w-48  border-none hover:bg-[#F30278] bg-[#F30278] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#004AAD,1px_1px_#004AAD,1px_1px_#004AAD,2px_2px_#004AAD,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
                 >
                   Yes
                 </Button>

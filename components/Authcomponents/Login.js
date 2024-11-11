@@ -32,12 +32,12 @@ import { useRouter,usePathname } from 'next/navigation';
 import {Sendotp,Verifyotp,Createuser} from "@/lib/API/Auth"
 
 
-const Login = ({ redirectTo }) => {
+const Login = () => {
   const { toast } = useToast();
   const dispatch = useDispatch();
   const router = useRouter();
   const path=usePathname()
-
+console.log(path)
 
   const [loginMethod, setLoginMethod] = useState("phone"); // 'phone' or 'email'
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -170,9 +170,9 @@ const Login = ({ redirectTo }) => {
               title: "Login successfully",
               action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
             });
+            router.refresh(path);
             dispatch(closeOtpModal());
             dispatch(setIsAuthenticated());
-            router.push(path);
           } else {
             toast({
               title: "Login failed",
@@ -209,7 +209,7 @@ const Login = ({ redirectTo }) => {
               });
             dispatch(closeOtpModal());
             dispatch(setIsAuthenticated());
-            router.push(path) 
+            router.refresh(path) 
           } else {
             toast({
               title: "Login failed",
@@ -347,7 +347,7 @@ const Login = ({ redirectTo }) => {
           </ModalHeader>
           <ModalBody>
             <p className="text-center text-sm text-muted-foreground">
-              Code sent to (+91-{phoneNumber})
+              Code sent to {phoneNumber ?(+91-phoneNumber):email}
             </p>
             <div className="flex justify-center gap-2">
               {otp.map((digit, index) => (

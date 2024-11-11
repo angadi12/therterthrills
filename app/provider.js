@@ -28,7 +28,9 @@ export function NextuiProviderWrapper({ children }) {
 
       try {
         const result = await Checktokenexpired();
+        console.log(result)
         if (result?.user) {
+
           dispatch(setUser(result.user));
         } else {
           Cookies.remove("token");
