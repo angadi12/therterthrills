@@ -99,7 +99,7 @@ export default function Component() {
         </section>
 
         <section>
-          <h2 className="text-lg font-semibold mb-2">Children's Information</h2>
+          <h2 className="text-lg font-semibold mb-2">{`Children's Information`}</h2>
           <p className="text-sm text-gray-600">
           {`  Protecting children's privacy online is essential. We do not
             knowingly collect data from children under 13. If you believe your
