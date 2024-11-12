@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon, MapPin } from "lucide-react";
-import { format } from "date-fns";
+import { format, isBefore, startOfToday } from "date-fns";
 import {
   Popover,
   PopoverContent,
@@ -17,29 +17,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useDispatch,useSelector } from "react-redux";
-import { fetchTheaterLocations, fetchLocationsAndSlots } from "@/lib/Redux/theaterSlice"; // Adjust path
-
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchTheaterLocations,
+  fetchLocationsAndSlots,
+} from "@/lib/Redux/theaterSlice"; // Adjust path
+import { Spinner } from "@nextui-org/react";
 
 export default function BookingHeader() {
   const dispatch = useDispatch();
-  const { locations, loading } = useSelector((state) => state.theater);
+  const { locations, loading, locationsWithSlots } = useSelector(
+    (state) => state.theater
+  );
   const [date, setDate] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState("");
 
-  console.log(locations)
+  const formattedDate = date ? format(new Date(date), "yyyy-MM-dd") : null;
+
 
   useEffect(() => {
     dispatch(fetchTheaterLocations());
   }, [dispatch]);
 
+  const payload = { location: selectedLocation, date: formattedDate };
 
   useEffect(() => {
-    if (selectedLocation && date) {
-      dispatch(fetchLocationsAndSlots({ location: selectedLocation, date }));
+    if (selectedLocation && payload) {
+      dispatch(fetchLocationsAndSlots(payload));
     }
-  }, [selectedLocation, date, dispatch]);
-  
+  }, [selectedLocation, formattedDate, dispatch]);
+
+  console.log(locationsWithSlots);
+  const isPastDate = (date) => isBefore(date, startOfToday());
+
   return (
     <div className="w-11/12 mx-auto py-12">
       <div className="flex justify-between items-center gap-8">
@@ -65,7 +75,7 @@ export default function BookingHeader() {
             >
               <SelectValue placeholder="Select location">
                 {loading ? (
-                  "Loading locations..."
+                 <Spinner color="danger" size="sm"/>
                 ) : (
                   <div className="flex items-center gap-2">
                     <MapPin className="mr-2 h-4 w-4  text-[#F30278]" />
@@ -108,6 +118,7 @@ export default function BookingHeader() {
                 mode="single"
                 selected={date}
                 onSelect={setDate}
+                disabled={isPastDate} 
                 initialFocus
               />
             </PopoverContent>

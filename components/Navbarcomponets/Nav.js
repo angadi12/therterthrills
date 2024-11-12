@@ -224,10 +224,13 @@ export default function Navbar() {
                   </DropdownMenuItem>
 
                   </Link>
+                  <Link href={"/dashboard"}>
                   <DropdownMenuItem>
                     <LayoutDashboard />
                     <span>Dashboard</span>
                   </DropdownMenuItem>
+
+                  </Link>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => Setisdelete(true)}>
