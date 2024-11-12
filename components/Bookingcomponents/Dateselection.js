@@ -17,29 +17,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useDispatch,useSelector } from "react-redux";
+import { fetchTheaterLocations, fetchLocationsAndSlots } from "@/lib/Redux/theaterSlice"; // Adjust path
 
-const fetchLocations = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"];
-};
 
 export default function BookingHeader() {
-  const [date, setDate] = useState();
-  const [locations, setLocations] = useState([]);
+  const dispatch = useDispatch();
+  const { locations, loading } = useSelector((state) => state.theater);
+  const [date, setDate] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+
+  console.log(locations)
 
   useEffect(() => {
-    const getLocations = async () => {
-      setIsLoading(true);
-      const fetchedLocations = await fetchLocations();
-      setLocations(fetchedLocations);
-      setIsLoading(false);
-    };
+    dispatch(fetchTheaterLocations());
+  }, [dispatch]);
 
-    getLocations();
-  }, []);
 
+  useEffect(() => {
+    if (selectedLocation && date) {
+      dispatch(fetchLocationsAndSlots({ location: selectedLocation, date }));
+    }
+  }, [selectedLocation, date, dispatch]);
   
   return (
     <div className="w-11/12 mx-auto py-12">
@@ -65,7 +64,7 @@ export default function BookingHeader() {
               className="w-full  h-12 flex items-center gap-2"
             >
               <SelectValue placeholder="Select location">
-                {isLoading ? (
+                {loading ? (
                   "Loading locations..."
                 ) : (
                   <div className="flex items-center gap-2">
@@ -76,7 +75,7 @@ export default function BookingHeader() {
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {locations.map((location) => (
+              {locations?.map((location) => (
                 <SelectItem key={location} value={location}>
                   {location}
                 </SelectItem>
