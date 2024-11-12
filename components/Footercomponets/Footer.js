@@ -76,23 +76,23 @@ export default function Footer() {
               Quick Links
             </h3>
             <ul className="space-y-4 text-sm">
-              <li className="flex items-center gap-2 cursor-pointer">
+              <li onClick={()=>router.push("/")} className="flex items-center gap-2 cursor-pointer">
                 <Image src={Arrowleft} alt="arrow" className="object-contain" />
                 Home
               </li>
-              <li className="flex items-center gap-2 cursor-pointer">
+              <li onClick={()=>router.push("/about")} className="flex items-center gap-2 cursor-pointer">
                 <Image src={Arrowleft} alt="arrow" className="object-contain" />
                 About Us
               </li>
-              <li className="flex items-center gap-2 cursor-pointer">
+              <li onClick={()=>router.push("/bookings")} className="flex items-center gap-2 cursor-pointer">
                 <Image src={Arrowleft} alt="arrow" className="object-contain" />
                 My Bookings
               </li>
-              <li className="flex items-center gap-2 cursor-pointer">
+              <li onClick={()=>router.push("/Add-Ons")} className="flex items-center gap-2 cursor-pointer">
                 <Image src={Arrowleft} alt="arrow" className="object-contain" />
-                Gallery
+               Add-ons
               </li>
-              <li className="flex items-center gap-2 cursor-pointer">
+              <li onClick={()=>router.push("/contact")} className="flex items-center gap-2 cursor-pointer">
                 <Image src={Arrowleft} alt="arrow" className="object-contain" />
                 Contact Us
               </li>
@@ -100,28 +100,19 @@ export default function Footer() {
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">
-              Our Services
+             Legal
             </h3>
             <ul className="space-y-4 text-sm">
-              <li className="flex items-center gap-2 cursor-pointer">
+              <li onClick={()=>router.push("/refund-policy")} className="flex items-center gap-2 cursor-pointer">
                 <Image src={Arrowleft} alt="arrow" className="object-contain" />
-                Private Screening
+                Refund Policy              </li>
+              <li onClick={()=>router.push("/terms-and-conditions")} className="flex items-center gap-2 cursor-pointer">
+                <Image src={Arrowleft} alt="arrow" className="object-contain" />
+                Terms & Condition
               </li>
-              <li className="flex items-center gap-2 cursor-pointer">
+              <li onClick={()=>router.push("/privacy-policy")} className="flex items-center gap-2 cursor-pointer">
                 <Image src={Arrowleft} alt="arrow" className="object-contain" />
-                Decorations
-              </li>
-              <li className="flex items-center gap-2 cursor-pointer">
-                <Image src={Arrowleft} alt="arrow" className="object-contain" />
-                Yummy Snacks
-              </li>
-              <li className="flex items-center gap-2 cursor-pointer">
-                <Image src={Arrowleft} alt="arrow" className="object-contain" />
-                Birthday Cakes
-              </li>
-              <li className="flex items-center gap-2 cursor-pointer">
-                <Image src={Arrowleft} alt="arrow" className="object-contain" />
-                All Services
+                Privacy Policy
               </li>
             </ul>
           </div>

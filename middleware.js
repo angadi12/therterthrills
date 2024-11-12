@@ -5,7 +5,7 @@ export function middleware(request) {
   const token = request.cookies.get('token');
 
   // Define protected routes
-  const protectedRoutes = ['/booknow', '/dashboard','/checkout'];
+  const protectedRoutes = ['/booknow', '/dashboard','/checkout','/bookings'];
 
   if (protectedRoutes.includes(request.nextUrl.pathname)) {
     if (!token) {
@@ -19,5 +19,5 @@ export function middleware(request) {
 
 // Specify the routes where the middleware should run
 export const config = {
-  matcher: ['/booknow', '/dashboard','/checkout'], // Apply to protected routes
+  matcher: ['/booknow', '/dashboard','/checkout','/bookings'], // Apply to protected routes
 };

@@ -27,6 +27,7 @@ import {
 import { Button } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import { openDialog, closeDialog } from "@/lib/Redux/dialogSlice";
+import { useRouter } from "next/navigation";
 
 
 const services = [
@@ -197,7 +198,8 @@ function ServiceCard({
   imageAlt,
 }) {
 
- 
+  const router=useRouter()
+
 
 
 

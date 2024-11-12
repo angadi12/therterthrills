@@ -277,17 +277,17 @@ console.log(path)
             <div className="flex items-center gap-4">
               <Button
                 isIconOnly
-                className="text-[#004AAD] ring-1 ring-[#F30278] bg-white"
-                isDisabled={loginMethod === "phone"}
+                className={`text-[#004AAD]  ${loginMethod === "phone"? "ring-1 ring-[#F30278]":"ring-1 ring-[#004AAD]"} bg-white`}
+                // isDisabled={loginMethod === "phone"}
                 onPress={() => setLoginMethod("phone")}
               >
                 <FaPhoneAlt size={24} />
               </Button>
               <Divider className="h-6 " orientation="vertical" />
               <Button
-                className="text-[#004AAD] ring-1 ring-[#F30278] bg-white"
+                className={`text-[#004AAD] ${loginMethod === "email"? "ring-1 ring-[#F30278]":"ring-1 ring-[#004AAD]"} bg-white`}
                 isIconOnly
-                isDisabled={loginMethod === "email"}
+                // isDisabled={loginMethod === "email"}
                 onPress={() => setLoginMethod("email")}
               >
                 <MdEmail size={24}/>
