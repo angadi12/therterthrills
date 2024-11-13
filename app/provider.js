@@ -1,6 +1,6 @@
 "use client";
 import { NextUIProvider } from "@nextui-org/react";
-import Loading from "./loading";
+import Loading from "../components/Homecomponents/loading";
 
 import { Suspense, useEffect, useState } from "react";
 import Login from "@/components/Authcomponents/Login";
@@ -49,7 +49,7 @@ export function NextuiProviderWrapper({ children }) {
   }, []);
 
   if (loading) {
-    return <Loading />; // Show initial loading for 5 seconds
+    return <Loading/>; // Show initial loading for 5 seconds
   }
 
   return (

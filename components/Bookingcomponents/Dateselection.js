@@ -26,7 +26,7 @@ import { Spinner } from "@nextui-org/react";
 
 export default function BookingHeader() {
   const dispatch = useDispatch();
-  const { locations, loading, locationsWithSlots } = useSelector(
+  const { locations, locationsloading } = useSelector(
     (state) => state.theater
   );
   const [date, setDate] = useState(null);
@@ -37,17 +37,16 @@ export default function BookingHeader() {
 
   useEffect(() => {
     dispatch(fetchTheaterLocations());
-  }, [dispatch]);
+  },[selectedLocation]);
 
   const payload = { location: selectedLocation, date: formattedDate };
 
   useEffect(() => {
-    if (selectedLocation && payload) {
+    if (selectedLocation && date) {
       dispatch(fetchLocationsAndSlots(payload));
     }
   }, [selectedLocation, formattedDate, dispatch]);
 
-  console.log(locationsWithSlots);
   const isPastDate = (date) => isBefore(date, startOfToday());
 
   return (
@@ -74,7 +73,7 @@ export default function BookingHeader() {
               className="w-full  h-12 flex items-center gap-2"
             >
               <SelectValue placeholder="Select location">
-                {loading ? (
+                {locationsloading ? (
                  <Spinner color="danger" size="sm"/>
                 ) : (
                   <div className="flex items-center gap-2">
