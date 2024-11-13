@@ -1,6 +1,6 @@
 "use client";
 import { Star, Users, Wine } from "lucide-react";
-import { Button } from "@nextui-org/react";
+import { Button} from "@nextui-org/react";
 import {
   Card,
   CardContent,
@@ -17,12 +17,39 @@ import Cakeicon from "@/public/asset/Cakeicon.png";
 import refundicon from "@/public/asset/refundicon.png";
 import TVicon from "@/public/asset/TVicon.png";
 import Speakericon from "@/public/asset/Speakericon.png";
+import { useSelector } from "react-redux";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 export default function TheatreCard({ theatre }) {
   const router = useRouter();
-  const [currentImage, setCurrentImage] = useState(0);
+  const { toast } = useToast();
 
+  const [currentImage, setCurrentImage] = useState(0);
   const icon = [Groupicon2, Cakeicon, refundicon, TVicon, Speakericon];
+  const [upcomingSlots, setUpcomingSlots] = useState([]);
+  const {selectedLocation } = useSelector(
+    (state) => state.theater
+  );
+  useEffect(() => {
+    if (theatre?.slots?.length > 0) {
+      const now = new Date();
+
+      const filteredSlots = theatre.slots.filter((slot) => {
+        // Convert slot start time to a comparable Date object
+        const [startHours, startMinutes] = slot.startTime.match(/\d+/g);
+        const startPeriod = slot.startTime.includes("PM") && +startHours < 12 ? 12 : 0;
+        const slotDate = new Date();
+        slotDate.setHours(+startHours + startPeriod, +startMinutes, 0, 0);
+
+        return slotDate > now; // Only include future slots
+      });
+
+      setUpcomingSlots(filteredSlots);
+    }
+  }, [theatre?.slots]);
+
+
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -31,7 +58,19 @@ export default function TheatreCard({ theatre }) {
     return () => clearInterval(timer);
   }, []);
 
+  const handleProceed = () => {
+    if (!selectedLocation) {
+      toast({
+        title: "Please Select a Location",
+        description:'Please select your location to continue booking.',
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });    } 
+  };
+
+
+
   return (
+    <>
     <Card className="w-full flex flex-col mx-auto justify-around items-center p-0 relative">
       {/* {isBestSeller && (
             <span className="absolute rounded-full top-2 right-2 bg-[#FFA800] text-white text-xs font-bold px-2 py-1 ">
@@ -120,11 +159,11 @@ export default function TheatreCard({ theatre }) {
           <div className="mt-auto">
             <h4 className="font-bold mb-2">Choose Slot</h4>
             <div className="grid grid-cols-2 gap-2 ">
-              {(theatre?.slots ?? []).map((slot, index) => (
+              {(upcomingSlots ?? []).map((slot, index) => (
                 <Button
                   key={index}
                   variant={
-                    index === (theatre?.slots?.length ?? 0) - 1
+                    index === (upcomingSlots?.length ?? 0) - 1
                       ? "default"
                       : "outline"
                   }
@@ -139,7 +178,7 @@ export default function TheatreCard({ theatre }) {
       </CardContent>
       <CardFooter className="mt-auto flex flex-col justify-center items-center gap-3 w-full px-4">
         <Button
-          onPress={() => router.push("/checkout")}
+          onPress={handleProceed}
           className="px-8 py-0.5 rounded-sm w-full  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
         >
           Procced{" "}
@@ -147,5 +186,6 @@ export default function TheatreCard({ theatre }) {
         <p className="text-[#7A7A7A]">(Book at just 750/- now)</p>
       </CardFooter>
     </Card>
+    </>
   );
 }

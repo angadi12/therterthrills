@@ -28,7 +28,7 @@ const page = () => {
 
   useEffect(() => {
     dispatch(fetchAllTheaters());
-  }, []);
+  }, [dispatch]);
 
   // if (loading || locationsWithSlotsloading) {
   //   return <div className="flex justify-center items-center h-screen"><Spinner color="danger"/></div>
@@ -39,46 +39,41 @@ const page = () => {
     return <p>Error: {error || locationsWithSlotserror}</p>;
   }
 
-console.log(allTheaters?.theaters)
+  console.log(locationsWithSlots);
   return (
-    <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spinner color="danger"/></div>}>
-
-    <main>
-      <div className="relative justify-center items-center w-full ">
-        <Image
-          src={Theaterbook}
-          alt="Theatre Booking"
-          className="relative brightness-50"
-        />
-        <p className="absolute text-3xl font-bold transform -translate-x-1/2 -translate-y-1/2 left-1/2 text-[#FFCE00] top-1/2">
-          Theatre Booking
-        </p>
-      </div>
-      <BookingHeader />
-      <div className="w-11/12 h-full mx-auto pb-20 grid grid-cols-3 gap-8 justify-center place-content-center items-stretch">
-        {locationsWithSlots?.length === 0 ? (
-          <>
-          {allTheaters?.theaters?.map((theatre, index) => (
-              <Suspense fallback={<TheatreCardSkeleton/>}>
-              <TheatreCard key={index} theatre={theatre} />
-
-              </Suspense>
-            ))}
-           
-          </>
-        ) : (
-          <>
-          {locationsWithSlots?.map((theatre, index) => (
-            <Suspense fallback={<TheatreCardSkeleton/>}>
-
-              <TheatreCard key={index} theatre={theatre} />
-              </Suspense>
-
-            ))}
-          </>
-        )}
-      </div>
-    </main>
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center h-screen">
+          <Spinner color="danger" />
+        </div>
+      }
+    >
+      <main>
+        <div className="relative justify-center items-center w-full ">
+          <Image
+            src={Theaterbook}
+            alt="Theatre Booking"
+            className="relative brightness-50"
+          />
+          <p className="absolute text-3xl font-bold transform -translate-x-1/2 -translate-y-1/2 left-1/2 text-[#FFCE00] top-1/2">
+            Theatre Booking
+          </p>
+        </div>
+        <BookingHeader />
+        <div className="w-11/12 h-full mx-auto pb-20 grid grid-cols-3 gap-8 justify-center place-content-center items-stretch">
+          {loading || locationsWithSlotsloading
+            ? Array.from({ length: 6 }).map((_, index) => (
+                <TheatreCardSkeleton key={index} />
+              ))
+            : locationsWithSlots?.length === 0
+            ? allTheaters?.theaters?.map((theatre, index) => (
+                <TheatreCard key={index} theatre={theatre} />
+              ))
+            : locationsWithSlots?.map((theatre, index) => (
+                <TheatreCard key={index} theatre={theatre} />
+              ))}
+        </div>
+      </main>
     </Suspense>
   );
 };

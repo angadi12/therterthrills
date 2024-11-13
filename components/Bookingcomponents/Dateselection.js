@@ -21,23 +21,26 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchTheaterLocations,
   fetchLocationsAndSlots,
+  setSelectedLocation,
+  setDate,
 } from "@/lib/Redux/theaterSlice"; // Adjust path
 import { Spinner } from "@nextui-org/react";
 
 export default function BookingHeader() {
+  const [popoverOpen, setPopoverOpen] = useState(false);
   const dispatch = useDispatch();
-  const { locations, locationsloading } = useSelector(
+  const { locations, locationsloading, date, selectedLocation } = useSelector(
     (state) => state.theater
   );
-  const [date, setDate] = useState(null);
-  const [selectedLocation, setSelectedLocation] = useState("");
 
-  const formattedDate = date ? format(new Date(date), "yyyy-MM-dd") : null;
-
+  const formattedDate =
+    date && !isNaN(new Date(date))
+      ? format(new Date(date), "yyyy-MM-dd")
+      : null;
 
   useEffect(() => {
     dispatch(fetchTheaterLocations());
-  },[selectedLocation]);
+  }, [selectedLocation]);
 
   const payload = { location: selectedLocation, date: formattedDate };
 
@@ -45,9 +48,14 @@ export default function BookingHeader() {
     if (selectedLocation && date) {
       dispatch(fetchLocationsAndSlots(payload));
     }
-  }, [selectedLocation, formattedDate, dispatch]);
+  }, [selectedLocation, date, dispatch]);
 
   const isPastDate = (date) => isBefore(date, startOfToday());
+
+  const handleDateSelect = (selectedDate) => {
+    dispatch(setDate(selectedDate?.toISOString())); // Store valid date string
+    setPopoverOpen(false); // Close the popover after selecting a date
+  };
 
   return (
     <div className="w-11/12 mx-auto py-12">
@@ -67,14 +75,17 @@ export default function BookingHeader() {
           >
             Choose Location
           </label>
-          <Select onValueChange={setSelectedLocation} value={selectedLocation}>
+          <Select
+            onValueChange={(value) => dispatch(setSelectedLocation(value))}
+            value={selectedLocation}
+          >
             <SelectTrigger
               id="location-select"
               className="w-full  h-12 flex items-center gap-2"
             >
               <SelectValue placeholder="Select location">
                 {locationsloading ? (
-                 <Spinner color="danger" size="sm"/>
+                  <Spinner color="danger" size="sm" />
                 ) : (
                   <div className="flex items-center gap-2">
                     <MapPin className="mr-2 h-4 w-4  text-[#F30278]" />
@@ -99,9 +110,10 @@ export default function BookingHeader() {
           >
             Choose Date
           </label>
-          <Popover>
+          <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
             <PopoverTrigger asChild>
               <Button
+                onClick={() => setPopoverOpen(!popoverOpen)}
                 variant={"outline"}
                 className={`w-[400px] justify-start h-12 text-left font-normal ${
                   !date && "text-muted-foreground"
@@ -115,9 +127,9 @@ export default function BookingHeader() {
               <Calendar
                 className={""}
                 mode="single"
-                selected={date}
-                onSelect={setDate}
-                disabled={isPastDate} 
+                selected={date ? new Date(date) : null} // Ensure `date` is passed as a Date object
+                onSelect={handleDateSelect}
+                disabled={isPastDate}
                 initialFocus
               />
             </PopoverContent>

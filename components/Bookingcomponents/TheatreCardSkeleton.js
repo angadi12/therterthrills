@@ -4,7 +4,6 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
 export default function TheatreCardSkeleton() {
   return (
-    <div className="w-11/12 h-full mx-auto pb-20 grid grid-cols-3 gap-8 justify-center place-content-center items-stretch">
     <Card className="w-full flex flex-col mx-auto justify-around items-center p-0 relative">
       {/* Image Skeleton */}
       <div className="w-full relative p-0 h-48 overflow-hidden">
@@ -69,6 +68,5 @@ export default function TheatreCardSkeleton() {
         <Skeleton className="w-1/3 h-4" />
       </CardFooter>
     </Card>
-    </div>
   );
 }
