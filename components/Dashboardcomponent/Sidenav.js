@@ -20,7 +20,7 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Tabs, Tab, Button } from "@nextui-org/react";
 import Image from "next/image";
-import LOGO from "@/public/asset/LOGO.png";
+import LOGO from "@/public/asset/logo.png";
 import { Tooltip } from "@nextui-org/react";
 import { MdTableRestaurant } from "react-icons/md";
 import { MdOutlineQrCode } from "react-icons/md";
