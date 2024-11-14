@@ -161,7 +161,7 @@ export default function TheatreCard({ theatre }) {
           </div>
         )} */}
         {
-         theatre?.availableSlots && theatre?.availableSlots.length>0 ?"No Slotes available":(
+         theatre?.availableSlots && theatre?.availableSlots.length>0 ?(
           <div className="mt-auto">
             <h4 className="font-bold mb-2">Choose Slot</h4>
             <div className="grid grid-cols-2 gap-2 ">
@@ -180,7 +180,7 @@ export default function TheatreCard({ theatre }) {
               ))}
             </div>
           </div>
-         )
+         ):"No Slotes available"
         }
       </CardContent>
       <CardFooter className="mt-auto flex flex-col justify-center items-center gap-3 w-full px-4">
