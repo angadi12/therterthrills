@@ -161,7 +161,7 @@ export default function TheatreCard({ theatre }) {
           </div>
         )} */}
         {
-         theatre?.availableSlots && theatre?.availableSlots.length>0 && (
+         theatre?.availableSlots && theatre?.availableSlots.length>0 ?"No Slotes available":(
           <div className="mt-auto">
             <h4 className="font-bold mb-2">Choose Slot</h4>
             <div className="grid grid-cols-2 gap-2 ">
