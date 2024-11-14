@@ -9,7 +9,7 @@ export default function DashboardLayout({ children }) {
           <Sidenav/>
         </div>
 
-        <section className="flex  flex-col gap-2 w-full h-full md:h-screen p-0 ">
+        <section className="flex  flex-col  w-full h-full md:h-screen p-0 ">
           <Nav/>
           {children}
         </section>

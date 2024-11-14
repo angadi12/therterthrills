@@ -15,6 +15,9 @@ import {
   FileText,
   PanelLeftOpen,
   PanelLeftClose,
+  Settings,
+  User,
+  IndianRupee 
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -24,6 +27,7 @@ import LOGO from "@/public/asset/Logo.png";
 import { Tooltip } from "@nextui-org/react";
 import { MdTableRestaurant } from "react-icons/md";
 import { MdOutlineQrCode } from "react-icons/md";
+import { ScrollArea } from "../ui/scroll-area";
 
 const Sidenav = () => {
   const router = useRouter();
@@ -44,6 +48,15 @@ const Sidenav = () => {
         break;
       case "/dashboard/YourBookings":
         setSelected("Your Bookings");
+        break;
+      case "/dashboard/Payments":
+        setSelected("Payments");
+        break;
+      case "/dashboard/Expenses":
+        setSelected("Expenses");
+        break;
+      case "/dashboard/Messages":
+        setSelected("Messages");
         break;
       case "/Notifications":
         setSelected("Notifications");
@@ -68,11 +81,20 @@ const Sidenav = () => {
       case "Your Bookings":
         router.push("/dashboard/YourBookings");
         break;
-      case "Notifications":
-        router.push("/Notifications");
+      case "Settings":
+        router.push("/dashboard/Settings");
+        break;
+      case "Payments":
+        router.push("/dashboard/Payments");
+        break;
+      case "Expenses":
+        router.push("/dashboard/Expenses");
+        break;
+      case "Messages":
+        router.push("/dashboard/Messages");
         break;
       default:
-        router.push("/");
+        router.push("/dashboard");
     }
   };
 
@@ -98,7 +120,7 @@ const Sidenav = () => {
         </Button>
       </div>
 
-      <nav className="flex flex-col items-start gap-4 px-2 sm:py-5">
+      <nav className="flex flex-col items-start gap-4  px-2 sm:py-5">
        {!isMinimized && <span className="text-[#F30278] font-medium text-sm transition-all duration-700 ease-in-out">Management</span>}
         <Tabs
           aria-label="Options"
@@ -253,9 +275,100 @@ const Sidenav = () => {
               </div>
             }
           />
+          <Tab
+            key="Payments"
+            title={
+              <div
+                className={`flex items-center gap-4 ${
+                  isMinimized ? "justify-center" : "w-44"
+                }`}
+              >
+                {!isMinimized ? (
+                  <IndianRupee  size={20} />
+                ) : (
+                  <Tooltip
+                    classNames={{
+                      base: ["before:bg-[#004AAD]"],
+                      content: [
+                        "py-2 px-4 rounded-md",
+                        "text-white bg-[#004AAD]",
+                      ],
+                    }}
+                    showArrow={true}
+                    content="Payments"
+                    placement="right"
+                  >
+                    <IndianRupee size={20} />
+                  </Tooltip>
+                )}
+                {!isMinimized && <span>Payments</span>}
+              </div>
+            }
+          />
+          <Tab
+            key="Expenses"
+            title={
+              <div
+                className={`flex items-center gap-4 ${
+                  isMinimized ? "justify-center" : "w-44"
+                }`}
+              >
+                {!isMinimized ? (
+                  <QrCode size={20} />
+                ) : (
+                  <Tooltip
+                    classNames={{
+                      base: ["before:bg-[#004AAD]"],
+                      content: [
+                        "py-2 px-4 rounded-md",
+                        "text-white bg-[#004AAD]",
+                      ],
+                    }}
+                    showArrow={true}
+                    content="Expenses"
+                    placement="right"
+                  >
+                    <QrCode size={20} />
+                  </Tooltip>
+                )}
+                {!isMinimized && <span>Expenses</span>}
+              </div>
+            }
+          />
+           <Tab
+            key="Messages"
+            title={
+              <div
+                className={`flex items-center gap-4 ${
+                  isMinimized ? "justify-center" : "w-44"
+                }`}
+              >
+                {!isMinimized ? (
+                  <QrCode size={20} />
+                ) : (
+                  <Tooltip
+                    classNames={{
+                      base: ["before:bg-[#004AAD]"],
+                      content: [
+                        "py-2 px-4 rounded-md",
+                        "text-white bg-[#004AAD]",
+                      ],
+                    }}
+                    showArrow={true}
+                    content="Messages"
+                    placement="right"
+                  >
+                    <QrCode size={20} />
+                  </Tooltip>
+                )}
+                {!isMinimized && <span>Messages</span>}
+              </div>
+            }
+          />
         </Tabs>
-        {!isMinimized && <span className="text-[#F30278] font-medium text-sm transition-all duration-700 ease-in-out">Account</span>}
-
+        {/* {!isMinimized && <span className="text-[#F30278] font-medium text-sm transition-all duration-700 ease-in-out">Account</span>} */}
+         {/* <Button variant="light"  className="w-full bg-white flex justify-start items-center gap-4"><Settings/>Settings</Button>
+         <Button variant="light"  className="w-full bg-white flex justify-start items-center gap-4"><User/>Profile</Button> */}
       </nav>
 
       <nav
