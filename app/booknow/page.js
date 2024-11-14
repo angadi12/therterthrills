@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import TheatreCardSkeleton from "@/components/Bookingcomponents/TheatreCardSkeleton";
 import { Spinner } from "@nextui-org/react";
 
-const page = () => {
+const Page = () => {
   const dispatch = useDispatch();
   const {
     locationsWithSlots,
