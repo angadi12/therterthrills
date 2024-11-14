@@ -163,7 +163,7 @@ export default function Navbar() {
         transition={{ duration: 0.5 }}
         className="w-full bg-white  sticky top-0 z-30"
       >
-        <div className="bg-[#F30278]  w-[85%] ml-auto rounded-l-full text-white py-2 px-4 flex justify-evenly items-center text-sm relative overflow-hidden">
+        <div className="bg-[#F30278] hidden  w-[85%] ml-auto rounded-l-full text-white py-2 px-4 md:flex justify-evenly items-center text-sm relative overflow-hidden">
           <div className="flex items-center space-x-8 ml-6 relative z-10">
             <div className="flex items-center">
               <IoMail className="w-4 h-4 mr-2" />
@@ -253,7 +253,7 @@ export default function Navbar() {
             )}
           </DropdownMenu>
         </div>
-        <nav className="bg-white py-4 px-4 flex justify-between items-center ">
+        <nav className="bg-white hidden  py-4 px-4 md:flex justify-between items-center ">
           <Link href="/" className="flex items-center space-x-2 ">
             <Image
               src={Logo}

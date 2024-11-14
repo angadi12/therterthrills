@@ -1,6 +1,6 @@
 "use client";
 import { Star, Users, Wine } from "lucide-react";
-import { Button} from "@nextui-org/react";
+import { Button, Divider} from "@nextui-org/react";
 import {
   Card,
   CardContent,
@@ -27,27 +27,10 @@ export default function TheatreCard({ theatre }) {
 
   const [currentImage, setCurrentImage] = useState(0);
   const icon = [Groupicon2, Cakeicon, refundicon, TVicon, Speakericon];
-  const [upcomingSlots, setUpcomingSlots] = useState([]);
   const {selectedLocation } = useSelector(
     (state) => state.theater
   );
-  useEffect(() => {
-    if (theatre?.slots?.length > 0) {
-      const now = new Date();
-
-      const filteredSlots = theatre.slots.filter((slot) => {
-        // Convert slot start time to a comparable Date object
-        const [startHours, startMinutes] = slot.startTime.match(/\d+/g);
-        const startPeriod = slot.startTime.includes("PM") && +startHours < 12 ? 12 : 0;
-        const slotDate = new Date();
-        slotDate.setHours(+startHours + startPeriod, +startMinutes, 0, 0);
-
-        return slotDate > now; // Only include future slots
-      });
-
-      setUpcomingSlots(filteredSlots);
-    }
-  }, [theatre?.slots]);
+ 
 
 
 
@@ -123,7 +106,7 @@ export default function TheatreCard({ theatre }) {
           <span className="font-bold text-lg">{theatre?.price}/-</span>
         </div>
         <h3 className="text-xl font-bold mb-2">{theatre?.name}</h3>
-        <div className="flex gap-2 mb-4">
+        <div className="flex gap-2 mb-2">
           <span className="bg-pink-100 ring-1 ring-[#F30278] text-xs text-[#F30278] px-2 py-2 font-semibold rounded flex items-center">
             <Image src={Groupicon2} alt="grp" className="w-3 h-3 mr-1" />{" "}
             {theatre?.capacity} People Capacity
@@ -133,6 +116,7 @@ export default function TheatreCard({ theatre }) {
             Decorations-{theatre?.minimumDecorationAmount}/-
           </span>
         </div>
+        <Divider/>
         {theatre?.amenities && theatre?.amenities.length > 0 && (
           <div className="mb-4">
             <h4 className="font-bold mb-2">Theatre Overview</h4>
@@ -155,7 +139,8 @@ export default function TheatreCard({ theatre }) {
             </div>
           </div>
         )}
-        {theatre?.slots && theatre?.slots.length > 0 && (
+        <Divider/>
+        {/* {theatre?.slots && theatre?.slots.length > 0 && (
           <div className="mt-auto">
             <h4 className="font-bold mb-2">Choose Slot</h4>
             <div className="grid grid-cols-2 gap-2 ">
@@ -174,7 +159,29 @@ export default function TheatreCard({ theatre }) {
               ))}
             </div>
           </div>
-        )}
+        )} */}
+        {
+         theatre?.availableSlots && theatre?.availableSlots.length>0 && (
+          <div className="mt-auto">
+            <h4 className="font-bold mb-2">Choose Slot</h4>
+            <div className="grid grid-cols-2 gap-2 ">
+              {( theatre?.availableSlots  ?? []).map((slot, index) => (
+                <Button
+                  key={index}
+                  variant={
+                    index === ( theatre?.availableSlots ?.length ?? 0) - 1
+                      ? "default"
+                      : "outline"
+                  }
+                  className="w-full ring-1 ring-[#F30278] text-[#F30278] rounded-sm"
+                >
+                  {slot?.startTime} - {slot?.endTime}
+                </Button>
+              ))}
+            </div>
+          </div>
+         )
+        }
       </CardContent>
       <CardFooter className="mt-auto flex flex-col justify-center items-center gap-3 w-full px-4">
         <Button

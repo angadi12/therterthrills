@@ -16,7 +16,7 @@ export default function FeaturesSection() {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="md:py-16 py-8 bg-gray-50">
       <div className="w-11/12  mx-auto ">
         <div className="flex flex-col md:flex-row items-center">
           <div
@@ -72,7 +72,7 @@ export default function FeaturesSection() {
             </div>
           </div>
           <div className="w-full md:w-1/2 md:pl-12">
-            <h2 className="text-4xl font-bold mb-4">
+            <h2 className="md:text-4xl text-2xl font-bold mb-4">
               We make your celebration{" "}
               <span className="bg-clip-text inline-block text-transparent bg-gradient-to-r from-[#004AAD] via-[#F30278] to-[#E2B600]">
                 a Blockbuster!
@@ -81,7 +81,7 @@ export default function FeaturesSection() {
             <p className="text-gray-600 leading-7 mb-6">
               {`At The Theatre Thrills, we provide private theatre space for a personalized entertainment experience. Whether you're hosting a movie night, birthday, or party, we make it unforgettable with our state-of-the-art theatres and event customization.`}{" "}
             </p>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 md:gap-6 gap-2 ">
               <FeatureItem icon={Cinematic} title="4K Cinematic Experience" />
               <FeatureItem icon={Calender} title="Flexible Booking Options" />
               <FeatureItem icon={Packages} title="Custom Event Packages" />
@@ -101,7 +101,7 @@ function FeatureItem({ icon, title }) {
   return (
     <div className="flex gap-2 items-center">
       <Image src={icon} alt="icon" className="mr-4 object-contain" />
-      <span className="text-lg font-bold">{title}</span>
+      <span className="md:text-lg text-xs font-bold">{title}</span>
     </div>
   );
 }

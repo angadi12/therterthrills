@@ -70,8 +70,8 @@ export default function TestimonialCarousel() {
           <h2 className="text-4xl font-bold mb-2">
             <span className="bg-clip-text inline-block text-transparent bg-gradient-to-r from-[#004AAD] via-[#F30278] to-[#E2B600]">Wonderful Feedbacks</span>{" "}
           </h2>
-          <h3 className="text-3xl font-bold mb-6">from our customers!</h3>
-          <p className="text-gray-600 mb-8">
+          <h3 className="md:text-3xl text-2xl font-bold md:mb-6 mb-3">from our customers!</h3>
+          <p className="text-gray-600 md:mb-8 mb-4">
 {`            We take pride in delivering exceptional experiences tailored to your needs. Here's what some of our satisfied clients have to say about their time at The Theatre Thrills
 `}          </p>
           <div className="flex space-x-2">
@@ -83,7 +83,7 @@ export default function TestimonialCarousel() {
             </Button>
           </div>
         </div>
-        <div className="relative h-auto flex justify-center  items-center ">
+        <div className="relative md:h-auto h-[60vh] flex justify-center  items-center ">
           <AnimatePresence initial={false}>
             {[-1, 0, 1].map((offset) => {
               const index = getSlideIndex(activeIndex + offset)
@@ -103,7 +103,7 @@ export default function TestimonialCarousel() {
                   className="absolute w-full"
                 >
                   <Card className={`bg-white shadow-md rounded-none border-l-4 ${offset === 0 ? 'border-blue-600' : 'border-gray-400'}`}>
-                    <CardContent className="p-4 flex items-start">
+                    <CardContent className="md:p-4 p-2 flex items-start">
                       <Image
                         src={testimonial.image}
                         alt={testimonial.name}

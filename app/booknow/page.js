@@ -39,7 +39,7 @@ const Page = () => {
     return <p>Error: {error || locationsWithSlotserror}</p>;
   }
 
-  console.log(locationsWithSlots);
+  
   return (
     <Suspense
       fallback={
@@ -66,7 +66,7 @@ const Page = () => {
                 <TheatreCardSkeleton key={index} />
               ))
             : locationsWithSlots?.length === 0
-            ? allTheaters?.theaters?.map((theatre, index) => (
+            ? allTheaters?.map((theatre, index) => (
                 <TheatreCard key={index} theatre={theatre} />
               ))
             : locationsWithSlots?.map((theatre, index) => (

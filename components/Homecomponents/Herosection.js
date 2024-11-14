@@ -56,7 +56,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <div className="relative h-screen w-full overflow-hidden ">
+    <div className="relative md:h-screen w-full overflow-hidden ">
       <AnimatePresence>
         {data.map((value, index) => (
          currentIndex === index && <motion.div
@@ -71,14 +71,14 @@ export default function Hero() {
             <Image
               src={value.image}
               alt="Birthday celebration"
-              className="absolute inset-0 object-cover w-full h-full"
+              className="absolute inset-0 object-cover w-full md:h-full h-[60vh]"
               layout="reponsive"
             />
           </motion.div>
         ))}
       </AnimatePresence>
-      <div className="relative z-20 flex flex-col items-start justify-end h-full  mx-auto py-12 sm:px-6 lg:px-12">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4">
+      <div className="relative z-20 flex flex-col items-start justify-end h-full  mx-auto md:py-12 py-6 sm:px-6 lg:px-12 ml-4 md:ml-0">
+        <h1 className="text-xl sm:text-5xl md:text-6xl font-bold text-white mb-4">
           Private Theatre <br />
           Spaces for{" "}
           <AnimatePresence>
@@ -101,7 +101,7 @@ export default function Hero() {
             Birthday Party!
           </span> */}
         </h1>
-        <p className="text-xl text-white mb-8 max-w-2xl">
+        <p className="md:text-xl text-sm text-white md:mb-8 mb-4 md:max-w-2xl">
           Experience a private theatre, perfect for your next movie night or
           celebration. Book Now!
         </p>

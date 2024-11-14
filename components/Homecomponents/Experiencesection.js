@@ -20,13 +20,13 @@ export default function ExperienceSection() {
   }, []);
 
   return (
-    <section className="py-16 bg-white">
+    <section className="md:py-16 py-8 bg-white">
       <div className="w-11/12 mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Text and Intro */}
           <div className="flex flex-col gap-2 justify-center w-full">
             <div>
-              <h2 className="text-4xl font-bold mb-2">
+              <h2 className="md:text-4xl text-2xl font-bold mb-2">
                 Choose us for your ultimate
               </h2>
               <h2 className="text-4xl font-bold mb-8">

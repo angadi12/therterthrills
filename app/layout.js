@@ -25,10 +25,7 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <body className={inter.className}>
           <NextuiProviderWrapper>
-            <Navbar />
             {children}
-            <Topfooter />
-            <Footer />
           </NextuiProviderWrapper>
         </body>
       </html>

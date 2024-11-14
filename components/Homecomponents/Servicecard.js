@@ -227,18 +227,18 @@ function ServiceCard({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[900px]">
         <div
-          className={`grid grid-cols-1 justify-center items-stretch md:grid-cols-2  px-4 w-full gap-12  `}
+          className={`grid grid-cols-1 justify-center items-stretch md:grid-cols-2  md:px-4 w-full md:gap-12  `}
         >
           <div className="flex items-center">
             <Image
               src={imageSrc}
               alt={imageAlt}
-              className="w-full h-full object-cover rounded-lg shadow-lg"
+              className="w-full h-full object-cover rounded-lg shadow-lg mt-4 md:mt-0"
             />
           </div>
           <div className="flex flex-col justify-center">
-            <h2 className="text-2xl font-bold mb-2">{title}</h2>
-            <p className="mb-4 text-sm  text-[#595959]">{description2}</p>
+            <h2 className="md:text-2xl text-xl font-bold mb-2 mt-2 md:mt-0">{title}</h2>
+            <p className="mb-4 md:text-sm text-xs  text-[#595959]">{description2}</p>
             <BenefitsList benefits={benefits} />
             <Button
               onPress={() => router.push("/booknow")}
