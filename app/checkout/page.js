@@ -1,6 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Divider } from "@nextui-org/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCurrentStep,
@@ -18,8 +26,15 @@ import Cakes from "@/components/Checkoutcomponents/Cakes";
 import AddOns from "@/components/Checkoutcomponents/AddOns";
 import Confirmation from "@/components/Checkoutcomponents/Confirmation";
 import Cart from "@/components/Checkoutcomponents/Cart";
+import { Createbooking, verifyPayment } from "@/lib/API/Booking";
+import Cookies from "js-cookie";
+import { selectAddOns } from "@/lib/Redux/addOnsSlice";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const CheckoutOnboarding = () => {
+  const router=useRouter()
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { toast } = useToast();
   const dispatch = useDispatch();
   const {
@@ -34,15 +49,25 @@ const CheckoutOnboarding = () => {
     (state) => state.checkout
   );
   const cakeText = useSelector((state) => state.cakes.cakeText);
+  const isEggless = useSelector((state) => state.cakes.isEggless);
 
   const addDecorations = useSelector(
     (state) => state.checkout.bookingDetails.addDecorations
   );
 
   const selectedCakes = useSelector((state) => state.cakes.selectedCakes);
-  const { selectedTheater} = useSelector(
+  const { selectedTheater, selectedslotsid ,date} = useSelector(
     (state) => state.theater
   );
+  const { decorations, roses, photography } = useSelector(selectAddOns);
+
+useEffect(() => {
+  if(!selectedTheater & !selectedslotsid){
+    onOpen()
+  }
+   
+}, [])
+
 
 
   const steps =
@@ -124,7 +149,7 @@ const CheckoutOnboarding = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleProceedToPayment = () => {
+  const handleProceedToPayment = async () => {
     if (!agreed) {
       toast({
         title: "Accept All The Conditions",
@@ -133,91 +158,167 @@ const CheckoutOnboarding = () => {
       });
       return;
     }
-    // Logic to proceed to payment
-    console.log("Proceeding to payment");
+
+    const encodedUserData = Cookies.get("User");
+
+    if (!encodedUserData) {
+      return null;
+    }
+    const decodedUserData = decodeURIComponent(encodedUserData);
+    const userData = JSON.parse(decodedUserData);
+    console.log(userData)
+    const bookingData = {
+      fullName:bookingDetails.fullName,
+      phoneNumber: bookingDetails.phoneNumber,
+      whatsappNumber: bookingDetails.whatsappNumber,
+      email: bookingDetails.email,
+      numberOfPeople: bookingDetails.numberOfPeople,
+      addDecorations: bookingDetails.addDecorations,
+      nickname: nickname,
+      partnerNickname: partnerNickname,
+      Occasionobject: selectedOccasion,
+      selectedCakes: selectedCakes,
+      cakeText: cakeText,
+      isEggless:isEggless,
+      addOns: {
+        decorations,
+        roses,
+        photography,
+      },
+      theaterId: selectedTheater,
+      slotId: selectedslotsid,
+      user: userData._id,
+      date:date,
+      paymentAmount:750
+    };
+
+    try {
+      const response = await Createbooking(bookingData);
+      if (response?.success) {
+        toast({
+          title: "Booking Successful",
+          description: "Your booking has been created successfully.",
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+        // Redirect or perform further actions after successful booking
+      } else {
+        toast({
+          title: "Booking Failed",
+          description: response?.message || "An error occurred.",
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+      }
+    } catch (error) {
+      console.error("Booking Error:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create booking. Please try again.",
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });
+    }
   };
-
-console.log(selectedTheater)
-
   return (
-    <div className="w-11/12 mx-auto px-6 py-20">
-      <div className="mb-8 flex justify-center items-center">
-        <ol
-          className={`flex items-center ${
-            addDecorations === "no" ? "w-1/2" : " w-full"
-          }`}
-        >
-          {steps.map((step, index) => (
-            <li
-              key={index}
-              className={`flex items-center ${
-                index !== steps.length - 1 ? "w-full" : ""
-              }`}
-            >
-              <div className="flex flex-col justify-center items-center gap-1">
-                <div
-                  className={`flex items-center justify-center w-4 h-4 rounded-full ${
-                    index <= currentStep ? "bg-[#004AAD]" : "bg-gray-300"
-                  }`}
-                >
-                  <span
-                    className={`text-sm font-medium ${
-                      index <= currentStep ? "text-white" : "text-gray-500"
+    <>
+      <div className="w-11/12 mx-auto px-6 py-20">
+        <div className="mb-8 flex justify-center items-center">
+          <ol
+            className={`flex items-center ${
+              addDecorations === "no" ? "w-1/2" : " w-full"
+            }`}
+          >
+            {steps.map((step, index) => (
+              <li
+                key={index}
+                className={`flex items-center ${
+                  index !== steps.length - 1 ? "w-full" : ""
+                }`}
+              >
+                <div className="flex flex-col justify-center items-center gap-1">
+                  <div
+                    className={`flex items-center justify-center w-4 h-4 rounded-full ${
+                      index <= currentStep ? "bg-[#004AAD]" : "bg-gray-300"
                     }`}
-                  ></span>
+                  >
+                    <span
+                      className={`text-sm font-medium ${
+                        index <= currentStep ? "text-white" : "text-gray-500"
+                      }`}
+                    ></span>
+                  </div>
+                  <span
+                    className={`ml-2 text-sm font-medium ${
+                      index <= currentStep ? "text-[#004AAD]" : "text-gray-500"
+                    }`}
+                  >
+                    {step.name}
+                  </span>
                 </div>
-                <span
-                  className={`ml-2 text-sm font-medium ${
-                    index <= currentStep ? "text-[#004AAD]" : "text-gray-500"
-                  }`}
-                >
-                  {step.name}
-                </span>
-              </div>
-              {index !== steps.length - 1 && (
-                <div
-                  className={`flex-1 h-0.5 mx-4 ${
-                    index < currentStep ? "bg-[#004AAD]" : "bg-gray-300"
-                  }`}
-                ></div>
-              )}
-            </li>
-          ))}
-        </ol>
-      </div>
+                {index !== steps.length - 1 && (
+                  <div
+                    className={`flex-1 h-0.5 mx-4 ${
+                      index < currentStep ? "bg-[#004AAD]" : "bg-gray-300"
+                    }`}
+                  ></div>
+                )}
+              </li>
+            ))}
+          </ol>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {renderStepComponent()}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {renderStepComponent()}
 
-        <Cart />
-      </div>
+          <Cart />
+        </div>
 
-      <div className="flex items-center justify-center gap-12 mt-12 ">
-        <Button
-          disabled={currentStep === 0}
-          onClick={handleBack}
-          className="px-8 py-0.5 w-48 rounded-none  border-none bg-white border-black dark:border-white uppercase text-[#F30278] ring-1 ring-[#F30278] transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-        >
-          Back
-        </Button>
-        {steps[currentStep].name === "Confirmation" ? (
+        <div className="flex items-center justify-center gap-12 mt-12 ">
           <Button
-            onPress={handleProceedToPayment}
-            className="px-8 py-0.5 w-48 rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+            disabled={currentStep === 0}
+            onClick={handleBack}
+            className="px-8 py-0.5 w-48 rounded-none  border-none bg-white border-black dark:border-white uppercase text-[#F30278] ring-1 ring-[#F30278] transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
           >
-            Procced to payment
+            Back
           </Button>
-        ) : (
-          <Button
-            disabled={currentStep >= steps.length - 1}
-            onClick={handleProceed}
-            className="px-8 py-0.5 w-48 rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-          >
-            Proceed
-          </Button>
-        )}
+          {steps[currentStep].name === "Confirmation" ? (
+            <Button
+              onPress={handleProceedToPayment}
+              className="px-8 py-0.5 w-48 rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+            >
+              Procced to payment
+            </Button>
+          ) : (
+            <Button
+              disabled={currentStep >= steps.length - 1}
+              onClick={handleProceed}
+              className="px-8 py-0.5 w-48 rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+            >
+              Proceed
+            </Button>
+          )}
+        </div>
       </div>
-    </div>
+
+      <Modal
+      hideCloseButton={true}
+        isDismissable={false}
+        isKeyboardDismissDisabled={true}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      >
+        <ModalContent>
+        <ModalHeader className="flex flex-col gap-1 text-center">Theater not selected</ModalHeader>
+          <ModalBody>
+            <p className="text-sm ">Please select both a slot and a theater before proceeding</p>
+          </ModalBody>
+          <ModalFooter className="flex justify-center items-center">
+
+            <Button onPress={()=>router.push("/booknow")} className="px-8 py-0.5 rounded-sm w-48  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] ">
+              Go to Book Now
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 
