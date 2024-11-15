@@ -23,7 +23,8 @@ import {
   closeOtpModal,
   openLoginModal,
   closeLoginModal,
-  setIsAuthenticated
+  setIsAuthenticated,
+  setUser
 } from "@/lib/Redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { MdEmail } from "react-icons/md";
@@ -37,7 +38,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const path=usePathname()
-console.log(path)
 
   const [loginMethod, setLoginMethod] = useState("phone"); // 'phone' or 'email'
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -46,7 +46,7 @@ console.log(path)
   const [confirmationResult, setConfirmationResult] = useState(null);
   const [isSendingOtp, setIsSendingOtp] = useState(false); // Loading state for sending OTP
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false); // Loading state for verifying OTP
-  const { isLoginModalOpen, isOtpModalOpen } = useSelector(
+  const { isLoginModalOpen, isOtpModalOpen,user } = useSelector(
     (state) => state.auth
   );
 
@@ -58,6 +58,7 @@ console.log(path)
       dispatch(openLoginModal());
     }
   }, []);
+
 
   const setupRecaptcha = () => {
     if (typeof window !== "undefined" && !window.recaptchaVerifier) {
@@ -166,6 +167,7 @@ console.log(path)
           const response = await Createuser(userData);
           if (response.status==="success") {
             Cookies.set("token", idToken);
+            Cookies.set("User", JSON.stringify(response?.data));
             toast({
               title: "Login successfully",
               action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
@@ -203,6 +205,7 @@ console.log(path)
   
             if (createUserResponse.status==="success") {
               Cookies.set("token", response.token);
+              Cookies.set("User", JSON.stringify(response?.data));
               toast({
                 title: "Login successfully",
                 action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,

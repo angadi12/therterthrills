@@ -19,11 +19,17 @@ import AddOns from "@/components/Checkoutcomponents/AddOns";
 import Confirmation from "@/components/Checkoutcomponents/Confirmation";
 import Cart from "@/components/Checkoutcomponents/Cart";
 
-
 const CheckoutOnboarding = () => {
   const { toast } = useToast();
   const dispatch = useDispatch();
-  const { currentStep, nickname,partnerNickname ,selectedOccasion,Occasionobject} = useSelector((state) => state.checkout);
+  const {
+    currentStep,
+    nickname,
+    partnerNickname,
+    selectedOccasion,
+    Occasionobject,
+    agreed,
+  } = useSelector((state) => state.checkout);
   const { bookingDetails, validationErrors } = useSelector(
     (state) => state.checkout
   );
@@ -34,6 +40,9 @@ const CheckoutOnboarding = () => {
   );
 
   const selectedCakes = useSelector((state) => state.cakes.selectedCakes);
+  const { selectedTheater} = useSelector(
+    (state) => state.theater
+  );
 
 
   const steps =
@@ -79,12 +88,11 @@ const CheckoutOnboarding = () => {
     if (!bookingDetails.email.match(/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/))
       errors.email = "Email is invalid.";
 
-   
     if (!Occasionobject?.noInput && currentStep === 1) {
       if (!nickname) {
         errors.nickname = "Nickname is required.";
       }
-    
+
       if (Occasionobject?.requiresPartner) {
         if (!partnerNickname) {
           errors.partnerNickname = "Partner's nickname is required.";
@@ -92,10 +100,8 @@ const CheckoutOnboarding = () => {
       }
     }
 
-    
-    if(currentStep === 2 && Object.keys(selectedCakes).length){
+    if (currentStep === 2 && Object.keys(selectedCakes).length) {
       if (!cakeText) errors.cakeText = "Cake text is required.";
-
     }
 
     return errors;
@@ -118,10 +124,29 @@ const CheckoutOnboarding = () => {
     return Object.keys(errors).length === 0;
   };
 
+  const handleProceedToPayment = () => {
+    if (!agreed) {
+      toast({
+        title: "Accept All The Conditions",
+        description: "Please agree to the conditions before proceeding.",
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });
+      return;
+    }
+    // Logic to proceed to payment
+    console.log("Proceeding to payment");
+  };
+
+console.log(selectedTheater)
+
   return (
     <div className="w-11/12 mx-auto px-6 py-20">
       <div className="mb-8 flex justify-center items-center">
-        <ol className={`flex items-center ${addDecorations === "no"?"w-1/2":" w-full"}`}>
+        <ol
+          className={`flex items-center ${
+            addDecorations === "no" ? "w-1/2" : " w-full"
+          }`}
+        >
           {steps.map((step, index) => (
             <li
               key={index}
@@ -175,16 +200,25 @@ const CheckoutOnboarding = () => {
         >
           Back
         </Button>
-        <Button
-          disabled={currentStep >= steps.length - 1}
-          onClick={handleProceed}
-          className="px-8 py-0.5 w-48 rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-        >
-          Proceed
-        </Button>
+        {steps[currentStep].name === "Confirmation" ? (
+          <Button
+            onPress={handleProceedToPayment}
+            className="px-8 py-0.5 w-48 rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+          >
+            Procced to payment
+          </Button>
+        ) : (
+          <Button
+            disabled={currentStep >= steps.length - 1}
+            onClick={handleProceed}
+            className="px-8 py-0.5 w-48 rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+          >
+            Proceed
+          </Button>
+        )}
       </div>
     </div>
   );
-}
+};
 
-export default CheckoutOnboarding
+export default CheckoutOnboarding;

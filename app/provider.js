@@ -33,16 +33,19 @@ export function NextuiProviderWrapper({ children }) {
 
       try {
         const result = await Checktokenexpired();
-        console.log(result);
         if (result?.user) {
           dispatch(setUser(result.user));
+          Cookies.set("User", JSON.stringify(result?.user));
+          console.log(result.user)
         } else {
           Cookies.remove("token");
+          Cookies.remove("User");
           dispatch(clearUser());
         }
       } catch (error) {
         console.error("Token verification error:", error);
         Cookies.remove("token");
+        Cookies.remove("User");
         dispatch(clearUser());
       }
     };

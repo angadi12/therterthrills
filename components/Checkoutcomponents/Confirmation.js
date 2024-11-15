@@ -2,16 +2,20 @@ import React, { useState } from "react";
 import { Calendar, Clock, MapPin, Users, Tv, Cake } from "lucide-react";
 import { Button } from "@nextui-org/react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { selectAddOns } from "@/lib/Redux/addOnsSlice";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import {setAgreed} from "@/lib/Redux/checkoutSlice"
 
 const Confirmation = () => {
+  const dispatch = useDispatch();
   const { toast } = useToast();
-  const [agreed, setAgreed] = useState(false);
   const addOns = useSelector(selectAddOns);
   const selectedCakes = useSelector((state) => state.cakes.selectedCakes);
+  const agreed =useSelector((state)=>state.checkout.agreed)
+
+
 
   const handleProceedToPayment = () => {
     if (!agreed) {
@@ -128,7 +132,7 @@ const Confirmation = () => {
           <Checkbox
             id="terms"
             checked={agreed}
-            onCheckedChange={(checked) => setAgreed(checked)}
+            onCheckedChange={(checked) => dispatch(setAgreed(checked))}
           />
           <label
             htmlFor="terms"
@@ -137,14 +141,14 @@ const Confirmation = () => {
             I agree to all the above conditions.
           </label>
         </div>
-        <div className="flex justify-center items-center w-full">
+        {/* <div className="flex justify-center items-center w-full">
           <Button
             className="px-8 mt-6 py-0.5 w-60 mx-auto rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
             onClick={handleProceedToPayment}
           >
             Proceed to Payment
           </Button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

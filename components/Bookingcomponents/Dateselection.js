@@ -23,13 +23,13 @@ import {
   fetchLocationsAndSlots,
   setSelectedLocation,
   setDate,
-} from "@/lib/Redux/theaterSlice"; // Adjust path
+} from "@/lib/Redux/theaterSlice"; 
 import { Spinner } from "@nextui-org/react";
 
 export default function BookingHeader() {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const dispatch = useDispatch();
-  const { locations, locationsloading, date, selectedLocation } = useSelector(
+  const { locations, locationsloading, date, selectedLocation} = useSelector(
     (state) => state.theater
   );
 
@@ -56,6 +56,7 @@ export default function BookingHeader() {
     dispatch(setDate(selectedDate?.toISOString())); // Store valid date string
     setPopoverOpen(false); // Close the popover after selecting a date
   };
+
 
   return (
     <div className="w-11/12 mx-auto py-12">

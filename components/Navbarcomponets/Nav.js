@@ -146,7 +146,8 @@ export default function Navbar() {
   }, [pathname]);
 
   const handleLogout = () => {
-    Cookies.remove("token"); // Clear token from cookies
+    Cookies.remove("token"); 
+    Cookies.remove("User"); 
     setIsLoggedIn(false);
     router.push("/");
   };
