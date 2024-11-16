@@ -14,6 +14,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import TheatreCardSkeleton from "@/components/Bookingcomponents/TheatreCardSkeleton";
 import { Spinner } from "@nextui-org/react";
+import { format} from "date-fns";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -24,10 +25,17 @@ const Page = () => {
     error,
     locationsWithSlotsloading,
     locationsWithSlotserror,
+    date
   } = useSelector((state) => state.theater);
 
+
+  const formattedDate =
+    date && !isNaN(new Date(date))
+      ? format(new Date(date), "yyyy-MM-dd")
+      : null;
+
   useEffect(() => {
-    dispatch(fetchAllTheaters());
+    dispatch(fetchAllTheaters(formattedDate));
   }, [dispatch]);
 
   // if (loading || locationsWithSlotsloading) {

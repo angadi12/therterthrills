@@ -5,6 +5,8 @@ import { Roboto } from "next/font/google";
 import Footer from "@/components/Footercomponets/Footer";
 import Topfooter from "@/components/Footercomponets/Topfooter";
 import { Providers } from "@/lib/Redux/provider";
+import Script from 'next/script';
+
 
 const inter = Roboto({
   weight: ["100", "400", "300", "500", "700", "900"],
@@ -23,6 +25,7 @@ export default function RootLayout({ children }) {
   return (
     <Providers>
       <html lang="en">
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
         <body className={inter.className}>
           <NextuiProviderWrapper>
             {children}

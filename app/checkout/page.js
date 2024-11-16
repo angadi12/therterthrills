@@ -31,6 +31,8 @@ import Cookies from "js-cookie";
 import { selectAddOns } from "@/lib/Redux/addOnsSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { format } from "date-fns";
+
 
 const CheckoutOnboarding = () => {
   const router=useRouter()
@@ -68,7 +70,12 @@ useEffect(() => {
    
 }, [])
 
+const formattedDate =
+    date && !isNaN(new Date(date))
+      ? format(new Date(date), "yyyy-MM-dd")
+      : null;
 
+      console.log(formattedDate)
 
   const steps =
     addDecorations === "yes"
@@ -187,20 +194,68 @@ useEffect(() => {
       },
       theaterId: selectedTheater,
       slotId: selectedslotsid,
-      user: userData._id,
-      date:date,
+      user:userData?._id,
+      date:formattedDate,
       paymentAmount:750
     };
 
     try {
       const response = await Createbooking(bookingData);
       if (response?.success) {
-        toast({
-          title: "Booking Successful",
-          description: "Your booking has been created successfully.",
-          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-        });
+        // toast({
+        //   title: "Booking Successful",
+        //   description: "Your booking has been created successfully.",
+        //   action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        // });
         // Redirect or perform further actions after successful booking
+        const bookingId = response.order?.receipt; // Extract bookingId
+        console.log(bookingId)
+        var razorpayOptions = {
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, // Replace with your Razorpay Key ID
+          amount: response.order?.amount, // Amount in paise (response from API)
+          currency: "INR",
+          name: "Acme Corp",
+          description: "Test Transaction",
+          image: "https://example.com/your_logo",
+          order_id: response.order?.id, // Order ID from backend
+          handler: async function (response) {
+            try {
+              const verifyResponse = await verifyPayment({
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpayOrderId: response.razorpay_order_id,
+                razorpaySignature: response.razorpay_signature,
+              }, bookingId);
+              if (verifyResponse.success) {
+                toast({
+                  title: "Payment Successful",
+                  description: "Your payment has been verified.",
+                  action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+                });
+                // router.push("/success"); // Redirect to success page
+              } else {
+                toast({
+                  title: "Payment Failed",
+                  description: "Verification failed.",
+                  action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+                });
+              }
+            } catch (error) {
+              console.error("Verification Error:", error);
+            }
+          },
+          prefill: {
+            name: bookingDetails.fullName,
+            email: bookingDetails.email,
+            contact: bookingDetails.phoneNumber,
+          },
+          theme: {
+            color: "#3399cc",
+          },
+        };
+  
+        const razorpay= new window.Razorpay(razorpayOptions)
+        razorpay.open()
+
       } else {
         toast({
           title: "Booking Failed",
