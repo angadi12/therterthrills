@@ -65,19 +65,10 @@ export default function Navbar() {
   const [isdelete, Setisdelete] = useState(false);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const token = Cookies.get("token");
-    setIsLoggedIn(!!token);
-  }, [isAuthenticated]);
-
-  const encodedUserData = Cookies.get("User");
-
-  if (!encodedUserData) {
-    return null;
-  }
-  const decodedUserData = decodeURIComponent(encodedUserData);
-  const userData = JSON.parse(decodedUserData);
-  const { role } = userData;
+  // useEffect(() => {
+  //   const token = Cookies.get("token");
+  //   setIsLoggedIn(!!token);
+  // }, [isAuthenticated]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -92,34 +83,6 @@ export default function Navbar() {
     const unsubscribe = scrollY.on("change", handleScroll);
     return () => unsubscribe();
   }, [scrollY, prevScrollY]);
-
-  const handleredirect = (link) => {
-    switch (link) {
-      case "home":
-        router.push("/");
-        break;
-      case "blogs":
-        router.push("/blogs");
-        break;
-      case "bookings":
-        router.push("/bookings");
-        break;
-      case "contact":
-        router.push("/contact");
-        break;
-      case "gallery":
-        router.push("/gallery");
-        break;
-      case "services":
-        router.push("/services");
-        break;
-      case "about":
-        router.push("/about");
-        break;
-      default:
-        break;
-    }
-  };
 
   useEffect(() => {
     switch (pathname) {
@@ -151,9 +114,48 @@ export default function Navbar() {
         setactiveitem("services");
         break;
       default:
-        setactiveitem("");
+        setactiveitem("home");
     }
   }, [pathname]);
+
+  const encodedUserData = Cookies.get("User");
+
+  if (!encodedUserData) {
+    return null;
+  }
+  const decodedUserData = decodeURIComponent(encodedUserData);
+  const userData = JSON.parse(decodedUserData);
+  const { role } = userData;
+
+
+  const handleredirect = (link) => {
+    switch (link) {
+      case "home":
+        router.push("/");
+        break;
+      case "blogs":
+        router.push("/blogs");
+        break;
+      case "bookings":
+        router.push("/bookings");
+        break;
+      case "contact":
+        router.push("/contact");
+        break;
+      case "gallery":
+        router.push("/gallery");
+        break;
+      case "services":
+        router.push("/services");
+        break;
+      case "about":
+        router.push("/about");
+        break;
+      default:
+        break;
+    }
+  };
+
 
   const handleLogout = () => {
     Cookies.remove("token");
@@ -218,7 +220,7 @@ export default function Navbar() {
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
-            {isLoggedIn ? (
+            {userData ? (
               <DropdownMenuContent className="w-56">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
 

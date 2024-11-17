@@ -67,7 +67,7 @@ export function NextuiProviderWrapper({ children }) {
         pathname === "/Profile/settings" ||
         pathname === "/Profile/accountinfo" ||
         pathname === "/Login" ? null : (
-          <Navbar />
+          <Navbar/>
         )}
         {children}
         {pathname === "/dashboard" ||
