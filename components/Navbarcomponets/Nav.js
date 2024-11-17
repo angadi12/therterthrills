@@ -14,42 +14,16 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   motion,
-  AnimatePresence,
-  stagger,
-  animate,
   useScroll,
-  useTransform,
 } from "framer-motion";
-import { LayoutDashboard, CalendarFold, LogOut, User } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 import { Button } from "@nextui-org/react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import Cookies from "js-cookie";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-} from "@nextui-org/react";
 import Slidingoffer from "../Homecomponents/Slidingoffer";
 import { openLoginModal } from "@/lib/Redux/authSlice";
 import Mobilenav from "./Mobilenav";
+import Usercomponet from "./User";
 
 export default function Navbar() {
   const router = useRouter();
@@ -60,15 +34,7 @@ export default function Navbar() {
   const { scrollY } = useScroll();
   const [prevScrollY, setPrevScrollY] = useState(0);
   const [hidden, setHidden] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { isAuthenticated } = useSelector((state) => state.auth);
-  const [isdelete, Setisdelete] = useState(false);
   const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   const token = Cookies.get("token");
-  //   setIsLoggedIn(!!token);
-  // }, [isAuthenticated]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -114,59 +80,10 @@ export default function Navbar() {
         setactiveitem("services");
         break;
       default:
-        setactiveitem("home");
+        setactiveitem("");
     }
   }, [pathname]);
 
-  const encodedUserData = Cookies.get("User");
-
-  if (!encodedUserData) {
-    return null;
-  }
-  const decodedUserData = decodeURIComponent(encodedUserData);
-  const userData = JSON.parse(decodedUserData);
-  const { role } = userData;
-
-
-  const handleredirect = (link) => {
-    switch (link) {
-      case "home":
-        router.push("/");
-        break;
-      case "blogs":
-        router.push("/blogs");
-        break;
-      case "bookings":
-        router.push("/bookings");
-        break;
-      case "contact":
-        router.push("/contact");
-        break;
-      case "gallery":
-        router.push("/gallery");
-        break;
-      case "services":
-        router.push("/services");
-        break;
-      case "about":
-        router.push("/about");
-        break;
-      default:
-        break;
-    }
-  };
-
-
-  const handleLogout = () => {
-    Cookies.remove("token");
-    Cookies.remove("User");
-    setIsLoggedIn(false);
-    router.push("/");
-  };
-
-  const handleLoginClick = () => {
-    dispatch(openLoginModal());
-  };
 
   return (
     <>
@@ -208,63 +125,7 @@ export default function Navbar() {
               className="w-6 h-6 object-contain"
             />
           </div>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Avatar className="absolute right-4 p-1 rounded-full">
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  alt="@THEATERTHRILLS"
-                  className=" rounded-full"
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            {userData ? (
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  {/* <DropdownMenuItem>
-                    <User />
-                    <span>Profile</span>
-                  </DropdownMenuItem> */}
-                  <Link href={"/bookings"}>
-                    <DropdownMenuItem>
-                      <CalendarFold />
-                      <span>My Bookings</span>
-                    </DropdownMenuItem>
-                  </Link>
-                  {(role === "admin" || role === "superadmin") && (
-                    <Link href="/dashboard">
-                      <DropdownMenuItem>
-                        <LayoutDashboard />
-                        <span>Dashboard</span>
-                      </DropdownMenuItem>
-                    </Link>
-                  )}
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => Setisdelete(true)}>
-                  <LogOut />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            ) : (
-              <DropdownMenuContent>
-                {" "}
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem onClick={handleLoginClick}>
-                    <User />
-                    <span>Log in</span>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            )}
-          </DropdownMenu>
+          <Usercomponet/>
         </div>
         <nav className="bg-white h-12 md:h-auto border-b  py-4 md:px-4 px-2 flex justify-between items-center ">
           <Link href="/" className="flex items-center space-x-2 ">
@@ -331,49 +192,10 @@ export default function Navbar() {
               Book Now
             </Button>
           </div>
-          {/* <Mobilenav /> */}
+          <Mobilenav />
         </nav>
         <Slidingoffer />
       </motion.header>
-
-      <Modal
-        isDismissable={false}
-        isKeyboardDismissDisabled={true}
-        backdrop="opaque"
-        isOpen={isdelete}
-        onOpenChange={Setisdelete}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col text-center">
-                Confirm Logout
-              </ModalHeader>
-              <ModalBody>
-                <p>Are you sure you want to logout?</p>
-              </ModalBody>
-              <ModalFooter className="flex justify-center items-center text-center">
-                <Button
-                  onPress={() => {
-                    handleLogout();
-                    onClose();
-                  }}
-                  className="px-8 py-0.5 rounded-sm w-48  border-none hover:bg-[#F30278] bg-[#F30278] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#004AAD,1px_1px_#004AAD,1px_1px_#004AAD,2px_2px_#004AAD,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-                >
-                  Yes
-                </Button>
-                <Button
-                  size="md"
-                  onPress={() => Setisdelete(false)}
-                  className="px-8 py-0.5 rounded-sm w-48  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-                >
-                  No
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
     </>
   );
 }

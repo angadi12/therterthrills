@@ -60,15 +60,15 @@ export function NextuiProviderWrapper({ children }) {
   }
 
   return (
-    <Suspense fallback={<Loading />}>
       <NextUIProvider>
-        {pathname === "/dashboard" ||
+        {/* {pathname === "/dashboard" ||
         pathname.startsWith("/dashboard") ||
         pathname === "/Profile/settings" ||
         pathname === "/Profile/accountinfo" ||
         pathname === "/Login" ? null : (
           <Navbar/>
-        )}
+        )} */}
+        <Navbar/>
         {children}
         {pathname === "/dashboard" ||
         pathname.startsWith("/dashboard") ||
@@ -83,6 +83,5 @@ export function NextuiProviderWrapper({ children }) {
         )}
         <Login />
       </NextUIProvider>
-    </Suspense>
   );
 }
