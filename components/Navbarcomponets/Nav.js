@@ -49,6 +49,7 @@ import {
 } from "@nextui-org/react";
 import Slidingoffer from "../Homecomponents/Slidingoffer";
 import { openLoginModal } from "@/lib/Redux/authSlice";
+import Mobilenav from "./Mobilenav";
 
 export default function Navbar() {
   const router = useRouter();
@@ -68,6 +69,15 @@ export default function Navbar() {
     const token = Cookies.get("token");
     setIsLoggedIn(!!token);
   }, [isAuthenticated]);
+
+  const encodedUserData = Cookies.get("User");
+
+  if (!encodedUserData) {
+    return null;
+  }
+  const decodedUserData = decodeURIComponent(encodedUserData);
+  const userData = JSON.parse(decodedUserData);
+  const { role } = userData;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -146,8 +156,8 @@ export default function Navbar() {
   }, [pathname]);
 
   const handleLogout = () => {
-    Cookies.remove("token"); 
-    Cookies.remove("User"); 
+    Cookies.remove("token");
+    Cookies.remove("User");
     setIsLoggedIn(false);
     router.push("/");
   };
@@ -214,24 +224,24 @@ export default function Navbar() {
 
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
+                  {/* <DropdownMenuItem>
                     <User />
                     <span>Profile</span>
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                   <Link href={"/bookings"}>
-                  <DropdownMenuItem>
-                    <CalendarFold />
-                    <span>My Bookings</span>
-                  </DropdownMenuItem>
-
+                    <DropdownMenuItem>
+                      <CalendarFold />
+                      <span>My Bookings</span>
+                    </DropdownMenuItem>
                   </Link>
-                  <Link href={"/dashboard"}>
-                  <DropdownMenuItem>
-                    <LayoutDashboard />
-                    <span>Dashboard</span>
-                  </DropdownMenuItem>
-
-                  </Link>
+                  {(role === "admin" || role === "superadmin") && (
+                    <Link href="/dashboard">
+                      <DropdownMenuItem>
+                        <LayoutDashboard />
+                        <span>Dashboard</span>
+                      </DropdownMenuItem>
+                    </Link>
+                  )}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => Setisdelete(true)}>
@@ -249,20 +259,20 @@ export default function Navbar() {
                     <User />
                     <span>Log in</span>
                   </DropdownMenuItem>
-                  </DropdownMenuGroup>
+                </DropdownMenuGroup>
               </DropdownMenuContent>
             )}
           </DropdownMenu>
         </div>
-        <nav className="bg-white hidden  py-4 px-4 md:flex justify-between items-center ">
+        <nav className="bg-white h-12 md:h-auto border-b  py-4 md:px-4 px-2 flex justify-between items-center ">
           <Link href="/" className="flex items-center space-x-2 ">
             <Image
               src={Logo}
               alt="Theatre Thrills Logo"
-              className="h-24 w-24 top-0 left-12 absolute object-contain"
+              className="md:h-24 md:w-24 top-0 md:left-12 h-10 w-10 md:absolute static object-contain"
             />
           </Link>
-          <div className="flex gap-1 items-center space-x-8">
+          <div className="md:flex  hidden gap-1 items-center space-x-8">
             <Link
               href="/"
               className={activeitem === "home" ? active : unactive}
@@ -319,6 +329,7 @@ export default function Navbar() {
               Book Now
             </Button>
           </div>
+          <Mobilenav />
         </nav>
         <Slidingoffer />
       </motion.header>

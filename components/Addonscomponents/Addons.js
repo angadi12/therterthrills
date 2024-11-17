@@ -100,7 +100,7 @@ const Addonss = () => {
 ];
 
   return (
-    <div className="w-11/12 mx-auto py-20 flex flex-col items-start gap-8">
+    <div className="w-11/12 mx-auto md:py-20 py-8 flex flex-col items-start gap-8">
       <div className="flex flex-col gap-6 w-full mx-auto">
         <h2 className="text-2xl font-bold">Decor Add-ons</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">

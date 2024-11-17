@@ -4,17 +4,11 @@ import Theaterbook from "@/public/asset/Theaterbook.png";
 import Image from "next/image";
 import BookingHeader from "@/components/Bookingcomponents/Dateselection";
 import TheatreCard from "@/components/Bookingcomponents/Theatercard";
-import Theaterimage from "@/public/asset/Theaterimage.png";
-import Theaterimage2 from "@/public/asset/Theaterimage2.png";
-
-import {
-  fetchAllTheaters,
-  fetchTheaterLocations,
-} from "@/lib/Redux/theaterSlice";
-import { useDispatch, useSelector } from "react-redux";
 import TheatreCardSkeleton from "@/components/Bookingcomponents/TheatreCardSkeleton";
 import { Spinner } from "@nextui-org/react";
-import { format} from "date-fns";
+import { format } from "date-fns";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllTheaters, fetchTheaterLocations } from "@/lib/Redux/theaterSlice";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -25,9 +19,8 @@ const Page = () => {
     error,
     locationsWithSlotsloading,
     locationsWithSlotserror,
-    date
+    date,
   } = useSelector((state) => state.theater);
-
 
   const formattedDate =
     date && !isNaN(new Date(date))
@@ -36,18 +29,15 @@ const Page = () => {
 
   useEffect(() => {
     dispatch(fetchAllTheaters(formattedDate));
-  }, [dispatch]);
+  }, [dispatch, date]);
 
-  // if (loading || locationsWithSlotsloading) {
-  //   return <div className="flex justify-center items-center h-screen"><Spinner color="danger"/></div>
-  // }
-
-  // Show a combined error state
   if (error || locationsWithSlotserror) {
     return <p>Error: {error || locationsWithSlotserror}</p>;
   }
 
-  
+  const isLoading = loading || locationsWithSlotsloading;
+  const noData = !locationsWithSlots?.length && !allTheaters?.length && !isLoading;
+
   return (
     <Suspense
       fallback={
@@ -63,23 +53,28 @@ const Page = () => {
             alt="Theatre Booking"
             className="relative brightness-50"
           />
-          <p className="absolute text-3xl font-bold transform -translate-x-1/2 -translate-y-1/2 left-1/2 text-[#FFCE00] top-1/2">
+          <p className="absolute md:text-3xl text-xl font-bold transform -translate-x-1/2 -translate-y-1/2 left-1/2 text-[#FFCE00] top-1/2">
             Theatre Booking
           </p>
         </div>
         <BookingHeader />
         <div className="w-11/12 h-full mx-auto pb-20 grid grid-cols-3 gap-8 justify-center place-content-center items-stretch">
-          {loading || locationsWithSlotsloading
-            ? Array.from({ length: 6 }).map((_, index) => (
-                <TheatreCardSkeleton key={index} />
-              ))
-            : locationsWithSlots?.length === 0
-            ? allTheaters?.map((theatre, index) => (
-                <TheatreCard key={index} theatre={theatre} />
-              ))
-            : locationsWithSlots?.map((theatre, index) => (
-                <TheatreCard key={index} theatre={theatre} />
-              ))}
+          {isLoading ? (
+            Array.from({ length: 6 }).map((_, index) => (
+              <TheatreCardSkeleton key={index} />
+            ))
+          ) : noData ? (
+            <p className="col-span-3 text-center text-lg font-medium">
+              No theaters available for the selected date.
+            </p>
+          ) : (
+            (locationsWithSlots?.length === 0
+              ? allTheaters
+              : locationsWithSlots
+            )?.map((theatre, index) => (
+              <TheatreCard key={index} theatre={theatre} />
+            ))
+          )}
         </div>
       </main>
     </Suspense>

@@ -8,11 +8,12 @@ import Farewell from "@/public/asset/Farewell.png";
 import Bussinessparty from "@/public/asset/Bussinessparty.png";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function Hero() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentIndex1, setCurrentIndex1] = useState(0);
-
+  const router=useRouter()
   const title = [
     "Birthday Party!",
     "Anniversary!",
@@ -56,7 +57,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <div className="relative md:h-screen w-full overflow-hidden ">
+    <div className="relative md:h-screen h-[70vh] w-full overflow-hidden ">
       <AnimatePresence>
         {data.map((value, index) => (
          currentIndex === index && <motion.div
@@ -66,12 +67,12 @@ export default function Hero() {
               transition={{ duration: 1, ease: "easeInOut" }}
             key={index}
           >
-                <div className="absolute inset-0 bg-black/40 z-10"></div>
+                <div className="absolute inset-0 bg-black/40 z-10  "></div>
 
             <Image
               src={value.image}
               alt="Birthday celebration"
-              className="absolute inset-0 object-cover w-full md:h-full h-[60vh]"
+              className="absolute inset-0 object-cover w-full md:h-full h-[70vh]"
               layout="reponsive"
             />
           </motion.div>
@@ -105,7 +106,9 @@ export default function Hero() {
           Experience a private theatre, perfect for your next movie night or
           celebration. Book Now!
         </p>
-        <Button className="px-8 py-0.5 w-48 rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] ">
+        <Button
+         onPress={()=>router.push("/booknow")}
+         className="px-8 py-0.5 w-48 rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] ">
           Book Now
         </Button>
       </div>

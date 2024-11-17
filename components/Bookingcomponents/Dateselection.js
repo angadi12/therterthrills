@@ -59,9 +59,9 @@ export default function BookingHeader() {
 
 
   return (
-    <div className="w-11/12 mx-auto py-12">
-      <div className="flex justify-between items-center gap-8">
-        <h1 className="text-4xl font-medium">
+    <div className="w-11/12 mx-auto md:py-12 py-6">
+      <div className="flex justify-between items-center md:gap-8 gap-4 flex-col md:flex-row">
+        <h1 className="md:text-4xl text-xl font-medium hidden md:block">
           Book Your{" "}
           <span className="bg-clip-text font-bold inline-block text-transparent bg-gradient-to-r from-[#004AAD] via-[#F30278] to-[#E2B600]">
             Private Theatre
@@ -69,7 +69,7 @@ export default function BookingHeader() {
           <br />
           Experience Today!
         </h1>
-        <div className="w-[400px]">
+        <div className="md:w-[400px] w-80 mx-auto">
           <label
             htmlFor="location-select"
             className="block text-sm font-medium text-[#F30278] mb-1"
@@ -116,7 +116,7 @@ export default function BookingHeader() {
               <Button
                 onClick={() => setPopoverOpen(!popoverOpen)}
                 variant={"outline"}
-                className={`w-[400px] justify-start h-12 text-left font-normal ${
+                className={`md:w-[400px] w-80 justify-start h-12 text-left font-normal ${
                   !date && "text-muted-foreground"
                 }`}
               >
@@ -124,7 +124,7 @@ export default function BookingHeader() {
                 {date ? format(date, "PPP") : <span>Choose Date</span>}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[400px] p-0">
+            <PopoverContent className="md:w-[400px] w-full mx-auto p-0">
               <Calendar
                 className={""}
                 mode="single"

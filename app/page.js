@@ -9,7 +9,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main>
+    <main className="pb-10 md:pb-0">
       <Hero />
       <FeaturesSection />
       <ExperienceSection />

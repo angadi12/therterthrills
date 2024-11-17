@@ -173,7 +173,7 @@ const formattedDate =
     }
     const decodedUserData = decodeURIComponent(encodedUserData);
     const userData = JSON.parse(decodedUserData);
-    console.log(userData)
+    
     const bookingData = {
       fullName:bookingDetails.fullName,
       phoneNumber: bookingDetails.phoneNumber,
@@ -214,9 +214,9 @@ const formattedDate =
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, // Replace with your Razorpay Key ID
           amount: response.order?.amount, // Amount in paise (response from API)
           currency: "INR",
-          name: "Acme Corp",
+          name: "THEATER THRILLS",
           description: "Test Transaction",
-          image: "https://example.com/your_logo",
+          image: "https://firebasestorage.googleapis.com/v0/b/awt-website-769f8.appspot.com/o/Logo.png?alt=media&token=d8826565-b850-4d05-8bfa-5be8061f70f6",
           order_id: response.order?.id, // Order ID from backend
           handler: async function (response) {
             try {
@@ -249,7 +249,7 @@ const formattedDate =
             contact: bookingDetails.phoneNumber,
           },
           theme: {
-            color: "#3399cc",
+            color: "#F30278",
           },
         };
   

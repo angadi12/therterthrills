@@ -29,7 +29,7 @@ export default function TheatreCard({ theatre }) {
 
   const [currentImage, setCurrentImage] = useState(0);
   const icon = [Groupicon2, Cakeicon, refundicon, TVicon, Speakericon];
-  const { selectedLocation,selectedslotsid ,selectedTheater} = useSelector((state) => state.theater);
+  const { selectedLocation,selectedslotsid ,selectedTheater,date} = useSelector((state) => state.theater);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -38,30 +38,46 @@ export default function TheatreCard({ theatre }) {
     return () => clearInterval(timer);
   }, []);
 
+  
   const handleProceed = () => {
+    let error = null;
+  
     if (!selectedLocation) {
-      toast({
+      error = {
         title: "Please Select a Location",
         description: "Please select your location to continue booking.",
-        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-      });
-    } else if (!selectedTheater) { // Check if selectedTheater is set
-      toast({
+      };
+    } else if (!selectedTheater) {
+      error = {
         title: "Theater Not Selected",
         description: "Please select a theater to continue.",
-        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-      });
-    } else if(!selectedslotsid){
-      toast({
+      };
+    } else if (!selectedslotsid) {
+      error = {
         title: "Theater Slot Not Selected",
-        description: "Please select a theater to continue.",
+        description: "Please select a theater slot to continue.",
+      };
+    } else if (!date) {
+      error = {
+        title: "Date Not Selected",
+        description: "Please select a date to continue.",
+      };
+    }
+  
+    if (error) {
+      toast({
+        title: error.title,
+        description: error.description,
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
-    }
-    else {
+    } else {
       router.push("/checkout");
     }
   };
+  
+  
+
+
 
   return (
     <>

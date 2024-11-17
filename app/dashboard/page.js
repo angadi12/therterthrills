@@ -1,10 +1,14 @@
 "use client"
 import { useState } from 'react'
 import { Calendar, ChevronDown, ChevronLeft, ChevronRight, ChevronRightIcon, Clock, MapPin } from 'lucide-react'
-import { Button } from "@/components/ui/button"
+import { Button } from "@nextui-org/react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ScrollArea } from '@/components/ui/scroll-area'
+import Totalbookicon from "@/public/asset/Totalbookicon.png"
+import Pendingbookicon from "@/public/asset/Pendingbookicon.png"
+import Completedicon from "@/public/asset/Completedicon.png"
+import Image from 'next/image'
 
 export default function BookingDashboard() {
   const [dateRange, setDateRange] = useState('25-10-2024 to 28-10-2024')
@@ -70,12 +74,10 @@ export default function BookingDashboard() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-blue-600 text-white">
-            <CardContent className="flex items-center p-6">
-              <div className="rounded-full bg-blue-500 p-3 mr-4">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z" />
-                </svg>
+          <Card className="bg-[#004AAD] text-white rounded-sm flex justify-start items-center ">
+            <CardContent className="flex  items-center p-6 ">
+              <div className="rounded-full bg-white p-3 mr-4 flex justify-center items-center">
+              <Image src={Totalbookicon} alt='totalbook' className='object-contain h-6 w-6'/>
               </div>
               <div>
                 <p className="text-sm font-medium">Total Bookings</p>
@@ -83,12 +85,10 @@ export default function BookingDashboard() {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-blue-600 text-white">
+          <Card className="bg-[#004AAD] text-white rounded-sm flex justify-start items-center ">
             <CardContent className="flex items-center p-6">
-              <div className="rounded-full bg-blue-500 p-3 mr-4">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div className="rounded-full bg-white p-3 mr-4 flex justify-center items-center">
+              <Image src={Pendingbookicon} alt='Pendingbookicon' className='object-contain h-6 w-6'/>
               </div>
               <div>
                 <p className="text-sm font-medium">Pending Bookings</p>
@@ -96,12 +96,10 @@ export default function BookingDashboard() {
               </div>
             </CardContent>
           </Card>
-          <Card className="bg-blue-600 text-white">
+          <Card className="bg-[#004AAD] text-white rounded-sm flex justify-start items-center ">
             <CardContent className="flex items-center p-6">
-              <div className="rounded-full bg-blue-500 p-3 mr-4">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+            <div className="rounded-full bg-white p-3 mr-4 flex justify-center items-center">
+              <Image src={Completedicon} alt='Completedicon' className='object-contain h-6 w-6'/>
               </div>
               <div>
                 <p className="text-sm font-medium">Completed Bookings</p>
@@ -111,8 +109,8 @@ export default function BookingDashboard() {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <Card className="rounded-none shadow-none">
             <CardContent className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">Our Branches</h2>
@@ -122,7 +120,7 @@ export default function BookingDashboard() {
                 <div className="flex overflow-x-auto space-x-4 pb-4">
                   {branches.map((branch, index) => (
                     <div key={index} className="flex-none w-48 border rounded-lg p-4">
-                      <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mb-4">
+                      <div className="w-12 h-12 bg-[#004AAD] rounded-full flex items-center justify-center mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="white" className="w-6 h-6">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
@@ -148,14 +146,14 @@ export default function BookingDashboard() {
                 </button>
               </div>
               <div className="flex justify-center mt-4 space-x-2">
-                <div className="w-2 h-2 rounded-full bg-blue-600"></div>
+                <div className="w-2 h-2 rounded-full bg-[#004AAD]"></div>
                 <div className="w-2 h-2 rounded-full bg-gray-300"></div>
                 <div className="w-2 h-2 rounded-full bg-gray-300"></div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-none shadow-none">
             <CardContent className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">Performance</h2>
@@ -187,7 +185,7 @@ export default function BookingDashboard() {
                   {performanceData.map((data, index) => (
                     <div key={index} className="flex-1 flex flex-col items-center">
                       <div 
-                        className={`w-full ${data.month === 'Jun' ? 'bg-pink-500' : 'bg-blue-600'}`} 
+                        className={`w-full ${data.month === 'Jun' ? 'bg-pink-500' : 'bg-[#004AAD]'}`} 
                         style={{ height: `${data.value}%` }}
                       ></div>
                       <span className="text-xs mt-2">{data.month}</span>
@@ -199,8 +197,8 @@ export default function BookingDashboard() {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <Card className="rounded-none shadow-none">
             <CardContent className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">Upcoming Events</h2>
@@ -234,7 +232,9 @@ export default function BookingDashboard() {
                         </div>
                       </div>
                     </div>
-                    <Button variant="outline" className="bg-blue-600 text-white hover:bg-blue-700">
+                    <Button variant="outline"
+              className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+              >
                       Send Reminder
                     </Button>
                   </div>
@@ -243,7 +243,7 @@ export default function BookingDashboard() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="rounded-none shadow-none">
             <CardContent className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold">New Bookings <span className="text-pink-500">(12)</span></h2>
@@ -260,7 +260,7 @@ export default function BookingDashboard() {
               </div>
               <div className="space-y-4">
                 {newBookings.map((booking, index) => (
-                  <div key={index} className={`flex items-center justify-between p-4 rounded-lg ${index === 1 ? 'bg-pink-500 text-white' : 'bg-blue-600 text-white'}`}>
+                  <div key={index} className={`flex items-center justify-between p-4 rounded-lg ${index === 1 ? 'bg-pink-500 text-white' : 'bg-[#004AAD] text-white'}`}>
                     <div className="flex items-center space-x-4">
                       <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-2xl">
                         {booking.icon}
@@ -276,7 +276,7 @@ export default function BookingDashboard() {
                     <ChevronRightIcon className="w-6 h-6" />
                   </div>
                 ))}
-                <Button variant="link" className="w-full text-blue-600 hover:text-blue-700">
+                <Button variant="link" className="w-full text-[#004AAD] hover:text-blue-700">
                   View All
                 </Button>
               </div>
