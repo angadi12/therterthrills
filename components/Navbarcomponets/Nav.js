@@ -329,7 +329,7 @@ export default function Navbar() {
               Book Now
             </Button>
           </div>
-          <Mobilenav />
+          {/* <Mobilenav /> */}
         </nav>
         <Slidingoffer />
       </motion.header>
