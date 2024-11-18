@@ -3,25 +3,24 @@ import { Button, Divider } from "@nextui-org/react"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { MapPin, Calendar, Clock, Users } from "lucide-react"
 import Bookingimage from "@/public/asset/Bookingimage.png"
+import { format } from "date-fns";
 
 
-export default function Bookingcard({
-  type = "Birthday Party",
-  price = "3479/-",
-  image = Bookingimage,
-  location = "Lingampally",
-  date = "17-10-2024",
-  time = "7:30 PM - 10:30 PM",
-  members = 4,
-  addOns = ["Party Props x 1","LED Lights x 1","Photo Clippings (4 photos) x 1"]
-}) {
+export default function Bookingcard({booking}) {
+
+  const formattedDate =
+  booking?.date && !isNaN(new Date(booking?.date))
+    ? format(new Date(booking?.date), "yyyy-MM-dd")
+    : null;
+
+
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="p-0">
         <div className="relative h-48 w-full">
           <Image
-            src={image}
-            alt={`${type} image`}
+            src={booking?.theater?.images[0]}
+            alt={`theater image`}
             fill
             className="object-cover rounded-t-lg"
           />
@@ -29,48 +28,73 @@ export default function Bookingcard({
       </CardHeader>
       <CardContent className="p-4">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">{type}</h2>
-          <span className="text-xl font-bold text-[#F30278]">{price}</span>
+          <h2 className="text-xl font-bold">{booking?.Occasionobject}</h2>
+          <span className="text-xl font-bold text-[#F30278]">{booking?.TotalAmount}/-</span>
         </div>
         <Divider className="my-2 w-full mx-auto"/>
         <div className="bg-[#F30278] text-white p-3 rounded-md mb-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="flex items-center">
               <MapPin className="w-4 h-4 mr-2" />
-              <span className="text-sm">{location}</span>
+              <span className="text-sm">{booking?.theater?.location}</span>
             </div>
             <div className="flex items-center">
               <Calendar className="w-4 h-4 mr-2" />
-              <span className="text-sm">{date}</span>
+              <span className="text-sm">{formattedDate}</span>
             </div>
             <div className="flex items-center">
               <Clock className="w-4 h-4 mr-2" />
-              <span className="text-sm">{time}</span>
+              <span className="text-sm">{booking?.slot?.startTime}-{booking?.slot?.endTime} time</span>
             </div>
             <div className="flex items-center">
               <Users className="w-4 h-4 mr-2" />
-              <span className="text-sm">{members} Members</span>
+              <span className="text-sm">{booking?.numberOfPeople} Members</span>
             </div>
           </div>
         </div>
         <div>
           <h3 className="text-lg font-semibold mb-2">Add - Ons</h3>
           <div className="grid grid-cols-2 gap-2">
-            {Array.isArray(addOns) && addOns.length > 0 ? (
-              addOns.map((addon, index) => (
+            {booking?.addOns && (
+              <>
+             { booking?.addOns?.photography.map((addon, index) => (
                 <div key={index} className="border-1 border-[#F30278] rounded bg-[#F30278]/10 p-2 text-sm text-center font-medium text-[#F30278]">
                   {addon}
                 </div>
-              ))
-            ) : (
-              <div className="col-span-2 text-center text-gray-500">No add-ons available</div>
+              ))}
+             
+              {Object.entries(booking?.addOns?.decorations).map(([name, count]) => (
+            <p key={name} className="border-1 border-[#F30278] rounded bg-[#F30278]/10 p-2 text-sm text-center font-medium text-[#F30278]">
+              {name} x {count}
+            </p>
+          ))}
+          {Object.entries(booking?.addOns?.roses).map(([name, count]) => (
+            <p className="border-1 border-[#F30278] rounded bg-[#F30278]/10 p-2 text-sm text-center font-medium text-[#F30278]" key={name}>
+              {name} x {count}
+            </p>
+          ))}
+          
+          {Object.values(booking?.selectedCakes).length > 0 ? (
+            Object.values(booking?.selectedCakes).map(({ id, name, quantity }) => (
+              <div key={id}>
+                <p className="border-1 border-[#F30278] rounded bg-[#F30278]/10 p-2 text-sm text-center font-medium text-[#F30278]" >
+                  {name} x {quantity}
+                </p>
+              </div>
+            ))
+          ) : (
+           ""
+          )}
+
+              </>
             )}
           </div>
         </div>
       </CardContent>
       <Divider className="my-2 w-11/12 mx-auto"/>
       <CardFooter>
-        <Button className="w-full bg-blue-600 hover:bg-blue-700 rounded-none text-white">Modify</Button>
+        
+        <Button className="w-full bg-blue-600 hover:bg-blue-700 rounded-none text-white">View Details</Button>
       </CardFooter>
     </Card>
   )

@@ -58,7 +58,7 @@ const Page = () => {
           </p>
         </div>
         <BookingHeader />
-        <div className="w-11/12 h-full mx-auto pb-20 grid grid-cols-3 gap-8 justify-center place-content-center items-stretch">
+        <div className="w-11/12 h-full mx-auto pb-20 grid md:grid-cols-3 grid-cols-1 gap-8 justify-center place-content-center items-stretch">
           {isLoading ? (
             Array.from({ length: 6 }).map((_, index) => (
               <TheatreCardSkeleton key={index} />

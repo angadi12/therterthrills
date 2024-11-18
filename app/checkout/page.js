@@ -88,7 +88,6 @@ const formattedDate =
       ? format(new Date(date), "yyyy-MM-dd")
       : null;
 
-      console.log(formattedDate)
 
   const steps =
     addDecorations === "yes"
@@ -309,7 +308,7 @@ const formattedDate =
   return (
     <>
       <div className="w-11/12 mx-auto px-6 py-20">
-        <div className="mb-8 flex justify-center items-center">
+        <div className="mb-8 md:flex hidden justify-center items-center">
           <ol
             className={`flex items-center ${
               addDecorations === "no" ? "w-1/2" : " w-full"
