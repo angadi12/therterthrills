@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Button, Divider } from "@nextui-org/react";
 import {
   Modal,
@@ -32,11 +32,14 @@ import { selectAddOns } from "@/lib/Redux/addOnsSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
-
+import {fetchtheaterbyid} from "@/lib/Redux/theaterSlice"
+import Successmodal from "./Successmodal";
 
 const CheckoutOnboarding = () => {
   const router=useRouter()
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [opensucessmodal,setOpensuccesmodal]=useState(false)
+  const [loading,setloading]=useState(false)
   const { toast } = useToast();
   const dispatch = useDispatch();
   const {
@@ -58,10 +61,11 @@ const CheckoutOnboarding = () => {
   );
 
   const selectedCakes = useSelector((state) => state.cakes.selectedCakes);
-  const { selectedTheater, selectedslotsid ,date} = useSelector(
+  const { selectedTheater, selectedslotsid ,date,theater,theaterloading} = useSelector(
     (state) => state.theater
   );
   const { decorations, roses, photography } = useSelector(selectAddOns);
+  const totalAmount = useSelector((state) => state.totalAmount.value);
 
 useEffect(() => {
   if(!selectedTheater & !selectedslotsid){
@@ -69,6 +73,15 @@ useEffect(() => {
   }
    
 }, [])
+
+useEffect(() => {
+ if (selectedTheater){
+  dispatch(fetchtheaterbyid(selectedTheater))
+ }
+}, [dispatch])
+
+
+
 
 const formattedDate =
     date && !isNaN(new Date(date))
@@ -157,6 +170,7 @@ const formattedDate =
   };
 
   const handleProceedToPayment = async () => {
+    setloading(true)
     if (!agreed) {
       toast({
         title: "Accept All The Conditions",
@@ -196,6 +210,7 @@ const formattedDate =
       slotId: selectedslotsid,
       user:userData?._id,
       date:formattedDate,
+      TotalAmount:totalAmount,
       paymentAmount:750
     };
 
@@ -226,21 +241,26 @@ const formattedDate =
                 razorpaySignature: response.razorpay_signature,
               }, bookingId);
               if (verifyResponse.success) {
-                toast({
-                  title: "Payment Successful",
-                  description: "Your payment has been verified.",
-                  action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-                });
-                // router.push("/success"); // Redirect to success page
+                // toast({
+                //   title: "Payment Successful",
+                //   description: "Your payment has been verified.",
+                //   action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+                // });
+                setloading(false)
+                setOpensuccesmodal(true)
               } else {
                 toast({
                   title: "Payment Failed",
                   description: "Verification failed.",
                   action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
                 });
+                setloading(false)
+
               }
             } catch (error) {
               console.error("Verification Error:", error);
+              setloading(false)
+
             }
           },
           prefill: {
@@ -262,6 +282,7 @@ const formattedDate =
           description: response?.message || "An error occurred.",
           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
+        setloading(false)
       }
     } catch (error) {
       console.error("Booking Error:", error);
@@ -270,8 +291,21 @@ const formattedDate =
         description: "Failed to create booking. Please try again.",
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
+      setloading(false)
     }
   };
+
+
+   if(opensucessmodal){
+    return<div className="flex justify-center items-center w-full h-[50vh]">
+
+<Successmodal/>
+    </div> 
+      
+   }
+
+
+
   return (
     <>
       <div className="w-11/12 mx-auto px-6 py-20">
@@ -323,7 +357,11 @@ const formattedDate =
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {renderStepComponent()}
 
-          <Cart />
+
+          <Suspense fallback={<p>loading...</p>}>
+
+          { theater && <Cart theater={theater}/>}
+          </Suspense>
         </div>
 
         <div className="flex items-center justify-center gap-12 mt-12 ">
@@ -336,6 +374,7 @@ const formattedDate =
           </Button>
           {steps[currentStep].name === "Confirmation" ? (
             <Button
+            isLoading={loading}
               onPress={handleProceedToPayment}
               className="px-8 py-0.5 w-48 rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
             >

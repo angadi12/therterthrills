@@ -80,12 +80,14 @@ const UserComponent = () => {
                   <span>My Bookings</span>
                 </DropdownMenuItem>
               </Link>
-              <Link href="/dashboard">
-                <DropdownMenuItem>
-                  <LayoutDashboard />
-                  <span>Dashboard</span>
-                </DropdownMenuItem>
-              </Link>
+              {(user.role === "admin" || user.role === "superadmin") && (
+                <Link href="/dashboard">
+                  <DropdownMenuItem>
+                    <LayoutDashboard />
+                    <span>Dashboard</span>
+                  </DropdownMenuItem>
+                </Link>
+              )}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => setIsDelete(true)}>

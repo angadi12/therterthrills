@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Divider } from "@nextui-org/react";
 import { Input } from "@/components/ui/input";
-import { useSelector } from "react-redux";
+import { useSelector ,useDispatch} from "react-redux";
 import { selectTotalAmount } from "@/lib/Redux/addOnsSlice";
+import { setTotalAmount } from "@/lib/Redux/totalAmountSlice";
 
 const validCoupons = {
   WELCOME250: 250,
@@ -11,7 +12,8 @@ const validCoupons = {
   DISCOUNT50: 50,
 };
 
-const Cart = () => {
+const Cart = ({theater}) => {
+  const dispatch=useDispatch()
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [error, setError] = useState("");
@@ -21,8 +23,9 @@ const Cart = () => {
   const addDecorations = useSelector(
     (state) => state.checkout.bookingDetails.addDecorations
   );
+  const totalAmount = useSelector((state) => state.totalAmount.value);
 
-  const decorationPrice = addDecorations === "yes" ? 749 : 0;
+  const decorationPrice = addDecorations === "yes" ? theater.minimumDecorationAmount : 0;
 
   // Calculate total price of selected cakes
   const calculateTotalCakesPrice = () => {
@@ -42,13 +45,20 @@ const Cart = () => {
   // Calculate the total amount (cakes + addons + theatre - coupon)
   const calculateTotalAmount = () => {
     const cakesTotal = calculateTotalCakesPrice();
-    const theatrePrice = 1472;
+    const theatrePrice = theater.price;
     const couponDiscount = appliedCoupon ? appliedCoupon.discount : 0;
 
     return (
       theatrePrice + addonsTotal + cakesTotal + decorationPrice - couponDiscount
     );
   };
+
+
+  useEffect(() => {
+    const totalAmount = calculateTotalAmount();
+    dispatch(setTotalAmount(totalAmount)); // Dispatch the calculated total amount
+  }, [selectedCakes, addonsTotal, decorationPrice, appliedCoupon]);
+
 
   const handleApplyCoupon = () => {
     if (validCoupons[couponCode]) {
@@ -69,7 +79,7 @@ const Cart = () => {
         <div className="space-y-4 text-[#636363]">
           <div className="flex justify-between">
             <span>Theatre Price (Standard)</span>
-            <span>1472/-</span>
+            <span>{theater?.price}/-</span>
           </div>
           <Divider />
           <div className="flex justify-between">
@@ -103,7 +113,7 @@ const Cart = () => {
       <div className="w-full mt-4">
         <Button className="flex justify-between rounded-md h-12 bg-[#F30278] font-semibold w-full">
           <span className="text-white">Total Amount</span>
-          <span className="text-white">{calculateTotalAmount()}/-</span>{" "}
+          <span className="text-white">{totalAmount}/-</span>{" "}
           {/* Adjust total calculation */}
         </Button>
       </div>

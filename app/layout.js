@@ -1,9 +1,6 @@
-import Navbar from "@/components/Navbarcomponets/Nav";
 import "./globals.css";
 import { NextuiProviderWrapper } from "./provider";
 import { Roboto } from "next/font/google";
-import Footer from "@/components/Footercomponets/Footer";
-import Topfooter from "@/components/Footercomponets/Topfooter";
 import { Providers } from "@/lib/Redux/provider";
 import Script from 'next/script';
 
