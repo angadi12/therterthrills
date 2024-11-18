@@ -168,6 +168,7 @@ const Login = () => {
           if (response.status==="success") {
             Cookies.set("token", idToken);
             Cookies.set("User", JSON.stringify(response?.data));
+            dispatch(setUser(response?.data))
             toast({
               title: "Login successfully",
               action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
@@ -206,6 +207,7 @@ const Login = () => {
             if (createUserResponse.status==="success") {
               Cookies.set("token", response.token);
               Cookies.set("User", JSON.stringify(response?.data));
+              dispatch(setUser(response?.data))
               toast({
                 title: "Login successfully",
                 action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,

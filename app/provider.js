@@ -6,7 +6,7 @@ import { Suspense, useEffect, useState } from "react";
 import Login from "@/components/Authcomponents/Login";
 import { Checktokenexpired } from "@/lib/API/Auth";
 import Cookies from "js-cookie";
-import { clearUser, setUser } from "@/lib/Redux/authSlice";
+import { clearUser, setIsAuthenticated, setUser } from "@/lib/Redux/authSlice";
 import { useDispatch } from "react-redux";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbarcomponets/Nav";
@@ -27,6 +27,8 @@ export function NextuiProviderWrapper({ children }) {
       const token = Cookies.get("token");
 
       if (!token) {
+        Cookies.remove("token");
+        Cookies.remove("User");
         dispatch(clearUser());
         return;
       }
@@ -35,8 +37,8 @@ export function NextuiProviderWrapper({ children }) {
         const result = await Checktokenexpired();
         if (result?.user) {
           dispatch(setUser(result.user));
+          dispatch(setIsAuthenticated());
           Cookies.set("User", JSON.stringify(result?.user));
-          console.log(result.user)
         } else {
           Cookies.remove("token");
           Cookies.remove("User");
@@ -61,14 +63,13 @@ export function NextuiProviderWrapper({ children }) {
 
   return (
       <NextUIProvider>
-        {/* {pathname === "/dashboard" ||
+        {pathname === "/dashboard" ||
         pathname.startsWith("/dashboard") ||
         pathname === "/Profile/settings" ||
         pathname === "/Profile/accountinfo" ||
         pathname === "/Login" ? null : (
           <Navbar/>
-        )} */}
-        <Navbar/>
+        )}
         {children}
         {pathname === "/dashboard" ||
         pathname.startsWith("/dashboard") ||

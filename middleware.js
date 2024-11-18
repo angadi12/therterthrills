@@ -7,8 +7,8 @@ export function middleware(request) {
   let role;
   if (userData) {
     try {
-      const parsedUserData = JSON.parse(userData.value); // Parse the JSON string
-      role = parsedUserData.role; // Access the role
+      const parsedUserData = JSON.parse(userData?.value); // Parse the JSON string
+      role = parsedUserData?.role; // Access the role
     } catch (error) {
       console.error('Failed to parse User cookie:', error);
     }
