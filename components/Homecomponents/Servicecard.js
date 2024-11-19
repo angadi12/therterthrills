@@ -148,7 +148,7 @@ const services = [
 export default function CustomServices() {
   return (
     <section className="py-16 bg-[#F7F7F7]">
-      <div className="w-11/12 mx-auto">
+      <div className="md:w-11/12 w-full mx-auto">
         <h2 className="text-4xl font-bold text-center mb-2">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#004AAD] to-[#F30278] ">
             Custom Services
@@ -160,7 +160,7 @@ export default function CustomServices() {
           experience. From private screenings to unique decorations, we ensure
           every celebration is special and memorable.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  items-center w-full mx-auto gap-8 mb-12">
           {services.slice(0, 4).map((service, index) => (
             <ServiceCard key={index} {...service} />
           ))}
@@ -206,7 +206,7 @@ function ServiceCard({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div   className="flex flex-col items-center text-center max-w-xs cursor-pointer">
+        <div   className="flex flex-col items-center text-center md:max-w-xs w-full cursor-pointer">
           <div className="w-40 h-40 rounded-full overflow-hidden mb-4 relative group">
             <Image
               src={image}

@@ -35,7 +35,7 @@ const Confirmation = () => {
     <div className="md:col-span-2">
       <div className="bg-[#2076E80D] p-6 rounded-md ring-1 ring-[#004AAD] shadow mb-6">
         <h2 className="text-xl font-semibold mb-4">Overview</h2>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
           <div className="flex flex-col justify-start items-start gap-2">
             <div className="flex items-center">
               <Tv className="w-5 h-5 mr-2 text-[#004AAD]" />
@@ -77,7 +77,7 @@ const Confirmation = () => {
 
       <div className="bg-[#2076E80D] p-6 rounded-md ring-1 ring-[#004AAD] shadow mb-6">
         <h2 className="text-xl font-semibold mb-4">Add-Ons</h2>
-        <div className="grid grid-cols-4 gap-4 w-full text-[#004AAD]">
+        <div className="grid md:grid-cols-4 grid-cols-1 gap-4 w-full text-[#004AAD]">
           <div>
             <h3 className="font-semibold">Decorations</h3>
             {Object.entries(addOns.decorations).map(([name, count]) => (

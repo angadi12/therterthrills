@@ -93,8 +93,8 @@ const formattedDate =
     addDecorations === "yes"
       ? [
           { component: <BookingDetails />, name: "Booking Details" },
-          { component: <Occasion />, name: "Occasion" },
-          { component: <Cakes />, name: "Cakes" },
+          { component: <Occasion/>, name: "Occasion" },
+          { component: <Cakes/>, name: "Cakes" },
           { component: <AddOns />, name: "Add-Ons" },
           { component: <Confirmation />, name: "Confirmation" },
         ]
@@ -307,7 +307,7 @@ const formattedDate =
 
   return (
     <>
-      <div className="w-11/12 mx-auto px-6 py-20">
+      <div className="w-11/12 mx-auto md:px-6  md:py-20 pb-20 py-6 md:pb-12">
         <div className="mb-8 md:flex hidden justify-center items-center">
           <ol
             className={`flex items-center ${
@@ -377,7 +377,7 @@ const formattedDate =
               onPress={handleProceedToPayment}
               className="px-8 py-0.5 w-48 rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
             >
-              Procced to payment
+              Pay now
             </Button>
           ) : (
             <Button

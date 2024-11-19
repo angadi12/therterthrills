@@ -74,7 +74,7 @@ export default function TestimonialCarousel() {
           <p className="text-gray-600 md:mb-8 mb-4">
 {`            We take pride in delivering exceptional experiences tailored to your needs. Here's what some of our satisfied clients have to say about their time at The Theatre Thrills
 `}          </p>
-          <div className="flex space-x-2">
+          <div className=" space-x-2 hidden md:flex">
             <Button variant="outline" isIconOnly className="rounded-full text-blue-600 ring-1 ring-blue-600" onClick={prevSlide}>
               <ChevronUp className="w-4 h-4" />
             </Button>
@@ -129,6 +129,14 @@ export default function TestimonialCarousel() {
             })}
           </AnimatePresence>
         </div>
+        <div className=" space-x-2 flex md:hidden justify-center items-center mx-auto">
+            <Button variant="outline" isIconOnly className="rounded-full text-blue-600 ring-1 ring-blue-600" onClick={prevSlide}>
+              <ChevronUp className="w-4 h-4" />
+            </Button>
+            <Button variant="solid" isIconOnly className="rounded-full bg-blue-600 text-white" onClick={nextSlide}>
+              <ChevronDown className="w-4 h-4" />
+            </Button>
+          </div>
       </div>
     </div>
   )

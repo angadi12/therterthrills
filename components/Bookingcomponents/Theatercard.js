@@ -200,7 +200,7 @@ export default function TheatreCard({ theatre }) {
                         ? "default"
                         : "outline"
                     }
-                    className={`w-full ${selectedslotsid===slot._id?"bg-[#F30278] text-white" :"ring-1 ring-[#F30278] text-[#F30278]"} rounded-sm`}
+                    className={`w-full text-xs md:text-sm ${selectedslotsid===slot._id?"bg-[#F30278] text-white" :"ring-1 ring-[#F30278] text-[#F30278]"} rounded-sm`}
                   >
                     {slot?.startTime} - {slot?.endTime}
                   </Button>

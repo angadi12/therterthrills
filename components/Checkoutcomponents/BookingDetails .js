@@ -34,7 +34,7 @@ const BookingDetails = () => {
       <div className="bg-white p-6 rounded-md shadow ring-1 ring-gray-300">
         <h2 className="text-xl font-semibold mb-4">Booking Details</h2>
         <div className="space-y-7">
-          <div className="grid grid-cols-2 justify-center items-center gap-4">
+          <div className="grid md:grid-cols-2 grid-cols-1 justify-center items-center gap-4">
             <Input
               placeholder="Full Name"
               className="h-12"
@@ -60,7 +60,7 @@ const BookingDetails = () => {
               </SelectContent>
             </Select>
           </div>
-          <div className="grid grid-cols-2 justify-center items-center gap-4">
+          <div className="grid md:grid-cols-2 grid-cols-1 justify-center items-center gap-4">
             <Input
               placeholder="Phone Number"
               className="h-12"

@@ -62,7 +62,7 @@ const Cakes = () => {
               </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 md:gap-6 gap-3 w-full">
               {cakes.map((cake) => (
                   <Card
                       key={cake.id}
@@ -88,15 +88,16 @@ const Cakes = () => {
                           </div>
 
                           {selectedCakes[cake.id] && (
-                              <div className="mt-8 absolute rounded-full bg-[#F30278] w-11/12 mx-auto left-0 right-0 top-1/2 flex items-center justify-center gap-2">
+                              <div className="md:mt-8 absolute rounded-full bg-[#F30278] w-11/12 mx-auto left-0 right-0 top-1/2 flex items-center justify-center gap-2">
                                   <Button
                                       variant="solid"
+                                     
                                       isIconOnly
                                       onClick={(e) => {
                                           e.stopPropagation();
                                           dispatch(updateQuantity({ id: cake.id, change: -1 }));
                                       }}
-                                      className="bg-[#F30278] font-bold text-white"
+                                      className="bg-[#F30278] h-6 md:h-10 font-bold text-white"
                                   >
                                       -
                                   </Button>
@@ -105,12 +106,13 @@ const Cakes = () => {
                                   </span>
                                   <Button
                                       variant="solid"
+                                     
                                       isIconOnly
                                       onClick={(e) => {
                                           e.stopPropagation();
                                           dispatch(updateQuantity({ id: cake.id, change: 1 }));
                                       }}
-                                      className="bg-[#F30278] font-bold text-white"
+                                      className="bg-[#F30278] h-6 md:h-10 font-bold text-white"
                                   >
                                       +
                                   </Button>
@@ -126,7 +128,7 @@ const Cakes = () => {
               {`For photoclippings, our team will reach out to you on the day of booking. You need to send 16 soft copies of the photos you want to place inside the theater.`}
           </div>
 
-          <div className="mb-6 w-1/2">
+          <div className="mb-6 md:w-1/2 w-full">
               <Input
                   type="text"
                   placeholder="Type the text to be on the cake"

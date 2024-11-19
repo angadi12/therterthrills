@@ -36,6 +36,8 @@ export default function ExperienceSection() {
               </h2>
               <Divider className="w-3/4 mr-auto" />
             </div>
+            <div className="hidden md:block">
+
             {currentIndex === 0 && (
               <motion.div className="mt-4"
               initial={{opacity:0.5,y:50}}
@@ -87,6 +89,7 @@ export default function ExperienceSection() {
                 </p>
               </motion.div>
             )}
+            </div>
           </div>
           {/* Image Section */}
           <div className="grid grid-cols-2 gap-2">

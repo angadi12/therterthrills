@@ -68,11 +68,11 @@ const Occasion = () => {
     <div className="md:col-span-2">
       <div className="bg-white ring-1 ring-gray-300 p-6 rounded-md shadow flex flex-col justify-start items-start gap-8">
         <h2 className="text-xl font-semibold mb-4">Choose occasion</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 justify-items-center gap-4 mx-auto w-full">
           {occasions.map((occasion) => (
             <Button
               key={occasion.name}
-              className={`flex flex-col items-center justify-center h-32 w-36 bg-white rounded-lg transition-colors ${
+              className={`flex flex-col items-center justify-center md:h-32 h-24 w-28 md:w-36 bg-white rounded-lg transition-colors ${
                 selectedOccasion === occasion.name
                   ? "bg-[#F302781A] font-semibold text-[#F30278] ring-1 ring-[#F30278]"
                   : " text-gray-600 hover:bg-gray-200"
@@ -83,9 +83,9 @@ const Occasion = () => {
               <Image
                 src={occasion.icon}
                 alt={occasion.name}
-                className="w-14 h-14 mb-2"
+                className="md:w-14 md:h-14 w-10 h-10 mb-2"
               />
-              <span className="text-lg">{occasion.name}</span>
+              <span className="md:text-lg text-sm">{occasion.name}</span>
             </Button>
           ))}
         </div>
@@ -93,7 +93,7 @@ const Occasion = () => {
         {selectedOccasion === "Business Meet" ? (
           ""
         ) : (
-          <div className=" w-full grid grid-cols-2 items-center gap-4 justify-center">
+          <div className=" w-full grid md:grid-cols-2 grid-cols-1 items-center gap-4 justify-center">
             <div>
               <label
                 htmlFor="nickname"
