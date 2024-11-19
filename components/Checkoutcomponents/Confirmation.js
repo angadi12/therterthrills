@@ -2,33 +2,34 @@ import React, { useState } from "react";
 import { Calendar, Clock, MapPin, Users, Tv, Cake } from "lucide-react";
 import { Button } from "@nextui-org/react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { selectAddOns } from "@/lib/Redux/addOnsSlice";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import {setAgreed} from "@/lib/Redux/checkoutSlice"
+import { setAgreed } from "@/lib/Redux/checkoutSlice";
+import { format } from "date-fns";
 
 const Confirmation = () => {
   const dispatch = useDispatch();
   const { toast } = useToast();
   const addOns = useSelector(selectAddOns);
   const selectedCakes = useSelector((state) => state.cakes.selectedCakes);
-  const agreed =useSelector((state)=>state.checkout.agreed)
+  const agreed = useSelector((state) => state.checkout.agreed);
+  const { theater, selectedslotsid, date } = useSelector(
+    (state) => state.theater
+  );
+  const { bookingDetails, selectedOccasion } = useSelector(
+    (state) => state.checkout
+  );
 
+  const formattedDate =
+    date && !isNaN(new Date(date))
+      ? format(new Date(date), "yyyy-MM-dd")
+      : null;
 
-
-  const handleProceedToPayment = () => {
-    if (!agreed) {
-      toast({
-        title: "Accept All The Conditions",
-        description: "Please agree to the conditions before proceeding.",
-        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-      });
-      return;
-    }
-    // Logic to proceed to payment
-    console.log("Proceeding to payment");
-  };
+  const selectedSlot = theater?.slots?.find(
+    (slot) => slot._id === selectedslotsid
+  );
 
   return (
     <div className="md:col-span-2">
@@ -38,31 +39,37 @@ const Confirmation = () => {
           <div className="flex flex-col justify-start items-start gap-2">
             <div className="flex items-center">
               <Tv className="w-5 h-5 mr-2 text-[#004AAD]" />
-              <span className="text-[#004AAD]">Bronze Theatre</span>
+              <span className="text-[#004AAD]">{theater?.name}</span>
             </div>
             <div className="flex items-center">
               <Users className="w-5 h-5 mr-2 text-[#004AAD]" />
-              <span className="text-[#004AAD]">4</span>
+              <span className="text-[#004AAD]">
+                {bookingDetails?.numberOfPeople}
+              </span>
             </div>
           </div>
           <div className="flex flex-col justify-start items-start gap-2">
             <div className="flex items-center">
               <MapPin className="w-5 h-5 mr-2 text-[#004AAD]" />
-              <span className="text-[#004AAD]">Lingampally</span>
+              <span className="text-[#004AAD]">{theater?.location}</span>
             </div>
             <div className="flex items-center">
               <Calendar className="w-5 h-5 mr-2 text-blue-600" />
-              <span className="text-[#004AAD]">17-10-2024</span>
+              <span className="text-[#004AAD]">{formattedDate}</span>
             </div>
           </div>
           <div className="flex flex-col justify-start items-start gap-2">
             <div className="flex items-center col-span-2">
               <Cake className="w-5 h-5 mr-2 text-[#004AAD]" />
-              <span className="text-[#004AAD]">Birthday Party</span>
+              <span className="text-[#004AAD]">{selectedOccasion}</span>
             </div>
             <div className="flex items-center col-span-2">
               <Clock className="w-5 h-5 mr-2 text-[#004AAD]" />
-              <span className="text-[#004AAD]">9:00 AM - 12:30 PM</span>
+              <span className="text-[#004AAD]">
+                {selectedSlot
+                  ? `${selectedSlot.startTime} - ${selectedSlot.endTime}`
+                  : "Slot not selected"}
+              </span>
             </div>
           </div>
         </div>
@@ -71,46 +78,49 @@ const Confirmation = () => {
       <div className="bg-[#2076E80D] p-6 rounded-md ring-1 ring-[#004AAD] shadow mb-6">
         <h2 className="text-xl font-semibold mb-4">Add-Ons</h2>
         <div className="grid grid-cols-4 gap-4 w-full text-[#004AAD]">
-        <div>
-          <h3 className="font-semibold">Decorations</h3>
-          {Object.entries(addOns.decorations).map(([name, count]) => (
-            <p key={name} className="text-sm">
-              {name} x {count}
-            </p>
-          ))}
-        </div>
-        <div>
-          <h3 className="font-semibold">Roses</h3>
-          {Object.entries(addOns.roses).map(([name, count]) => (
-            <p className="text-sm" key={name}>
-              {name} x {count}
-            </p>
-          ))}
-        </div>
-        <div>
-          <h3 className="font-semibold">Photography</h3>
-          {addOns.photography.length > 0 ? (
-            addOns.photography.map((item) => <p className="text-sm" key={item}>{item}</p>)
-          ) : (
-            <p className="text-sm">No photography selected</p>
-          )}
-        </div>
-
-        <div>
-          <h3  className="font-semibold">Cakes</h3>
-          {Object.values(selectedCakes).length > 0 ? (
-            Object.values(selectedCakes).map(({ id, name, quantity }) => (
-              <div key={id}>
-                <p className="text-sm" >
-                  {name} x {quantity}
+          <div>
+            <h3 className="font-semibold">Decorations</h3>
+            {Object.entries(addOns.decorations).map(([name, count]) => (
+              <p key={name} className="text-sm">
+                {name} x {count}
+              </p>
+            ))}
+          </div>
+          <div>
+            <h3 className="font-semibold">Roses</h3>
+            {Object.entries(addOns.roses).map(([name, count]) => (
+              <p className="text-sm" key={name}>
+                {name} x {count}
+              </p>
+            ))}
+          </div>
+          <div>
+            <h3 className="font-semibold">Photography</h3>
+            {addOns.photography.length > 0 ? (
+              addOns.photography.map((item) => (
+                <p className="text-sm" key={item}>
+                  {item}
                 </p>
-              </div>
-            ))
-          ) : (
-            <p className="text-sm" >No cakes selected</p>
-          )}
-        </div>
+              ))
+            ) : (
+              <p className="text-sm">No photography selected</p>
+            )}
+          </div>
 
+          <div>
+            <h3 className="font-semibold">Cakes</h3>
+            {Object.values(selectedCakes).length > 0 ? (
+              Object.values(selectedCakes).map(({ id, name, quantity }) => (
+                <div key={id}>
+                  <p className="text-sm">
+                    {name} x {quantity}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm">No cakes selected</p>
+            )}
+          </div>
         </div>
       </div>
 

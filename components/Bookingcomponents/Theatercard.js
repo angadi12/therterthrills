@@ -115,7 +115,7 @@ export default function TheatreCard({ theatre }) {
             </div>
           </div>
         </div>
-        <CardContent className="p-4">
+        <CardContent className="py-4 w-full">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (

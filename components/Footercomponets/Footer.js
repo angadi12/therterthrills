@@ -31,6 +31,9 @@ export default function Footer() {
       case "/booknow":
         setactiveitem("Book");
         break;
+      case "/checkout":
+        setactiveitem("Book");
+        break;
       case "/Add-Ons":
         setactiveitem("Addons");
         break;
