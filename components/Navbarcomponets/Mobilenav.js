@@ -46,7 +46,7 @@ export default function Mobilenav() {
         <SheetHeader>
           <Image src={Logo} alt="logo" className="object-contain h-12 w-12 absolute top-2"/>
         </SheetHeader>
-        <nav className="mt-12 flex flex-col justify-between gap-3">
+        <nav className="mt-14 flex flex-col justify-between gap-3">
           {navigationItems.map((item) => (
             <>
             <div className="w-full flex justify-between items-center">

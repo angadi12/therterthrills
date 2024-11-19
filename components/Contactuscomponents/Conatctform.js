@@ -25,7 +25,7 @@ export default function Contactform() {
                 Contact Us Today!{" "}
               </span>{" "}
             </h2>
-            <p className="text-gray-600 text-xs md:text-sm text-justify">
+            <p className="text-gray-600  text-justify">
               {`  We're excited to help bring your event to life. Whether you're booking a private screening or planning a
               celebration, contact us today for all the details. Our team is here to make sure your experience is smooth and
               unforgettable.`}

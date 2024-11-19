@@ -24,7 +24,7 @@ export default function Branchselect() {
         </Select>
       </div>
       <div className="w-full ">
-        <p className="text-[#595959] md:text-sm text-xs leading-7 text-justify">
+        <p className="text-[#595959]  leading-7 text-justify">
           {`Step into our gallery and explore snapshots from the unforgettable experiences we’ve created at The Theatre Thrills. From intimate movie screenings to grand birthday celebrations, each image captures the joy and excitement of our guests. Get inspired by the unique events we've hosted, showcasing custom decorations, themed parties, and private theatre setups.`}
         </p>
       </div>

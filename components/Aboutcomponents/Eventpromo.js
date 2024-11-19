@@ -54,7 +54,7 @@ export default function Eventpromo() {
               Memorable Experience!
             </span>{" "}
           </h1>
-          <p className="text-gray-600 leading-7 text-xs md:text-sm text-justify">
+          <p className="text-gray-600 leading-7  text-justify">
             {` At The Theatre Thrills, we are passionate about creating unforgettable experiences through private cinema and personalized events. Our mission is to transform your gatherings into extraordinary occasions, whether it's a cozy movie night or a lavish celebration. With a dedicated team that takes care of every detail, we ensure that your event is uniquely tailored to your preferences. From custom decorations to delicious refreshments, we offer a range of services designed to enhance your experience and create lasting memories. Join us for a magical journey where every moment is cherished!`}
           </p>
         </div>

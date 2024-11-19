@@ -24,29 +24,33 @@ import {
   openLoginModal,
   closeLoginModal,
   setIsAuthenticated,
-  setUser
+  setUser,
 } from "@/lib/Redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { MdEmail } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
-import { useRouter,usePathname } from 'next/navigation';
-import {Sendotp,Verifyotp,Createuser} from "@/lib/API/Auth"
-
+import { useRouter, usePathname } from "next/navigation";
+import { Sendotp, Verifyotp, Createuser } from "@/lib/API/Auth";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 const Login = () => {
   const { toast } = useToast();
   const dispatch = useDispatch();
   const router = useRouter();
-  const path=usePathname()
+  const path = usePathname();
 
   const [loginMethod, setLoginMethod] = useState("phone"); // 'phone' or 'email'
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState("");
   const [confirmationResult, setConfirmationResult] = useState(null);
   const [isSendingOtp, setIsSendingOtp] = useState(false); // Loading state for sending OTP
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false); // Loading state for verifying OTP
-  const { isLoginModalOpen, isOtpModalOpen,user } = useSelector(
+  const { isLoginModalOpen, isOtpModalOpen, user } = useSelector(
     (state) => state.auth
   );
 
@@ -58,7 +62,6 @@ const Login = () => {
       dispatch(openLoginModal());
     }
   }, []);
-
 
   const setupRecaptcha = () => {
     if (typeof window !== "undefined" && !window.recaptchaVerifier) {
@@ -82,7 +85,6 @@ const Login = () => {
           title: "Invalid Phone Number",
           description: "Please enter a valid phone number.",
           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-          
         });
       }
 
@@ -96,9 +98,9 @@ const Login = () => {
         );
         setConfirmationResult(result);
         toast({
-            title: "OTP Has been sent to your number",
-            action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-          });
+          title: "OTP Has been sent to your number",
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
         dispatch(closeLoginModal());
         dispatch(openOtpModal());
       } catch (error) {
@@ -151,25 +153,23 @@ const Login = () => {
 
   const handleVerifyOtp = async () => {
     setIsVerifyingOtp(true);
-    const otpString = otp.join("");
-    if (otpString.length === 6) {
+    if (otp.length === 6) {
       if (loginMethod === "phone" && confirmationResult) {
         try {
-          const result = await confirmationResult.confirm(otpString);
+          const result = await confirmationResult.confirm(otp);
           const idToken = await result.user.getIdToken();
-          // Cookies.set("token", idToken);
           const userData = {
             uid: result.user.uid,
             phoneNumber: result.user.phoneNumber,
             authType: "firebase",
           };
-  
+
           // Call Createuser endpoint
           const response = await Createuser(userData);
-          if (response.status==="success") {
+          if (response.status === "success") {
             Cookies.set("token", idToken);
             Cookies.set("User", JSON.stringify(response?.data?.user));
-            dispatch(setUser(response?.data?.user))
+            dispatch(setUser(response?.data?.user));
             toast({
               title: "Login successfully",
               action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
@@ -194,36 +194,38 @@ const Login = () => {
         }
       } else if (loginMethod === "email") {
         try {
-          const otpString = otp.join(""); 
-          const response = await Verifyotp({ email, otp:otpString });
+          const response = await Verifyotp({ email, otp: otp });
           if (response.status) {
             const userData = {
               email,
               authType: "emailOtp",
             };
-  
+
             // Call Createuser endpoint
             const createUserResponse = await Createuser(userData);
-  
-            if (createUserResponse.status==="success") {
+
+            if (createUserResponse.status === "success") {
               Cookies.set("token", response.token);
-              Cookies.set("User", JSON.stringify(createUserResponse?.data?.user));
-              dispatch(setUser(createUserResponse?.data?.user))
+              Cookies.set(
+                "User",
+                JSON.stringify(createUserResponse?.data?.user)
+              );
+              dispatch(setUser(createUserResponse?.data?.user));
               toast({
                 title: "Login successfully",
                 action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
               });
-            dispatch(closeOtpModal());
-            dispatch(setIsAuthenticated());
-            router.refresh(path) 
+              dispatch(closeOtpModal());
+              dispatch(setIsAuthenticated());
+              router.refresh(path);
+            } else {
+              toast({
+                title: "Login failed",
+                description: createUserResponse.message,
+                action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+              });
+            }
           } else {
-            toast({
-              title: "Login failed",
-              description: createUserResponse.message,
-              action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-            });
-          }        
-           } else {
             toast({
               title: "Failed to verify OTP",
               description: response.message,
@@ -283,7 +285,11 @@ const Login = () => {
             <div className="flex items-center gap-4">
               <Button
                 isIconOnly
-                className={`text-[#004AAD]  ${loginMethod === "phone"? "ring-1 ring-[#F30278]":"ring-1 ring-[#004AAD]"} bg-white`}
+                className={`text-[#004AAD]  ${
+                  loginMethod === "phone"
+                    ? "ring-1 ring-[#F30278]"
+                    : "ring-1 ring-[#004AAD]"
+                } bg-white`}
                 // isDisabled={loginMethod === "phone"}
                 onPress={() => setLoginMethod("phone")}
               >
@@ -291,20 +297,23 @@ const Login = () => {
               </Button>
               <Divider className="h-6 " orientation="vertical" />
               <Button
-                className={`text-[#004AAD] ${loginMethod === "email"? "ring-1 ring-[#F30278]":"ring-1 ring-[#004AAD]"} bg-white`}
+                className={`text-[#004AAD] ${
+                  loginMethod === "email"
+                    ? "ring-1 ring-[#F30278]"
+                    : "ring-1 ring-[#004AAD]"
+                } bg-white`}
                 isIconOnly
                 // isDisabled={loginMethod === "email"}
                 onPress={() => setLoginMethod("email")}
               >
-                <MdEmail size={24}/>
+                <MdEmail size={24} />
               </Button>
             </div>
             <div className="flex gap-4 w-full">
               {loginMethod === "phone" && (
                 <div className="flex items-center gap-2 w-full">
                   {" "}
-                  <FaPhoneAlt size={30} className="text-[#F30278]"/>
-
+                  <FaPhoneAlt size={30} className="text-[#F30278]" />
                   <Input
                     type="number"
                     label="Mobile Number"
@@ -317,14 +326,14 @@ const Login = () => {
 
               {loginMethod === "email" && (
                 <div className="flex items-center gap-2 w-full">
-                <MdEmail size={40} className="text-[#F30278]"/>
-                <Input
-                type="email"
-                  label="Email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+                  <MdEmail size={40} className="text-[#F30278]" />
+                  <Input
+                    type="email"
+                    label="Email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
               )}
             </div>
@@ -332,7 +341,7 @@ const Login = () => {
               isLoading={isSendingOtp}
               onPress={handleSendOtp}
               className="px-8 py-0.5 rounded-sm w-48  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-              >
+            >
               {isSendingOtp ? "Sending..." : "Send OTP"}
             </Button>
           </ModalBody>
@@ -353,27 +362,29 @@ const Login = () => {
           </ModalHeader>
           <ModalBody>
             <p className="text-center text-sm text-muted-foreground">
-              Code sent to {phoneNumber ?(+91-phoneNumber):email}
+              Code sent to {phoneNumber ? +91 - phoneNumber : email}
             </p>
             <div className="flex justify-center gap-2">
-              {otp.map((digit, index) => (
-                <Input
-                  key={index}
-                  id={`otp-${index}`}
-                  type="text"
-                  inputMode="numeric"
-                  className="w-12 h-12 text-center text-lg"
-                  value={digit}
-                  onChange={(e) => handleOtpChange(index, e.target.value)}
-                  maxLength={1}
-                />
-              ))}
+              <InputOTP
+                maxLength={6}
+                value={otp}
+                onChange={(value) => setOtp(value)}
+              >
+                <InputOTPGroup className="gap-4">
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
             </div>
             <Button
               isLoading={isVerifyingOtp}
               onPress={handleVerifyOtp}
               className="px-8 py-0.5 rounded-sm w-full  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-              >
+            >
               {isVerifyingOtp ? "Verifying..." : "Verify"}
             </Button>
           </ModalBody>

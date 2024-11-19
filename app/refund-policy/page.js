@@ -8,7 +8,7 @@ export default function Component() {
         <CardTitle className="text-2xl text-center">Refund Policy</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <ul className="space-y-4 list-disc text-xs md:text-lg md:pl-6">
+        <ul className="space-y-4 list-disc text-sm md:text-lg md:pl-6">
           <li>{`We require a ₹700 advance to confirm your booking.`}</li>
           <li>
            {` If you cancel at least 72 hours before your scheduled time, ₹500 of
