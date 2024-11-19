@@ -64,7 +64,7 @@ export default function TestimonialCarousel() {
   }
 
   return (
-    <div className="w-11/12 mx-auto py-24 ">
+    <div className="w-11/12 mx-auto md:py-24 py-8 ">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-center place-content-center items-stretch">
         <div className=''>
           <h2 className="text-4xl font-bold mb-2">
