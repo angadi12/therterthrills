@@ -3,6 +3,7 @@ import { NextuiProviderWrapper } from "./provider";
 import { Roboto } from "next/font/google";
 import { Providers } from "@/lib/Redux/provider";
 import Script from 'next/script';
+import { Toaster } from "@/components/ui/toaster";
 
 
 const inter = Roboto({
@@ -26,6 +27,7 @@ export default function RootLayout({ children }) {
         <body className={inter.className}>
           <NextuiProviderWrapper>
             {children}
+            <Toaster />
           </NextuiProviderWrapper>
         </body>
       </html>

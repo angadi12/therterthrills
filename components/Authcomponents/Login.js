@@ -82,6 +82,7 @@ const Login = () => {
           title: "Invalid Phone Number",
           description: "Please enter a valid phone number.",
           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+          
         });
       }
 
@@ -259,8 +260,7 @@ const Login = () => {
   };
 
   return (
-    <>
-      <Toaster />
+    <div className="overflow-hidden">
       <div id="recaptcha-container"></div>
 
       {/* Login Modal */}
@@ -268,10 +268,11 @@ const Login = () => {
         isDismissable={false}
         isKeyboardDismissDisabled={true}
         backdrop="opaque"
+        className="overflow-hidden"
         isOpen={isLoginModalOpen}
         onOpenChange={() => dispatch(closeLoginModal())}
       >
-        <ModalContent className="flex justify-center items-center w-full gap-4">
+        <ModalContent className="flex justify-center items-center w-full gap-4 overflow-hidden">
           <ModalHeader className="text-2xl text-center">
             Sign Up/Log In
           </ModalHeader>
@@ -378,7 +379,7 @@ const Login = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 };
 
