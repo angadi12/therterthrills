@@ -206,8 +206,8 @@ const Login = () => {
   
             if (createUserResponse.status==="success") {
               Cookies.set("token", response.token);
-              Cookies.set("User", JSON.stringify(response?.data?.user));
-              dispatch(setUser(response?.data?.user))
+              Cookies.set("User", JSON.stringify(createUserResponse?.data?.user));
+              dispatch(setUser(createUserResponse?.data?.user))
               toast({
                 title: "Login successfully",
                 action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,

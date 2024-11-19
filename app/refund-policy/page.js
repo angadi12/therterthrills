@@ -2,13 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Component() {
   return (
-    <section className="flex justify-center items-center w-full py-20 mb-8">
-    <Card className="w-3/4 mx-auto p-4">
+    <section className="flex justify-center items-center w-full md:py-20 py-8 mb-8">
+    <Card className="md:w-3/4 w-11/12 mx-auto md:p-4 p-1">
       <CardHeader>
         <CardTitle className="text-2xl text-center">Refund Policy</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <ul className="space-y-4 list-disc pl-6">
+        <ul className="space-y-4 list-disc text-xs md:text-lg md:pl-6">
           <li>{`We require a ₹700 advance to confirm your booking.`}</li>
           <li>
            {` If you cancel at least 72 hours before your scheduled time, ₹500 of

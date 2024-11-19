@@ -29,15 +29,15 @@ export default function Component() {
   ]
 
   return (
-    <section className="flex justify-center items-center w-full py-20 mb-8">
-    <Card className="w-3/4 mx-auto p-4">
+    <section className="flex justify-center items-center w-full md:py-20 py-10 mb-8">
+    <Card className="md:w-3/4 w-11/12 mx-auto md:p-4 p-1">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-center">Terms & Condition</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {terms.map((term, index) => (
           <div key={index}>
-            <h2 className="text-lg font-semibold mb-2">{`${index + 1}. ${term.title}`}</h2>
+            <h2 className="md:text-lg text-sm font-semibold mb-2">{`${index + 1}. ${term.title}`}</h2>
             <p className="text-sm text-gray-600">{term.content}</p>
           </div>
         ))}

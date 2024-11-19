@@ -149,7 +149,7 @@ export default function CustomServices() {
   return (
     <section className="py-16 bg-[#F7F7F7]">
       <div className="md:w-11/12 w-full mx-auto">
-        <h2 className="text-4xl font-bold text-center mb-2">
+        <h2 className="md:text-4xl text-2xl font-bold text-center mb-2">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#004AAD] to-[#F30278] ">
             Custom Services
           </span>{" "}

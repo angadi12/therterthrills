@@ -11,9 +11,9 @@ import Photoshoot from "@/public/asset/Photoshoot.png"
 const BenefitsList = ({ benefits }) => (
   <div className="bg-pink-100 ring-1 ring-[#F30278] p-4 rounded-lg">
     <h3 className="text-[#F30278] font-semibold mb-2">Benefits & Features</h3>
-    <ul className="list-disc list-inside text-[#F30278]  text-sm">
+    <ul className="list-disc list-inside text-[#F30278]  md:text-sm text-xs">
       {benefits.map((benefit, index) => (
-        <li className='m-2' key={index}>{benefit}</li>
+        <li className='md:m-2' key={index}>{benefit}</li>
       ))}
     </ul>
   </div>
@@ -27,13 +27,13 @@ const ServiceSection = ({
   imageAlt,
   reverse = false,
 }) => (
-  <div className={`grid grid-cols-1 justify-center items-stretch md:grid-cols-2 py-8 px-12 w-full gap-12 mb-12 ${reverse ? 'md:[&>*:first-child]:order-last bg-[#F7F7F7]' : ''}`}>
+  <div className={`grid grid-cols-1 justify-center items-stretch md:grid-cols-2 py-8 md:px-12 px-2 w-full md:gap-12 gap-6 md:mb-12 ${reverse ? 'md:[&>*:first-child]:order-last bg-[#F7F7F7]' : ''}`}>
     <div className="flex items-center">
       <Image src={imageSrc} alt={imageAlt} className="w-full h-auto object-contain rounded-lg shadow-lg" />
     </div>
     <div className="flex flex-col justify-center">
-      <h2 className="text-2xl font-bold mb-4">{title}</h2>
-      <p className="mb-4 text-sm leading-7 text-[#595959]">{description}</p>
+      <h2 className="md:text-2xl text-xl font-bold mb-4">{title}</h2>
+      <p className="mb-4 md:text-sm text-xs leading-7 text-[#595959]">{description}</p>
       <BenefitsList benefits={benefits} />
     </div>
   </div>

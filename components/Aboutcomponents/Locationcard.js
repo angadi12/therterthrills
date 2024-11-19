@@ -4,7 +4,7 @@ import { FaLocationDot } from "react-icons/fa6";
 
 export default function BranchInfo() {
   return (
-    <div className="max-w-lg mx-auto py-16">
+    <div className="max-w-lg mx-auto md:py-16 py-8">
       <h1 className="text-3xl font-medium text-center mb-6">
         Our Branches in <span className="bg-clip-text font-semibold inline-block text-transparent bg-gradient-to-r from-[#004AAD] via-[#F30278] to-[#E2B600]">Hyderabad!</span>
       </h1>

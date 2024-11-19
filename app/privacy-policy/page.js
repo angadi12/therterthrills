@@ -2,14 +2,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Component() {
   return (
-    <section className="flex justify-center items-center w-full py-20 mb-8">
-    <Card className="w-3/4 mx-auto p-4">
+    <section className="flex justify-center items-center w-full md:py-20 py-10 mb-8">
+    <Card className="md:w-3/4 w-11/12 mx-auto md:p-4 p-1">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-center">
+        <CardTitle className="md;text-2xl text-xl font-bold text-center">
           Privacy Policy
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 text-xs md:text-lg">
         <p className="text-sm text-gray-600">
           {`At The Theatre Thrills, accessible from www.thetheatrethrills.com, safeguarding visitor privacy is a top priority. This Privacy Policy outlines the types of information we collect, how it's recorded, and how we use it.`}
         </p>
