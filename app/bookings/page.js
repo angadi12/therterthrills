@@ -10,6 +10,7 @@ import {
   selectBookingLoading,
   selectBookings,
 } from "@/lib/Redux/bookingSlice";
+import TheatreCardSkeleton from "@/components/Bookingcomponents/TheatreCardSkeleton";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -38,10 +39,23 @@ const Page = () => {
       <section className="w-11/12 mx-auto flex flex-col gap-4 justify-center items-start md:py-20 py-8">
         <p className="md:text-3xl text-xl font-medium md:mb-8">My Bookings</p>
         <div className="w-full grid md:grid-cols-3 grid-cols-1 justify-center items-stretch place-content-center gap-4">
-          {bookings &&
-            bookings.map((booking, index) => (
-              <Bookingcard key={index} booking={booking} />
-            ))}
+          {loading ? (
+            Array.from({ length: 6 }).map((_, index) => (
+              <TheatreCardSkeleton key={index} />
+            ))
+          ) : (
+            <>
+              {bookings.length === 0 ? (
+                <p className="col-span-3 text-center text-lg font-medium">
+                  No Booking available.
+                </p>
+              ) : (
+                bookings.map((booking, index) => (
+                  <Bookingcard key={index} booking={booking} />
+                ))
+              )}
+            </>
+          )}
         </div>
       </section>
     </main>

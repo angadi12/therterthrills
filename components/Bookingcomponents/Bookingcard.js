@@ -30,9 +30,16 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 export default function Bookingcard({ booking }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const formattedDate =
     booking?.date && !isNaN(new Date(booking?.date))
@@ -137,6 +144,103 @@ export default function Bookingcard({ booking }) {
     </Dialog>
   );
 
+  const BookingDetailsDrawer = () => (
+    <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle className="text-[#004AAD]">Booking Details</DrawerTitle>
+        </DrawerHeader>
+        <ScrollArea className="h-[80vh]">
+          <div className="grid md:grid-cols-2 grid-cols-1 gap-8 p-6">
+            <div className="space-y-6 md:border-r md:pr-4 md:border-[#F30278]">
+              <div>
+                <h2 className="text-2xl font-bold text-[#004AAD]">
+                  {booking?.Occasionobject}
+                </h2>
+                <p className="text-lg font-semibold text-[#F30278]">
+                  Booking ID: {booking?.bookingId}
+                </p>
+                <p className="text-lg font-semibold text-[#F30278]">
+                  Total: ₹{booking?.TotalAmount}/-
+                </p>
+              </div>
+              <Separator className="bg-[#F30278]" />
+              <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+                <div className="flex items-center">
+                  <Calendar className="w-4 h-4 mr-2 text-[#004AAD]" />
+                  <span className="text-sm">{formattedDate}</span>
+                </div>
+                <div className="flex items-center">
+                  <Users className="w-4 h-4 mr-2 text-[#004AAD]" />
+                  <span className="text-sm">
+                    {booking?.numberOfPeople} Members
+                  </span>
+                </div>
+                <div className="flex items-center">
+                  <Phone className="w-4 h-4 mr-2 text-[#004AAD]" />
+                  <span className="text-sm">{booking?.phoneNumber}</span>
+                </div>
+                <div className="flex items-center">
+                  <Mail className="w-4 h-4 mr-2 text-[#004AAD]" />
+                  <span className="text-sm">{booking?.email}</span>
+                </div>
+              </div>
+              <Separator className="bg-[#F30278]" />
+              <div>
+                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">Cake Details</h3>
+                <p>Eggless: <span className="text-[#F30278]">{booking?.isEggless ? "Yes" : "No"}</span></p>
+                <p>Cake Text: <span className="text-[#F30278]">{booking?.cakeText}</span></p>
+                <p>Nick Name: <span className="text-[#F30278]">{booking?.nickname}</span></p>
+                <p>Partner Nickname: <span className="text-[#F30278]">{booking?.partnerNickname}</span></p>
+                {Object.values(booking?.Cakes).map((cake, index) => (
+                  <p key={index} className="text-sm">
+                    {cake?.name} x {cake?.quantity} - <span className="text-[#F30278]">₹
+                    {cake?.price * cake?.quantity}</span>
+                  </p>
+                ))}
+              </div>
+            </div>
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">Add-Ons</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  {Object.entries(booking?.Addons?.decorations).map(
+                    ([name, count]) => (
+                      <p key={name} className="text-sm">
+                        {name} x <span className="text-[#F30278]">{count}</span>
+                      </p>
+    )
+                  )}
+                  {Object.entries(booking?.Addons?.roses).map(
+                    ([name, count]) => (
+                      <p key={name} className="text-sm">
+                        {name} x <span className="text-[#F30278]">{count}</span>
+                      </p>
+                    )
+                  )}
+                  {booking?.Addons?.photography.map((item, index) => (
+                    <p key={index} className="text-sm text-[#F30278]">
+                      {item}
+                    </p>
+                  ))}
+                </div>
+              </div>
+              <Separator className="bg-[#F30278]" />
+              <div>
+                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">Payment Details</h3>
+                <div className="flex items-center mb-2">
+                  <CreditCard className="w-4 h-4 mr-2 text-[#004AAD]" />
+                  <span>Status: <span className="text-[#F30278]">{booking?.paymentStatus}</span></span>
+                </div>
+                <p>Amount Paid: <span className="text-[#F30278]">₹{booking?.paymentAmount}/-</span></p>
+                <p>Order ID: <span className="text-[#F30278]">{booking?.orderId}</span></p>
+              </div>
+            </div>
+          </div>
+        </ScrollArea>
+      </DrawerContent>
+    </Drawer>)
+
   return (
     <Card className="w-full flex flex-col mx-auto justify-around items-center p-0 relative">
       <CardHeader className="p-0 w-full">
@@ -158,7 +262,7 @@ export default function Bookingcard({ booking }) {
           </span>
         </div>
         <Separator className="my-2" />
-        <div className="bg-[#F30278] text-primary-foreground p-3 rounded-md mb-4 w-full">
+        <div className="bg-[#004AAD]/10 text-[#004AAD] rounded-md mb-4 p-2 w-full border-1 border-[#004AAD]">
           <div className="grid grid-cols-2 gap-4">
             <div className="flex items-center">
               <Calendar className="w-4 h-4 mr-2" />
@@ -232,13 +336,20 @@ export default function Bookingcard({ booking }) {
       <Separator className="my-2 mx-auto" />
       <CardFooter className="flex justify-center items-center w-full mt-auto">
         <Button
-          className="px-8 py-0.5 rounded-sm w-full  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+          className="px-8 py-0.5 rounded-sm w-full md:hidden block  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+          onClick={() => setIsDrawerOpen(true)}
+        >
+          View Details
+        </Button>
+        <Button
+          className="px-8 py-0.5 rounded-sm w-full hidden md:block  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
           onClick={() => setIsModalOpen(true)}
         >
           View Details
         </Button>
       </CardFooter>
       <BookingDetailsDialog />
+      <BookingDetailsDrawer/>
     </Card>
   );
 }
