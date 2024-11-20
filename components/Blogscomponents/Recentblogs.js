@@ -59,8 +59,8 @@ const Recentblogs = () => {
 
 
   return (
-    <div className="w-11/12 mx-auto  py-12">
-    <h1 className="text-4xl font-bold text-left mb-8">
+    <div className="w-11/12 mx-auto  md:py-12 py-6">
+    <h1 className="md:text-4xl text-xl font-bold text-left mb-8">
     Recent Blogs
     </h1>
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

@@ -26,20 +26,24 @@ import Cakes from "@/components/Checkoutcomponents/Cakes";
 import AddOns from "@/components/Checkoutcomponents/AddOns";
 import Confirmation from "@/components/Checkoutcomponents/Confirmation";
 import Cart from "@/components/Checkoutcomponents/Cart";
-import { Createbooking, verifyPayment } from "@/lib/API/Booking";
+import {
+  Createbooking,
+  verifyPayment,
+  CreateRazorpayorder,
+} from "@/lib/API/Booking";
 import Cookies from "js-cookie";
 import { selectAddOns } from "@/lib/Redux/addOnsSlice";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { format } from "date-fns";
-import {fetchtheaterbyid} from "@/lib/Redux/theaterSlice"
+import { fetchtheaterbyid } from "@/lib/Redux/theaterSlice";
 import Successmodal from "./Successmodal";
 
 const CheckoutOnboarding = () => {
-  const router=useRouter()
+  const router = useRouter();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const [opensucessmodal,setOpensuccesmodal]=useState(false)
-  const [loading,setloading]=useState(false)
+  const [opensucessmodal, setOpensuccesmodal] = useState(false);
+  const [loading, setloading] = useState(false);
   const { toast } = useToast();
   const dispatch = useDispatch();
   const {
@@ -61,40 +65,34 @@ const CheckoutOnboarding = () => {
   );
 
   const selectedCakes = useSelector((state) => state.cakes.selectedCakes);
-  const { selectedTheater, selectedslotsid ,date,theater,theaterloading} = useSelector(
-    (state) => state.theater
-  );
+  const { selectedTheater, selectedslotsid, date, theater, theaterloading } =
+    useSelector((state) => state.theater);
   const { decorations, roses, photography } = useSelector(selectAddOns);
   const totalAmount = useSelector((state) => state.totalAmount.value);
 
-useEffect(() => {
-  if(!selectedTheater & !selectedslotsid){
-    onOpen()
-  }
-   
-}, [])
+  useEffect(() => {
+    if (!selectedTheater & !selectedslotsid) {
+      onOpen();
+    }
+  }, []);
 
-useEffect(() => {
- if (selectedTheater){
-  dispatch(fetchtheaterbyid(selectedTheater))
- }
-}, [dispatch])
+  useEffect(() => {
+    if (selectedTheater) {
+      dispatch(fetchtheaterbyid(selectedTheater));
+    }
+  }, [dispatch]);
 
-
-
-
-const formattedDate =
+  const formattedDate =
     date && !isNaN(new Date(date))
       ? format(new Date(date), "yyyy-MM-dd")
       : null;
-
 
   const steps =
     addDecorations === "yes"
       ? [
           { component: <BookingDetails />, name: "Booking Details" },
-          { component: <Occasion/>, name: "Occasion" },
-          { component: <Cakes/>, name: "Cakes" },
+          { component: <Occasion />, name: "Occasion" },
+          { component: <Cakes />, name: "Cakes" },
           { component: <AddOns />, name: "Add-Ons" },
           { component: <Confirmation />, name: "Confirmation" },
         ]
@@ -169,13 +167,23 @@ const formattedDate =
   };
 
   const handleProceedToPayment = async () => {
-    setloading(true)
+    setloading(true);
     if (!agreed) {
       toast({
         title: "Accept All The Conditions",
         description: "Please agree to the conditions before proceeding.",
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
+      setloading(false);
+      return;
+    }
+    if (totalAmount===null) {
+      toast({
+        title: "Total Amount is required",
+        description: "Please check  the amount before proceeding.",
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });
+      setloading(false);
       return;
     }
 
@@ -186,9 +194,9 @@ const formattedDate =
     }
     const decodedUserData = decodeURIComponent(encodedUserData);
     const userData = JSON.parse(decodedUserData);
-    
+
     const bookingData = {
-      fullName:bookingDetails.fullName,
+      fullName: bookingDetails.fullName,
       phoneNumber: bookingDetails.phoneNumber,
       whatsappNumber: bookingDetails.whatsappNumber,
       email: bookingDetails.email,
@@ -199,7 +207,7 @@ const formattedDate =
       Occasionobject: selectedOccasion,
       selectedCakes: selectedCakes,
       cakeText: cakeText,
-      isEggless:isEggless,
+      isEggless: isEggless,
       addOns: {
         decorations,
         roses,
@@ -207,59 +215,62 @@ const formattedDate =
       },
       theaterId: selectedTheater,
       slotId: selectedslotsid,
-      user:userData?._id,
-      date:formattedDate,
-      TotalAmount:totalAmount,
-      paymentAmount:750
+      user: userData?._id,
+      date: formattedDate,
+      TotalAmount: totalAmount,
+      paymentAmount: 750,
+    };
+
+    const orderdata = {
+      theaterId: selectedTheater,
+      slotId: selectedslotsid,
+      date: formattedDate,
+      paymentAmount: 750,
     };
 
     try {
-      const response = await Createbooking(bookingData);
-      if (response?.success) {
-        // toast({
-        //   title: "Booking Successful",
-        //   description: "Your booking has been created successfully.",
-        //   action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-        // });
-        // Redirect or perform further actions after successful booking
-        const bookingId = response.order?.receipt; // Extract bookingId
-        console.log(bookingId)
+      const response = await CreateRazorpayorder(orderdata);
+      if (response?.success === true) {
         var razorpayOptions = {
-          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, // Replace with your Razorpay Key ID
-          amount: response.order?.amount, // Amount in paise (response from API)
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+          amount: response.order?.amount,
           currency: "INR",
           name: "THEATER THRILLS",
           description: "Test Transaction",
-          image: "https://firebasestorage.googleapis.com/v0/b/awt-website-769f8.appspot.com/o/Logo.png?alt=media&token=d8826565-b850-4d05-8bfa-5be8061f70f6",
-          order_id: response.order?.id, // Order ID from backend
+          image:
+            "https://firebasestorage.googleapis.com/v0/b/awt-website-769f8.appspot.com/o/Logo.png?alt=media&token=d8826565-b850-4d05-8bfa-5be8061f70f6",
+          order_id: response.order?.id,
           handler: async function (response) {
             try {
               const verifyResponse = await verifyPayment({
                 razorpayPaymentId: response.razorpay_payment_id,
                 razorpayOrderId: response.razorpay_order_id,
                 razorpaySignature: response.razorpay_signature,
-              }, bookingId);
+              });
               if (verifyResponse.success) {
-                // toast({
-                //   title: "Payment Successful",
-                //   description: "Your payment has been verified.",
-                //   action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-                // });
-                setloading(false)
-                setOpensuccesmodal(true)
+                const { orderId } = verifyResponse;
+
+                const updatedBookingData = {
+                  ...bookingData,
+                  orderId,
+                };
+                const booked = await Createbooking(updatedBookingData);
+                if (booked?.success) {
+                  setloading(false);
+                  setOpensuccesmodal(true);
+                }
               } else {
                 toast({
                   title: "Payment Failed",
                   description: "Verification failed.",
                   action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
                 });
-                setloading(false)
-
+                setloading(false);
+                router.refresh("/checkout");
               }
             } catch (error) {
               console.error("Verification Error:", error);
-              setloading(false)
-
+              setloading(false);
             }
           },
           prefill: {
@@ -270,18 +281,27 @@ const formattedDate =
           theme: {
             color: "#F30278",
           },
+          modal: {
+            ondismiss: function () {
+              toast({
+                title: "Payment Cancelled",
+                description: "You exited the payment process.",
+                action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+              });
+              setloading(false);
+            },
+          },
         };
-  
-        const razorpay= new window.Razorpay(razorpayOptions)
-        razorpay.open()
 
+        const razorpay = new window.Razorpay(razorpayOptions);
+        razorpay.open();
       } else {
         toast({
           title: "Booking Failed",
           description: response?.message || "An error occurred.",
           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
-        setloading(false)
+        setloading(false);
       }
     } catch (error) {
       console.error("Booking Error:", error);
@@ -290,20 +310,17 @@ const formattedDate =
         description: "Failed to create booking. Please try again.",
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
-      setloading(false)
+      setloading(false);
     }
   };
 
-
-   if(opensucessmodal){
-    return<div className="flex justify-center items-center w-full h-[50vh]">
-
-<Successmodal/>
-    </div> 
-      
-   }
-
-
+  if (opensucessmodal) {
+    return (
+      <div className="flex justify-center items-center w-full h-[50vh]">
+        <Successmodal />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -356,10 +373,8 @@ const formattedDate =
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {renderStepComponent()}
 
-
           <Suspense fallback={<p>loading...</p>}>
-
-          { theater && <Cart theater={theater}/>}
+            {theater && <Cart theater={theater} />}
           </Suspense>
         </div>
 
@@ -373,7 +388,7 @@ const formattedDate =
           </Button>
           {steps[currentStep].name === "Confirmation" ? (
             <Button
-            isLoading={loading}
+              isLoading={loading}
               onPress={handleProceedToPayment}
               className="px-8 py-0.5 w-48 rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
             >
@@ -392,29 +407,31 @@ const formattedDate =
       </div>
 
       <Modal
-      hideCloseButton={true}
+        hideCloseButton={true}
         isDismissable={false}
         isKeyboardDismissDisabled={true}
         isOpen={isOpen}
         onOpenChange={onOpenChange}
       >
         <ModalContent>
-        <ModalHeader className="flex flex-col gap-1 text-center">Theater not selected</ModalHeader>
+          <ModalHeader className="flex flex-col gap-1 text-center">
+            Theater not selected
+          </ModalHeader>
           <ModalBody>
-            <p className="text-sm ">Please select both a slot and a theater before proceeding</p>
+            <p className="text-sm ">
+              Please select both a slot and a theater before proceeding
+            </p>
           </ModalBody>
           <ModalFooter className="flex justify-center items-center">
-
-            <Button onPress={()=>router.push("/booknow")} className="px-8 py-0.5 rounded-sm w-48  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] ">
+            <Button
+              onPress={() => router.push("/booknow")}
+              className="px-8 py-0.5 rounded-sm w-48  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+            >
               Go to Book Now
             </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
-
-    
-
-
     </>
   );
 };

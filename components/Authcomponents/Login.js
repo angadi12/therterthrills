@@ -370,7 +370,7 @@ const Login = () => {
                 value={otp}
                 onChange={(value) => setOtp(value)}
               >
-                <InputOTPGroup className="gap-4">
+                <InputOTPGroup className="md:gap-4 gap-1">
                   <InputOTPSlot index={0} />
                   <InputOTPSlot index={1} />
                   <InputOTPSlot index={2} />
