@@ -101,18 +101,20 @@ const CheckoutOnboarding = () => {
           { component: <Confirmation />, name: "Confirmation" },
         ];
 
-  // Render current step's component based on dynamic steps array
   const renderStepComponent = () => steps[currentStep]?.component;
 
   const handleProceed = () => {
     if (handleValidation()) {
       dispatch(setCurrentStep(currentStep + 1));
+      window.scrollTo({ top: 0, behavior: "smooth" }); 
     }
   };
 
   const handleBack = () => {
     if (currentStep > 0) {
       dispatch(setCurrentStep(currentStep - 1));
+      window.scrollTo({ top: 0, behavior: "smooth" }); 
+
     }
   };
 
