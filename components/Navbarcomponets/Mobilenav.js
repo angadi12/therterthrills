@@ -39,7 +39,6 @@ const navigationItems = [
   },
   { name: "Add-Ons", href: "/Add-Ons", icon: <SmilePlus strokeWidth={1.5} /> },
   { name: "Gallery", href: "/gallery", icon: <BookImage strokeWidth={1.5} /> },
-  { name: "Contact Us", href: "/contact", icon: <Headset strokeWidth={1.5} /> },
   { name: "Blogs", href: "/blogs", icon: <Rss strokeWidth={1.5} /> },
   {
     name: "Refund Policy",
@@ -56,6 +55,7 @@ const navigationItems = [
     href: "/terms-and-conditions",
     icon: <Handshake strokeWidth={1.5} />,
   },
+  { name: "Contact Us", href: "/contact", icon: <Headset strokeWidth={1.5} /> },
 ];
 
 export default function Mobilenav() {

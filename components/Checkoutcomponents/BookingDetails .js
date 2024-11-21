@@ -5,6 +5,8 @@ import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label"
+
 import {
     Select,
     SelectContent,
@@ -13,7 +15,7 @@ import {
     SelectValue,
   } from "@/components/ui/select";
   
-const BookingDetails = () => {
+const BookingDetails = ({theater}) => {
     const { toast } = useToast();
     const dispatch = useDispatch();
     const { bookingDetails, validationErrors } = useSelector(
@@ -35,15 +37,27 @@ const BookingDetails = () => {
         <h2 className="text-xl font-semibold mb-4">Booking Details</h2>
         <div className="space-y-7">
           <div className="grid md:grid-cols-2 grid-cols-1 justify-center items-center gap-4">
+           <div className="w-full flex flex-col gap-1 items-start">
+             <Label>Full Name <span className="text-red-500">*</span></Label>
             <Input
               placeholder="Full Name"
               className="h-12"
               value={bookingDetails.fullName}
               onChange={(e) => handleInputChange("fullName", e.target.value)}
             />
+           </div>
+           <div className="w-full flex flex-col gap-1 items-start">
+           <Label>Capacity<span className="text-red-500">*</span></Label>
+            <Input
+              placeholder={theater?.capacity}
+              className="h-12"
+              disabled 
+              value={theater?.capacity}
+            />
+           </div>
 
-            <Select
-              value={bookingDetails.numberOfPeople}
+            {/* <Select
+              value={theater.numberOfPeople}
               onValueChange={(value) =>
                 handleInputChange("numberOfPeople", value)
               }
@@ -58,16 +72,21 @@ const BookingDetails = () => {
                   </SelectItem>
                 ))}
               </SelectContent>
-            </Select>
+            </Select> */}
           </div>
           <div className="grid md:grid-cols-2 grid-cols-1 justify-center items-center gap-4">
+          <div className="w-full flex flex-col gap-1 items-start">
+          <Label>Phone Number <span className="text-red-500">*</span></Label>
             <Input
               placeholder="Phone Number"
               className="h-12"
               value={bookingDetails.phoneNumber}
               onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
             />
+          </div>
 
+          <div className="w-full flex flex-col gap-1 items-start">
+          <Label>Whatsapp Number <span className="text-red-500">*</span></Label>
             <Input
               placeholder="Whatsapp Number"
               className="h-12"
@@ -77,6 +96,9 @@ const BookingDetails = () => {
               }
             />
           </div>
+          </div>
+          <div className="w-full flex flex-col gap-1 items-start">
+          <Label>Email<span className="text-red-500">*</span></Label>
           <Input
             placeholder="Email Id"
             type="email"
@@ -84,6 +106,7 @@ const BookingDetails = () => {
             value={bookingDetails.email}
             onChange={(e) => handleInputChange("email", e.target.value)}
           />
+          </div>
 
           <div>
             <p className="text-sm text-gray-600 mb-2">{`Do you want to add decorations to your event? (Extra Charge)`}</p>

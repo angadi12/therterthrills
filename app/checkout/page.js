@@ -38,6 +38,7 @@ import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import { fetchtheaterbyid } from "@/lib/Redux/theaterSlice";
 import Successmodal from "./Successmodal";
+import BookingSummarySkeleton from "@/components/Checkoutcomponents/Checkoutskeleton";
 
 const CheckoutOnboarding = () => {
   const router = useRouter();
@@ -90,7 +91,10 @@ const CheckoutOnboarding = () => {
   const steps =
     addDecorations === "yes"
       ? [
-          { component: <BookingDetails />, name: "Booking Details" },
+          {
+            component: <BookingDetails theater={theater} />,
+            name: "Booking Details",
+          },
           { component: <Occasion />, name: "Occasion" },
           { component: <Cakes />, name: "Cakes" },
           { component: <AddOns />, name: "Add-Ons" },
@@ -106,23 +110,22 @@ const CheckoutOnboarding = () => {
   const handleProceed = () => {
     if (handleValidation()) {
       dispatch(setCurrentStep(currentStep + 1));
-      window.scrollTo({ top: 0, behavior: "smooth" }); 
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const handleBack = () => {
     if (currentStep > 0) {
       dispatch(setCurrentStep(currentStep - 1));
-      window.scrollTo({ top: 0, behavior: "smooth" }); 
-
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const validateFields = (bookingDetails) => {
     const errors = {};
     if (!bookingDetails.fullName) errors.fullName = "Full name is required.";
-    if (!bookingDetails.numberOfPeople)
-      errors.numberOfPeople = "Select number of people.";
+    // if (!bookingDetails.numberOfPeople)
+    //   errors.numberOfPeople = "Select number of people.";
     if (!bookingDetails.addDecorations)
       errors.addDecorations = "Do you want to add decorations to your event?";
     if (!bookingDetails.phoneNumber.match(/^\d{10}$/))
@@ -179,7 +182,7 @@ const CheckoutOnboarding = () => {
       setloading(false);
       return;
     }
-    if (totalAmount===null) {
+    if (totalAmount === null) {
       toast({
         title: "Total Amount is required",
         description: "Please check  the amount before proceeding.",
@@ -202,7 +205,7 @@ const CheckoutOnboarding = () => {
       phoneNumber: bookingDetails.phoneNumber,
       whatsappNumber: bookingDetails.whatsappNumber,
       email: bookingDetails.email,
-      numberOfPeople: bookingDetails.numberOfPeople,
+      // numberOfPeople: bookingDetails.numberOfPeople,
       addDecorations: bookingDetails.addDecorations,
       nickname: nickname,
       partnerNickname: partnerNickname,
@@ -376,7 +379,11 @@ const CheckoutOnboarding = () => {
           {renderStepComponent()}
 
           <Suspense fallback={<p>loading...</p>}>
-            {theater && <Cart theater={theater} />}
+            {theaterloading ? (
+              <BookingSummarySkeleton />
+            ) : (
+              <>{theater && <Cart theater={theater} />}</>
+            )}
           </Suspense>
         </div>
 

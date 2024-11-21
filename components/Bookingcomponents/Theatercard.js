@@ -132,7 +132,10 @@ export default function TheatreCard({ theatre }) {
             </div>
             <span className="font-bold text-lg">{theatre?.price}/-</span>
           </div>
+          <div className="flex items-center justify-between mb-2">
           <h3 className="text-xl font-bold mb-2">{theatre?.name}</h3>
+          {theatre?.availableSlots.length > 0 && <p className="text-white text-sm px-2 bg-[#F30278] rounded-full p-1">{`${theatre?.availableSlots.length} slots available`}</p>}
+          </div>
           <div className="flex gap-2 mb-2">
             <span className="bg-pink-100 ring-1 ring-[#F30278] text-xs text-[#F30278] px-2 py-2 font-semibold rounded flex items-center">
               <Image src={Groupicon2} alt="grp" className="w-3 h-3 mr-1" />{" "}

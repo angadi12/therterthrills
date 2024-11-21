@@ -75,7 +75,7 @@ export default function Bookingcard({ booking }) {
                 <div className="flex items-center">
                   <Users className="w-4 h-4 mr-2 text-[#004AAD]" />
                   <span className="text-sm">
-                    {booking?.numberOfPeople} Members
+                    {booking?.theater?.capacity} Members
                   </span>
                 </div>
                 <div className="flex items-center">
@@ -173,7 +173,7 @@ export default function Bookingcard({ booking }) {
                 <div className="flex items-center">
                   <Users className="w-4 h-4 mr-2 text-[#004AAD]" />
                   <span className="text-sm">
-                    {booking?.numberOfPeople} Members
+                    {booking?.theater?.capacity} Members
                   </span>
                 </div>
                 <div className="flex items-center">
@@ -270,7 +270,7 @@ export default function Bookingcard({ booking }) {
             </div>
             <div className="flex items-center">
               <Users className="w-4 h-4 mr-2" />
-              <span className="text-sm">{booking.numberOfPeople} Members</span>
+              <span className="text-sm">{booking?.theater?.capacity} Members</span>
             </div>
             <div className="flex items-center">
               <MapPin className="w-4 h-4 mr-2" />

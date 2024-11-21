@@ -166,12 +166,7 @@ export default function Navbar() {
             >
               Gallery
             </Link>
-            <Link
-              href="/contact"
-              className={activeitem === "contact" ? active : unactive}
-            >
-              Contact Us
-            </Link>
+           
             <Link
               href="/refund-policy"
               className={activeitem === "refund-policy" ? active : unactive}
@@ -183,6 +178,12 @@ export default function Navbar() {
               className={activeitem === "blogs" ? active : unactive}
             >
               Blogs
+            </Link>
+            <Link
+              href="/contact"
+              className={activeitem === "contact" ? active : unactive}
+            >
+              Contact Us
             </Link>
 
             <Button
