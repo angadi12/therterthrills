@@ -58,7 +58,7 @@ import {
 
 export default function Nav() {
   return (
-    <Navbar isBordered maxWidth="full" position="sticky" className="h-14">
+    <Navbar isBordered maxWidth="full" position="sticky" className="h-14 bg-white">
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
           <Sheet>
