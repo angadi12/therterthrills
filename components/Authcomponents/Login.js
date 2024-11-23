@@ -54,14 +54,14 @@ const Login = () => {
     (state) => state.auth
   );
 
-  useEffect(() => {
-    const token = Cookies.get("token");
-    if (token) {
-      dispatch(closeLoginModal());
-    } else {
-      dispatch(openLoginModal());
-    }
-  }, []);
+  // useEffect(() => {
+  //   const token = Cookies.get("token");
+  //   if (token) {
+  //     dispatch(closeLoginModal());
+  //   } else {
+  //     dispatch(openLoginModal());
+  //   }
+  // }, []);
 
   const setupRecaptcha = () => {
     if (typeof window !== "undefined" && !window.recaptchaVerifier) {

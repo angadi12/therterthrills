@@ -24,6 +24,7 @@ import Link from "next/link";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { clearUser, openLoginModal, setUser } from "@/lib/Redux/authSlice";
+import Login from "../Authcomponents/Login";
 
 const UserComponent = () => {
   const router = useRouter();
@@ -147,6 +148,7 @@ const UserComponent = () => {
           )}
         </ModalContent>
       </Modal>
+      {/* <Login/> */}
     </>
   );
 };
