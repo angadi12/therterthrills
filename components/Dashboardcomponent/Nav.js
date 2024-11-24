@@ -99,7 +99,7 @@ export default function Navbarr() {
     dispatch(clearUser());
     Cookies.remove("token");
     Cookies.remove("User");
-    router.push("/dashboard");
+    router.refresh("/dashboard");
   };
 
   return (
@@ -123,7 +123,7 @@ export default function Navbarr() {
                   radius="md"
                   as="button"
                   className="transition-transform hidden md:flex lg:flex"
-                  color="primary"
+                  color="danger"
                   size="sm"
                 />
               </DropdownTrigger>
@@ -207,7 +207,7 @@ export default function Navbarr() {
                   radius="md"
                   as="button"
                   className="transition-transform hidden md:flex lg:flex"
-                  color="primary"
+                  color="danger"
                   size="sm"
                 />
               </DropdownTrigger>

@@ -10,8 +10,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import { setFilterQuery as setAdminFilterQuery, Setopenadmin } from "@/lib/Redux/BranchSlice";
-import { fetchAdminsByBranchId } from "@/lib/Redux/AdminSlice";
+import {
+  setFilterQuery as setAdminFilterQuery,
+  Setopenadmin,
+  Setopenupdateadmin,
+} from "@/lib/Redux/BranchSlice";
+import { fetchAdminsByBranchId, Setselectedadminid } from "@/lib/Redux/AdminSlice";
 import { useSelector, useDispatch } from "react-redux";
 import Createadmin from "@/components/Dashboardcomponent/Createadmin";
 import {
@@ -21,6 +25,7 @@ import {
   ModalBody,
   ModalFooter,
 } from "@nextui-org/react";
+import Updateadmin from "@/components/Dashboardcomponent/Updateadmin";
 
 const admins = [
   {
@@ -82,9 +87,8 @@ const admins = [
 export default function ManageAdmins() {
   const { toast } = useToast();
   const dispatch = useDispatch();
-  const { selectedBranchId, filterQuery,openadmin } = useSelector(
-    (state) => state.branches
-  );
+  const { selectedBranchId, filterQuery, openadmin, openupdateadmin } =
+    useSelector((state) => state.branches);
   const { admins, adminsStatus, error } = useSelector((state) => state.admin);
   const [filteredAdmins, setFilteredAdmins] = useState(admins);
 
@@ -92,7 +96,7 @@ export default function ManageAdmins() {
     if (selectedBranchId) {
       dispatch(fetchAdminsByBranchId(selectedBranchId));
     }
-  }, [dispatch, selectedBranchId, filterQuery]);
+  }, [dispatch, selectedBranchId]);
 
   useEffect(() => {
     setFilteredAdmins(
@@ -115,6 +119,10 @@ export default function ManageAdmins() {
 
   const setopenmodel = () => {
     dispatch(Setopenadmin(!openadmin));
+  };
+
+  const openupdateadminhandle = () => {
+    dispatch(Setopenupdateadmin(!openupdateadmin));
   };
 
   return (
@@ -140,7 +148,11 @@ export default function ManageAdmins() {
               {/* <Button variant="outline" size="icon">
             <Filter className="h-4 w-4" />
           </Button> */}
-              <Button onPress={()=> dispatch(Setopenadmin(!openadmin))} isIconOnly className="bg-[#F30278]  hover:bg-pink-600">
+              <Button
+                onPress={() => dispatch(Setopenadmin(!openadmin))}
+                isIconOnly
+                className="bg-[#F30278]  hover:bg-pink-600"
+              >
                 <Plus className="h-4 w-4 text-white" />
               </Button>
             </div>
@@ -165,10 +177,8 @@ export default function ManageAdmins() {
                       <div className="flex justify-between items-start mb-4">
                         <div className="flex items-center space-x-4">
                           <Avatar className="w-16 h-16">
-                            <AvatarImage src={"/"} alt={admin.fullName} />
-                            <AvatarFallback>
-                              {admin.fullName.charAt(0)}
-                            </AvatarFallback>
+                            <AvatarImage src={"/"} alt={admin?.fullName} />
+                            <AvatarFallback>{admin?.fullName}</AvatarFallback>
                           </Avatar>
                           <div>
                             <h2 className="text-xl font-semibold">
@@ -193,7 +203,12 @@ export default function ManageAdmins() {
                       </div>
                     </CardContent>
                     <CardFooter className="bg-gray-50 p-6">
-                      <Button className="px-8 py-0.5 rounded-sm w-full  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] ">
+                      <Button
+                        onPress={() =>
+                          {dispatch(Setopenupdateadmin(!openupdateadmin)),dispatch(Setselectedadminid(admin?._id))}
+                        }
+                        className="px-8 py-0.5 rounded-sm w-full  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                      >
                         Modify
                       </Button>
                     </CardFooter>
@@ -203,9 +218,6 @@ export default function ManageAdmins() {
           </div>
         </section>
       )}
-
-
-
 
       <Modal
         isDismissable={false}
@@ -243,7 +255,7 @@ export default function ManageAdmins() {
               </ModalHeader>
               <ModalBody>
                 <div className="w-full h-auto">
-                  <Createadmin/>
+                  <Createadmin />
                 </div>
               </ModalBody>
               <ModalFooter className="flex justify-center items-center text-center"></ModalFooter>
@@ -252,13 +264,13 @@ export default function ManageAdmins() {
         </ModalContent>
       </Modal>
 
-      {/* <Modal
+      <Modal
         isDismissable={false}
         isKeyboardDismissDisabled={true}
         backdrop="blur"
         size="4xl"
-        isOpen={openupdatebranch}
-        onOpenChange={Openupdatebranchhandle}
+        isOpen={openupdateadmin}
+        onOpenChange={openupdateadminhandle}
         motionProps={{
           variants: {
             enter: {
@@ -284,16 +296,16 @@ export default function ManageAdmins() {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col text-center">
-                Update Branch Details
+                Update Admin Details
               </ModalHeader>
               <ModalBody>
-                <Updatebranch />
+                <Updateadmin/>
               </ModalBody>
               <ModalFooter className="flex justify-center items-center text-center"></ModalFooter>
             </>
           )}
         </ModalContent>
-      </Modal> */}
+      </Modal>
 
       {/* <Modal
         isDismissable={false}
@@ -333,7 +345,6 @@ export default function ManageAdmins() {
           )}
         </ModalContent>
       </Modal> */}
-
     </>
   );
 }
