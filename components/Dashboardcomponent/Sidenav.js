@@ -17,7 +17,7 @@ import {
   PanelLeftClose,
   Settings,
   User,
-  IndianRupee 
+  IndianRupee,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -45,6 +45,9 @@ const Sidenav = () => {
         break;
       case "/dashboard/ManageAdmins":
         setSelected("Manage Admins");
+        break;
+      case "/dashboard/ManageTheatres":
+        setSelected("Manage Theatres");
         break;
       case "/dashboard/YourBookings":
         setSelected("Your Bookings");
@@ -77,6 +80,9 @@ const Sidenav = () => {
         break;
       case "Manage Admins":
         router.push("/dashboard/ManageAdmins");
+        break;
+      case "Manage Theatres":
+        router.push("/dashboard/ManageTheatres");
         break;
       case "Your Bookings":
         router.push("/dashboard/YourBookings");
@@ -121,7 +127,11 @@ const Sidenav = () => {
       </div>
 
       <nav className="flex flex-col items-start gap-4  px-2 sm:py-5">
-       {!isMinimized && <span className="text-[#F30278] font-medium text-sm transition-all duration-700 ease-in-out">Management</span>}
+        {!isMinimized && (
+          <span className="text-[#F30278] font-medium text-sm transition-all duration-700 ease-in-out">
+            Management
+          </span>
+        )}
         <Tabs
           aria-label="Options"
           isVertical={true}
@@ -246,6 +256,36 @@ const Sidenav = () => {
             }
           />
           <Tab
+            key="Manage Theatres"
+            title={
+              <div
+                className={`flex items-center gap-4 ${
+                  isMinimized ? "justify-center" : "w-44"
+                }`}
+              >
+                {!isMinimized ? (
+                  <MdTableRestaurant size={20} />
+                ) : (
+                  <Tooltip
+                    classNames={{
+                      base: ["before:bg-[#004AAD]"],
+                      content: [
+                        "py-2 px-4 rounded-md",
+                        "text-white bg-[#004AAD]",
+                      ],
+                    }}
+                    showArrow={true}
+                    content="Manage Theatres"
+                    placement="right"
+                  >
+                    <Armchair size={20} />
+                  </Tooltip>
+                )}
+                {!isMinimized && <span>Manage Theatres</span>}
+              </div>
+            }
+          />
+          <Tab
             key="Your Bookings"
             title={
               <div
@@ -284,7 +324,7 @@ const Sidenav = () => {
                 }`}
               >
                 {!isMinimized ? (
-                  <IndianRupee  size={20} />
+                  <IndianRupee size={20} />
                 ) : (
                   <Tooltip
                     classNames={{
@@ -335,7 +375,7 @@ const Sidenav = () => {
               </div>
             }
           />
-           <Tab
+          <Tab
             key="Messages"
             title={
               <div
@@ -367,7 +407,7 @@ const Sidenav = () => {
           />
         </Tabs>
         {/* {!isMinimized && <span className="text-[#F30278] font-medium text-sm transition-all duration-700 ease-in-out">Account</span>} */}
-         {/* <Button variant="light"  className="w-full bg-white flex justify-start items-center gap-4"><Settings/>Settings</Button>
+        {/* <Button variant="light"  className="w-full bg-white flex justify-start items-center gap-4"><Settings/>Settings</Button>
          <Button variant="light"  className="w-full bg-white flex justify-start items-center gap-4"><User/>Profile</Button> */}
       </nav>
 

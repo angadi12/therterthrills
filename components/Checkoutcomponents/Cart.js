@@ -2,9 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { Button, Divider } from "@nextui-org/react";
 import { Input } from "@/components/ui/input";
-import { useSelector ,useDispatch} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { selectTotalAmount } from "@/lib/Redux/addOnsSlice";
 import { setTotalAmount } from "@/lib/Redux/totalAmountSlice";
+import { setExtraCharge } from "@/lib/Redux/checkoutSlice";
 
 const validCoupons = {
   WELCOME250: 250,
@@ -12,20 +13,25 @@ const validCoupons = {
   DISCOUNT50: 50,
 };
 
-const Cart = ({theater}) => {
-  const dispatch=useDispatch()
+const Cart = ({ theater }) => {
+  const dispatch = useDispatch();
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [error, setError] = useState("");
 
   const selectedCakes = useSelector((state) => state.cakes.selectedCakes);
   const addonsTotal = useSelector(selectTotalAmount);
-  const addDecorations = useSelector(
-    (state) => state.checkout.bookingDetails.addDecorations
+  const {addDecorations} = useSelector(
+    (state) => state.checkout
   );
   const totalAmount = useSelector((state) => state.totalAmount.value);
 
-  const decorationPrice = addDecorations === "yes" ? theater.minimumDecorationAmount : 0;
+  const decorationPrice =
+    addDecorations === "yes" ? theater.minimumDecorationAmount : 0;
+    
+  const { bookingDetails, maxCapacity, extraPerPerson ,groupSize,ExtraCharge} = useSelector(
+    (state) => state.checkout
+  );
 
   // Calculate total price of selected cakes
   const calculateTotalCakesPrice = () => {
@@ -42,6 +48,21 @@ const Cart = ({theater}) => {
     );
   };
 
+  
+  useEffect(() => {
+    // Calculate extra charge when numberOfPeople or maxCapacity changes
+    if (bookingDetails?.numberOfPeople > groupSize) {
+      // Calculate the number of people exceeding the group size
+      const extraPeople = bookingDetails?.numberOfPeople - groupSize;
+      // Calculate the extra charge
+      const extraAmount = extraPeople * extraPerPerson;
+      dispatch(setExtraCharge(extraAmount)); // Dispatch the extra charge to Redux
+    } else {
+      dispatch(setExtraCharge(0)); // No extra charge if within group size
+    }
+  }, [bookingDetails?.numberOfPeople, groupSize, extraPerPerson, dispatch]);
+
+console.log(bookingDetails?.numberOfPeople,groupSize,maxCapacity,extraPerPerson,ExtraCharge)
   // Calculate the total amount (cakes + addons + theatre - coupon)
   const calculateTotalAmount = () => {
     const cakesTotal = calculateTotalCakesPrice();
@@ -49,16 +70,26 @@ const Cart = ({theater}) => {
     const couponDiscount = appliedCoupon ? appliedCoupon.discount : 0;
 
     return (
-      theatrePrice + addonsTotal + cakesTotal + decorationPrice - couponDiscount
+      theatrePrice +
+      addonsTotal +
+      cakesTotal +
+      decorationPrice +
+      ExtraCharge -
+      couponDiscount
     );
   };
-
 
   useEffect(() => {
     const totalAmount = calculateTotalAmount();
     dispatch(setTotalAmount(totalAmount)); // Dispatch the calculated total amount
-  }, [selectedCakes, addonsTotal, decorationPrice, appliedCoupon]);
-
+  }, [
+    selectedCakes,
+    addonsTotal,
+    decorationPrice,
+    appliedCoupon,
+    bookingDetails?.numberOfPeople,
+    ExtraCharge
+  ]);
 
   const handleApplyCoupon = () => {
     if (validCoupons[couponCode]) {
@@ -110,13 +141,6 @@ const Cart = ({theater}) => {
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </div>
       </div>
-      <div className="w-full mt-4">
-        <Button className="flex justify-between rounded-md h-12 bg-[#F30278] font-semibold w-full">
-          <span className="text-white">Total Amount</span>
-          <span className="text-white">{totalAmount}/-</span>{" "}
-          {/* Adjust total calculation */}
-        </Button>
-      </div>
       <div className="mt-6 flex items-center">
         <Input
           type="text"
@@ -132,7 +156,13 @@ const Cart = ({theater}) => {
           Apply
         </Button>
       </div>
-
+      <div className="w-full mt-4">
+        <Button className="flex justify-between rounded-md h-12 bg-[#F30278] font-semibold w-full">
+          <span className="text-white">Total Amount</span>
+          <span className="text-white">{totalAmount}/-</span>{" "}
+          {/* Adjust total calculation */}
+        </Button>
+      </div>
     </div>
   );
 };

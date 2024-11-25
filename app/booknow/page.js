@@ -9,6 +9,7 @@ import { Spinner } from "@nextui-org/react";
 import { format } from "date-fns";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllTheaters, fetchTheaterLocations } from "@/lib/Redux/theaterSlice";
+import { setBookingField } from "@/lib/Redux/checkoutSlice";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ const Page = () => {
     locationsWithSlotserror,
     date,
   } = useSelector((state) => state.theater);
-
+ 
   const formattedDate =
     date && !isNaN(new Date(date))
       ? format(new Date(date), "yyyy-MM-dd")
@@ -37,6 +38,12 @@ const Page = () => {
 
   const isLoading = loading || locationsWithSlotsloading;
   const noData = !locationsWithSlots?.length && !allTheaters?.length && !isLoading;
+
+useEffect(() => {
+  dispatch(setBookingField({ field:"numberOfPeople", value:0 }));
+}, [])
+
+
 
   return (
     <Suspense

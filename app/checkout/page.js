@@ -61,8 +61,8 @@ const CheckoutOnboarding = () => {
   const cakeText = useSelector((state) => state.cakes.cakeText);
   const isEggless = useSelector((state) => state.cakes.isEggless);
 
-  const addDecorations = useSelector(
-    (state) => state.checkout.bookingDetails.addDecorations
+  const {addDecorations} = useSelector(
+    (state) => state.checkout
   );
 
   const selectedCakes = useSelector((state) => state.cakes.selectedCakes);
@@ -101,7 +101,7 @@ const CheckoutOnboarding = () => {
           { component: <Confirmation />, name: "Confirmation" },
         ]
       : [
-          { component: <BookingDetails />, name: "Booking Details" },
+          { component: <BookingDetails  theater={theater} />, name: "Booking Details" },
           { component: <Confirmation />, name: "Confirmation" },
         ];
 
@@ -123,16 +123,14 @@ const CheckoutOnboarding = () => {
 
   const validateFields = (bookingDetails) => {
     const errors = {};
-    if (!bookingDetails.fullName) errors.fullName = "Full name is required.";
-    // if (!bookingDetails.numberOfPeople)
-    //   errors.numberOfPeople = "Select number of people.";
-    if (!bookingDetails.addDecorations)
+    if (!bookingDetails?.fullName) errors.fullName = "Full name is required.";
+    if (!bookingDetails?.numberOfPeople)
+      errors.numberOfPeople = "Select number of people.";
+    if (!addDecorations)
       errors.addDecorations = "Do you want to add decorations to your event?";
-    if (!bookingDetails.phoneNumber.match(/^\d{10}$/))
-      errors.phoneNumber = "Phone number must be 10 digits.";
-    if (!bookingDetails.whatsappNumber.match(/^\d{10}$/))
+    if (!bookingDetails?.whatsappNumber.match(/^\d{10}$/))
       errors.whatsappNumber = "WhatsApp number must be 10 digits.";
-    if (!bookingDetails.email.match(/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/))
+    if (!bookingDetails?.email.match(/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/))
       errors.email = "Email is invalid.";
 
     if (!Occasionobject?.noInput && currentStep === 1) {
@@ -202,10 +200,9 @@ const CheckoutOnboarding = () => {
 
     const bookingData = {
       fullName: bookingDetails.fullName,
-      phoneNumber: bookingDetails.phoneNumber,
       whatsappNumber: bookingDetails.whatsappNumber,
       email: bookingDetails.email,
-      // numberOfPeople: bookingDetails.numberOfPeople,
+      numberOfPeople: bookingDetails.numberOfPeople,
       addDecorations: bookingDetails.addDecorations,
       nickname: nickname,
       partnerNickname: partnerNickname,
@@ -281,7 +278,7 @@ const CheckoutOnboarding = () => {
           prefill: {
             name: bookingDetails.fullName,
             email: bookingDetails.email,
-            contact: bookingDetails.phoneNumber,
+            contact: bookingDetails.whatsappNumber,
           },
           theme: {
             color: "#F30278",

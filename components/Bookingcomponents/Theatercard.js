@@ -39,44 +39,85 @@ export default function TheatreCard({ theatre }) {
   }, []);
 
   
-  const handleProceed = () => {
-    let error = null;
+  // const handleProceed = () => {
+  //   let error = null;
   
-    if (!selectedLocation) {
-      error = {
-        title: "Please Select a Location",
-        description: "Please select your location to continue booking.",
-      };
-    } else if (!selectedTheater) {
-      error = {
-        title: "Theater Not Selected",
-        description: "Please select a theater to continue.",
-      };
-    } else if (!selectedslotsid) {
-      error = {
-        title: "Theater Slot Not Selected",
-        description: "Please select a theater slot to continue.",
-      };
-    } else if (!date) {
-      error = {
-        title: "Date Not Selected",
-        description: "Please select a date to continue.",
-      };
-    }
+  //   if (!selectedLocation) {
+  //     error = {
+  //       title: "Please Select a Location",
+  //       description: "Please select your location to continue booking.",
+  //     };
+  //   } else if (!selectedTheater) {
+  //     error = {
+  //       title: "Theater Not Selected",
+  //       description: "Please select a theater to continue.",
+  //     };
+  //   } else if (!selectedslotsid) {
+  //     error = {
+  //       title: "Theater Slot Not Selected",
+  //       description: "Please select a theater slot to continue.",
+  //     };
+  //   } else if (!date) {
+  //     error = {
+  //       title: "Date Not Selected",
+  //       description: "Please select a date to continue.",
+  //     };
+  //   }
   
-    if (error) {
-      toast({
-        title: error.title,
-        description: error.description,
-        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-      });
-    } else {
-      router.push("/checkout");
-    }
+  //   if (error) {
+  //     toast({
+  //       title: error.title,
+  //       description: error.description,
+  //       action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+  //     });
+  //   } else {
+  //     router.push("/checkout");
+  //   }
+  // };
+  
+  
+  const handleProceedWithValidation = () => {
+    // Dispatch the selected theater
+    dispatch(setSelectedTheater(theatre?.theaterId));
+  
+    // Validate and proceed
+    setTimeout(() => {
+      let error = null;
+  
+      if (!selectedLocation) {
+        error = {
+          title: "Please Select a Location",
+          description: "Please select your location to continue booking.",
+        };
+      } else if (!theatre?.theaterId) {
+        error = {
+          title: "Theater Not Selected",
+          description: "Please select a theater to continue.",
+        };
+      } else if (!selectedslotsid) {
+        error = {
+          title: "Theater Slot Not Selected",
+          description: "Please select a theater slot to continue.",
+        };
+      } else if (!date) {
+        error = {
+          title: "Date Not Selected",
+          description: "Please select a date to continue.",
+        };
+      }
+  
+      if (error) {
+        toast({
+          title: error.title,
+          description: error.description,
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+      } else {
+        router.push("/checkout");
+      }
+    }, 0); // Small timeout ensures Redux state is updated
   };
   
-  
-
 
 
   return (
@@ -139,7 +180,7 @@ export default function TheatreCard({ theatre }) {
           <div className="flex gap-2 mb-2">
             <span className="bg-pink-100 ring-1 ring-[#F30278] text-xs text-[#F30278] px-2 py-2 font-semibold rounded flex items-center">
               <Image src={Groupicon2} alt="grp" className="w-3 h-3 mr-1" />{" "}
-              {theatre?.capacity} People Capacity
+              {theatre?.groupSize} People Capacity
             </span>
             <span className="bg-pink-100 text-[#F30278] ring-1 ring-[#F30278] text-xs font-semibold px-2 py-1 rounded flex items-center">
               <Image src={Decorations} alt="Alcohol" className="w-3 h-3 mr-1" />{" "}
@@ -219,7 +260,7 @@ export default function TheatreCard({ theatre }) {
         <CardFooter className="mt-auto flex flex-col justify-center items-center gap-3 w-full px-4">
           <Button
             isDisabled={theatre?.availableSlots.length === 0}
-            onPress={()=>{dispatch(setSelectedTheater(theatre?.theaterId)),handleProceed()}}
+            onPress={handleProceedWithValidation}
             className="px-8 py-0.5 rounded-sm w-full  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
           >
             Procced{" "}

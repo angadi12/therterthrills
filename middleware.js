@@ -18,6 +18,7 @@ export function middleware(request) {
     '/dashboard',
     '/dashboard/ManageAdmins',
     '/dashboard/ManageBranches',
+    '/dashboard/ManageTheatres',
     '/dashboard/YourBookings',
     '/dashboard/Payments',
     '/dashboard/Expenses',
@@ -45,5 +46,5 @@ export function middleware(request) {
 
 
 export const config = {
-  matcher: ['/booknow', '/dashboard','/checkout','/bookings','/dashboard/ManageAdmins','/dashboard/ManageBranches','/dashboard/YourBookings','/dashboard/Payments','/dashboard/Expenses','/dashboard/Messages'], // Apply to protected routes
+  matcher: ['/booknow', '/dashboard','/checkout','/bookings','/dashboard/ManageAdmins','/dashboard/ManageBranches','/dashboard/YourBookings','/dashboard/Payments','/dashboard/Expenses','/dashboard/Messages','/dashboard/ManageTheatres'], // Apply to protected routes
 };

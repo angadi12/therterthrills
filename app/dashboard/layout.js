@@ -7,15 +7,12 @@ export default function DashboardLayout({ children }) {
     <section>
       <main className="grid grid-cols-1 md:grid-cols-[auto,1fr]    w-full">
         <div className="w-full h-full md:h-screen">
-          <Sidenav/>
+          <Sidenav />
         </div>
 
         <section className="flex  flex-col  w-full  h-full md:h-screen p-0 ">
-          <Nav/>
-          <ScrollArea className="w-full  ">
-          {children}
-
-          </ScrollArea>
+          <Nav />
+          <ScrollArea className="w-full  ">{children}</ScrollArea>
         </section>
       </main>
     </section>
