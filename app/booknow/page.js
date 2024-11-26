@@ -30,7 +30,7 @@ const Page = () => {
 
   useEffect(() => {
     dispatch(fetchAllTheaters(formattedDate));
-  }, [dispatch, date]);
+  }, [dispatch, formattedDate]);
 
   if (error || locationsWithSlotserror) {
     return <p>Error: {error || locationsWithSlotserror}</p>;
