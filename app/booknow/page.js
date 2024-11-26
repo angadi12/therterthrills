@@ -41,7 +41,7 @@ const Page = () => {
 
 useEffect(() => {
   dispatch(setBookingField({ field:"numberOfPeople", value:0 }));
-}, [])
+}, [dispatch])
 
 
 
