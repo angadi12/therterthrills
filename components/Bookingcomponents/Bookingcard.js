@@ -75,12 +75,12 @@ export default function Bookingcard({ booking }) {
                 <div className="flex items-center">
                   <Users className="w-4 h-4 mr-2 text-[#004AAD]" />
                   <span className="text-sm">
-                    {booking?.theater?.capacity} Members
+                    {booking?.numberOfPeople} Members
                   </span>
                 </div>
                 <div className="flex items-center">
                   <Phone className="w-4 h-4 mr-2 text-[#004AAD]" />
-                  <span className="text-sm">{booking?.phoneNumber}</span>
+                  <span className="text-sm">{booking?.whatsappNumber}</span>
                 </div>
                 <div className="flex items-center">
                   <Mail className="w-4 h-4 mr-2 text-[#004AAD]" />
@@ -89,31 +89,55 @@ export default function Bookingcard({ booking }) {
               </div>
               <Separator className="bg-[#F30278]" />
               <div>
-                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">Cake Details</h3>
-                <p>Eggless: <span className="text-[#F30278]">{booking?.isEggless ? "Yes" : "No"}</span></p>
-                <p>Cake Text: <span className="text-[#F30278]">{booking?.cakeText}</span></p>
-                <p>Nick Name: <span className="text-[#F30278]">{booking?.nickname}</span></p>
-                <p>Partner Nickname: <span className="text-[#F30278]">{booking?.partnerNickname}</span></p>
-                {Object.values(booking?.Cakes).map((cake, index) => (
+                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
+                  Cake Details
+                </h3>
+                <p>
+                  Eggless:{" "}
+                  <span className="text-[#F30278]">
+                    {booking?.isEggless ? "Yes" : "No"}
+                  </span>
+                </p>
+                <p>
+                  Cake Text:{" "}
+                  <span className="text-[#F30278]">{booking?.cakeText}</span>
+                </p>
+                <p>
+                  Nick Name:{" "}
+                  <span className="text-[#F30278]">{booking?.nickname}</span>
+                </p>
+                <p>
+                  Partner Nickname:{" "}
+                  <span className="text-[#F30278]">
+                    {booking?.partnerNickname}
+                  </span>
+                </p>
+                {booking?.Cakes && Object?.values(booking?.Cakes).map((cake, index) => (
                   <p key={index} className="text-sm">
-                    {cake?.name} x {cake?.quantity} - <span className="text-[#F30278]">₹
-                    {cake?.price * cake?.quantity}</span>
+                    {cake?.name} x {cake?.quantity} -{" "}
+                    <span className="text-[#F30278]">
+                      ₹{cake?.price * cake?.quantity}
+                    </span>
                   </p>
                 ))}
               </div>
             </div>
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">Add-Ons</h3>
+                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
+                  Add-Ons
+                </h3>
                 <div className="grid grid-cols-2 gap-2">
-                  {Object.entries(booking?.Addons?.decorations).map(
-                    ([name, count]) => (
-                      <p key={name} className="text-sm">
-                        {name} x <span className="text-[#F30278]">{count}</span>
-                      </p>
-                    )
-                  )}
-                  {Object.entries(booking?.Addons?.roses).map(
+                  {booking?.Addons?.decorations &&
+                    Object.entries(booking.Addons.decorations).map(
+                      ([key, value]) => (
+                        <div key={key}>
+                          {/* Render your content using key and value */}
+                          {key}: {value}
+                        </div>
+                      )
+                    )}
+                  {booking?.Addons?.roses && Object?.entries(booking?.Addons?.roses).map(
                     ([name, count]) => (
                       <p key={name} className="text-sm">
                         {name} x <span className="text-[#F30278]">{count}</span>
@@ -129,13 +153,28 @@ export default function Bookingcard({ booking }) {
               </div>
               <Separator className="bg-[#F30278]" />
               <div>
-                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">Payment Details</h3>
+                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
+                  Payment Details
+                </h3>
                 <div className="flex items-center mb-2">
                   <CreditCard className="w-4 h-4 mr-2 text-[#004AAD]" />
-                  <span>Status: <span className="text-[#F30278]">{booking?.paymentStatus}</span></span>
+                  <span>
+                    Status:{" "}
+                    <span className="text-[#F30278]">
+                      {booking?.paymentStatus}
+                    </span>
+                  </span>
                 </div>
-                <p>Amount Paid: <span className="text-[#F30278]">₹{booking?.paymentAmount}/-</span></p>
-                <p>Order ID: <span className="text-[#F30278]">{booking?.orderId}</span></p>
+                <p>
+                  Amount Paid:{" "}
+                  <span className="text-[#F30278]">
+                    ₹{booking?.paymentAmount}/-
+                  </span>
+                </p>
+                <p>
+                  Order ID:{" "}
+                  <span className="text-[#F30278]">{booking?.orderId}</span>
+                </p>
               </div>
             </div>
           </div>
@@ -173,12 +212,12 @@ export default function Bookingcard({ booking }) {
                 <div className="flex items-center">
                   <Users className="w-4 h-4 mr-2 text-[#004AAD]" />
                   <span className="text-sm">
-                    {booking?.theater?.capacity} Members
+                    {booking?.numberOfPeople} Members
                   </span>
                 </div>
                 <div className="flex items-center">
                   <Phone className="w-4 h-4 mr-2 text-[#004AAD]" />
-                  <span className="text-sm">{booking?.phoneNumber}</span>
+                  <span className="text-sm">{booking?.whatsappNumber}</span>
                 </div>
                 <div className="flex items-center">
                   <Mail className="w-4 h-4 mr-2 text-[#004AAD]" />
@@ -187,31 +226,53 @@ export default function Bookingcard({ booking }) {
               </div>
               <Separator className="bg-[#F30278]" />
               <div>
-                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">Cake Details</h3>
-                <p>Eggless: <span className="text-[#F30278]">{booking?.isEggless ? "Yes" : "No"}</span></p>
-                <p>Cake Text: <span className="text-[#F30278]">{booking?.cakeText}</span></p>
-                <p>Nick Name: <span className="text-[#F30278]">{booking?.nickname}</span></p>
-                <p>Partner Nickname: <span className="text-[#F30278]">{booking?.partnerNickname}</span></p>
-                {Object.values(booking?.Cakes).map((cake, index) => (
+                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
+                  Cake Details
+                </h3>
+                <p>
+                  Eggless:{" "}
+                  <span className="text-[#F30278]">
+                    {booking?.isEggless ? "Yes" : "No"}
+                  </span>
+                </p>
+                <p>
+                  Cake Text:{" "}
+                  <span className="text-[#F30278]">{booking?.cakeText}</span>
+                </p>
+                <p>
+                  Nick Name:{" "}
+                  <span className="text-[#F30278]">{booking?.nickname}</span>
+                </p>
+                <p>
+                  Partner Nickname:{" "}
+                  <span className="text-[#F30278]">
+                    {booking?.partnerNickname}
+                  </span>
+                </p>
+                {booking?.Cakes && Object.values(booking?.Cakes).map((cake, index) => (
                   <p key={index} className="text-sm">
-                    {cake?.name} x {cake?.quantity} - <span className="text-[#F30278]">₹
-                    {cake?.price * cake?.quantity}</span>
+                    {cake?.name} x {cake?.quantity} -{" "}
+                    <span className="text-[#F30278]">
+                      ₹{cake?.price * cake?.quantity}
+                    </span>
                   </p>
                 ))}
               </div>
             </div>
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">Add-Ons</h3>
+                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
+                  Add-Ons
+                </h3>
                 <div className="grid grid-cols-2 gap-2">
-                  {Object.entries(booking?.Addons?.decorations).map(
+                  {booking?.Addons?.decorations && Object.entries(booking?.Addons?.decorations).map(
                     ([name, count]) => (
                       <p key={name} className="text-sm">
                         {name} x <span className="text-[#F30278]">{count}</span>
                       </p>
-    )
+                    )
                   )}
-                  {Object.entries(booking?.Addons?.roses).map(
+                  {booking?.Addons?.roses && Object.entries(booking?.Addons?.roses).map(
                     ([name, count]) => (
                       <p key={name} className="text-sm">
                         {name} x <span className="text-[#F30278]">{count}</span>
@@ -227,19 +288,35 @@ export default function Bookingcard({ booking }) {
               </div>
               <Separator className="bg-[#F30278]" />
               <div>
-                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">Payment Details</h3>
+                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
+                  Payment Details
+                </h3>
                 <div className="flex items-center mb-2">
                   <CreditCard className="w-4 h-4 mr-2 text-[#004AAD]" />
-                  <span>Status: <span className="text-[#F30278]">{booking?.paymentStatus}</span></span>
+                  <span>
+                    Status:{" "}
+                    <span className="text-[#F30278]">
+                      {booking?.paymentStatus}
+                    </span>
+                  </span>
                 </div>
-                <p>Amount Paid: <span className="text-[#F30278]">₹{booking?.paymentAmount}/-</span></p>
-                <p>Order ID: <span className="text-[#F30278]">{booking?.orderId}</span></p>
+                <p>
+                  Amount Paid:{" "}
+                  <span className="text-[#F30278]">
+                    ₹{booking?.paymentAmount}/-
+                  </span>
+                </p>
+                <p>
+                  Order ID:{" "}
+                  <span className="text-[#F30278]">{booking?.orderId}</span>
+                </p>
               </div>
             </div>
           </div>
         </ScrollArea>
       </DrawerContent>
-    </Drawer>)
+    </Drawer>
+  );
 
   return (
     <Card className="w-full flex flex-col mx-auto justify-around items-center p-0 relative">
@@ -270,7 +347,9 @@ export default function Bookingcard({ booking }) {
             </div>
             <div className="flex items-center">
               <Users className="w-4 h-4 mr-2" />
-              <span className="text-sm">{booking?.theater?.capacity} Members</span>
+              <span className="text-sm">
+                {booking?.numberOfPeople} Members
+              </span>
             </div>
             <div className="flex items-center">
               <MapPin className="w-4 h-4 mr-2" />
@@ -349,7 +428,7 @@ export default function Bookingcard({ booking }) {
         </Button>
       </CardFooter>
       <BookingDetailsDialog />
-      <BookingDetailsDrawer/>
+      <BookingDetailsDrawer />
     </Card>
   );
 }

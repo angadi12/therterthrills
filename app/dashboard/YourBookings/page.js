@@ -62,14 +62,21 @@ export default function ActiveEvents() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedTheatre, setSelectedTheatre] = useState('Silver Theatre')
 
+
+
+  
+
   return (
-    <ScrollArea className="w-full mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center space-x-4">
+    <section className="w-full mx-auto bg-white">
+          <div className="flex justify-between  items-center py-4  sticky top-0 bg-white z-50 p-4">
+          <div className="flex items-center space-x-4">
           <h1 className="text-2xl font-bold">
             Active Events <span className="text-pink-500">(3)</span>
           </h1>
-          <Select value={selectedTheatre} onValueChange={setSelectedTheatre}>
+         
+        </div>
+        <div className="flex space-x-2">
+        <Select value={selectedTheatre} onValueChange={setSelectedTheatre}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select Theatre" />
             </SelectTrigger>
@@ -79,25 +86,13 @@ export default function ActiveEvents() {
               <SelectItem value="Bronze Theatre">Bronze Theatre</SelectItem>
             </SelectContent>
           </Select>
-        </div>
-        <div className="flex space-x-2">
-          <Input
-            type="search"
-            placeholder="Search"
-            className="w-64"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
           <Button variant="outline" size="icon">
             <Filter className="h-4 w-4" />
-          </Button>
-          <Button size="icon" className="bg-pink-500 hover:bg-pink-600">
-            <Plus className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
-      <Tabs defaultValue="upcoming" className="w-full">
+      <Tabs defaultValue="upcoming" className="w-full p-5">
         <TabsList>
           <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
           <TabsTrigger value="completed">Completed</TabsTrigger>
@@ -106,7 +101,7 @@ export default function ActiveEvents() {
         <TabsContent value="upcoming">
           <div className="space-y-4 mt-4">
             {events.map((event) => (
-              <div key={event.id} className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow">
+              <div key={event.id} className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300">
                 <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
                   {event.icon}
                 </div>
@@ -146,7 +141,7 @@ export default function ActiveEvents() {
                     </div>
                   ))}
                 </div>
-                <Button variant="destructive">Cancel</Button>
+                <Button className="bg-[#EF0000] text-white">Cancel</Button>
               </div>
             ))}
           </div>
@@ -158,6 +153,6 @@ export default function ActiveEvents() {
           <div className="p-4 text-center text-gray-500">No cancelled events</div>
         </TabsContent>
       </Tabs>
-    </ScrollArea>
+    </section>
   )
 }

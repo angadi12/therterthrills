@@ -124,7 +124,7 @@ export default function BookingHeader() {
                 {date ? format(date, "PPP") : <span>Choose Date</span>}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="md:w-[400px] w-full mx-auto p-0">
+            <PopoverContent className="md:w-[400px] w-full mx-auto p-0 ">
               <Calendar
                 className={""}
                 mode="single"

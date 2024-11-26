@@ -30,6 +30,7 @@ import {
   Createbooking,
   verifyPayment,
   CreateRazorpayorder,
+  Unsavedbooking
 } from "@/lib/API/Booking";
 import Cookies from "js-cookie";
 import { selectAddOns } from "@/lib/Redux/addOnsSlice";
@@ -268,6 +269,7 @@ const CheckoutOnboarding = () => {
                   action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
                 });
                 setloading(false);
+                Unsavedbooking(bookingData)
                 router.refresh("/checkout");
               }
             } catch (error) {
@@ -290,6 +292,7 @@ const CheckoutOnboarding = () => {
                 description: "You exited the payment process.",
                 action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
               });
+              Unsavedbooking(bookingData)
               setloading(false);
             },
           },
@@ -303,6 +306,7 @@ const CheckoutOnboarding = () => {
           description: response?.message || "An error occurred.",
           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
+        Unsavedbooking(bookingData)
         setloading(false);
       }
     } catch (error) {
@@ -312,6 +316,7 @@ const CheckoutOnboarding = () => {
         description: "Failed to create booking. Please try again.",
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
+      Unsavedbooking(bookingData)
       setloading(false);
     }
   };
