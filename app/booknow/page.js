@@ -32,9 +32,9 @@ const Page = () => {
     dispatch(fetchAllTheaters(formattedDate));
   }, [dispatch, formattedDate]);
 
-  if (error || locationsWithSlotserror) {
-    return <p>Error: {error || locationsWithSlotserror}</p>;
-  }
+  // if (error || locationsWithSlotserror) {
+  //   return <p>Error: {error || locationsWithSlotserror}</p>;
+  // }
 
   const isLoading = loading || locationsWithSlotsloading;
   const noData = !locationsWithSlots?.length && !allTheaters?.length && !isLoading;
