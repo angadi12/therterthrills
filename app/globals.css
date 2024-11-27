@@ -35,3 +35,62 @@ body::-webkit-scrollbar-thumb {
 }
 
 
+.DateRangePickerInput {
+  background-color: white !important;
+  border-radius: 4px !important;
+
+}
+
+/* Background for selected dates */
+.CalendarDay__selected {
+  background: #F30278 !important;
+  color: #fff !important;
+}
+
+.CalendarDay__selected:hover {
+  background: #aaafb6 !important;
+  color: #fff !important;
+}
+
+/* Hovered calendar day */
+.CalendarDay__hovered_span,
+.CalendarDay__hovered_span:hover {
+  background: #004AAD !important;
+  color: #fff !important;
+}
+
+/* Range start and end dates */
+.CalendarDay__selected_start,
+.CalendarDay__selected_end {
+  background: #F30278 !important;
+  color: #fff !important;
+}
+
+/* Focused input border */
+.DateRangePickerInput {
+  border: 1px solid #F30278 !important;
+  border-radius: 4px !important;
+  padding: 5px !important; /* Adjust the padding */
+  font-size: 14px !important; /* Adjust font size */
+}
+
+
+
+/* Calendar Header */
+.DayPicker__header {
+  color: white !important;
+  padding: 4px;
+  
+}
+
+/* Background for selected dates */
+.CalendarDay__selected {
+  background: #F30278 !important; /* Replace with the desired color */
+  color: #fff !important; /* Text color */
+}
+
+.CalendarDay__selected_span {
+  background: #f996c6 !important; 
+  color: white; 
+  border: 1px solid#F30278 !important ; 
+}

@@ -1,160 +1,450 @@
-"use client"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+"use client";
+import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchPayments,
+  selectPayments,
+  selectPaymentsError,
+  selectPaymentsLoading,
+} from "@/lib/Redux/paymentSlice";
 import {
   Table,
-  TableBody,
-  TableCell,
-  TableHead,
   TableHeader,
+  TableColumn,
+  TableBody,
   TableRow,
-} from "@/components/ui/table"
-import { Filter, Plus } from 'lucide-react'
-import { ScrollArea } from "@/components/ui/scroll-area"
+  TableCell,
+  Chip,
+  Pagination,
+  Spinner,
+} from "@nextui-org/react";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { addDays, format } from "date-fns";
+import { Calendar as CalendarIcon, Search, X } from "lucide-react";
+import { DateRange } from "react-day-picker";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import RazorpayDatePicker, { DateRangePicker } from "@/components/Dashboardcomponent/Daterange";
 
-const payments = [
-  {
-    id: 1,
-    name: "Mithul M",
-    bookingId: "#booking_7562",
-    contactNo: "91+7353830989",
-    occasion: "Birthday Party",
-    receivedOn: "28-10-2024",
-    method: "UPI",
-    amount: "5999/-",
-  },
-  {
-    id: 2,
-    name: "Mithul M",
-    bookingId: "#booking_7562",
-    contactNo: "91+7353830989",
-    occasion: "Anniversary Party",
-    receivedOn: "28-10-2024",
-    method: "UPI",
-    amount: "5999/-",
-  },
-  {
-    id: 3,
-    name: "Mithul M",
-    bookingId: "#booking_7562",
-    contactNo: "91+7353830989",
-    occasion: "Reunion Party",
-    receivedOn: "28-10-2024",
-    method: "Online Banking",
-    amount: "5999/-",
-  },
-  {
-    id: 4,
-    name: "Mithul M",
-    bookingId: "#booking_7562",
-    contactNo: "91+7353830989",
-    occasion: "Farewell Party",
-    receivedOn: "28-10-2024",
-    method: "Cash",
-    amount: "5999/-",
-  },
-  {
-    id: 5,
-    name: "Mithul M",
-    bookingId: "#booking_7562",
-    contactNo: "91+7353830989",
-    occasion: "Birthday Party",
-    receivedOn: "28-10-2024",
-    method: "Debit Card",
-    amount: "5999/-",
-  },
-]
+
+const INITIAL_VISIBLE_COLUMNS = [
+  "name",
+  "bookingId",
+  "whatsappNumber",
+  "Occasionobject",
+  "createdAt",
+  "method",
+  "TotalAmount",
+  "actions",
+];
+
+export function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+const columns = [
+  { name: "ID", uid: "id" },
+  { name: "NAME", uid: "name" },
+  { name: "BOOKING_ID", uid: "bookingId" },
+  { name: "CONTACT", uid: "whatsappNumber" },
+  { name: "OCCASION", uid: "Occasionobject" },
+  { name: "RECEIVED ON", uid: "createdAt" },
+  { name: "METHOD", uid: "method" },
+  { name: "AMOUNT", uid: "TotalAmount" },
+  { name: "ACTION", uid: "actions" },
+];
 
 export default function PaymentsTable() {
-  const [searchTerm, setSearchTerm] = useState("")
+  const dispatch = useDispatch();
+  const payments = useSelector(selectPayments);
+  const loading = useSelector(selectPaymentsLoading);
+  const error = useSelector(selectPaymentsError);
+  const date = useSelector((state) => state.payments.dateRange);
 
-  return (
-    <ScrollArea className="w-full mx-auto p-6">
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Payments</h1>
-          <div className="flex space-x-2">
-            <Input
-              type="search"
-              placeholder="Search"
-              className="w-64"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <Button variant="outline" size="icon">
-              <Filter className="h-4 w-4" />
-            </Button>
-            <Button size="icon" className="bg-pink-500 hover:bg-pink-600">
-              <Plus className="h-4 w-4" />
+
+
+
+
+  useEffect(() => {
+    dispatch(fetchPayments({ from: date?.from, to: date?.to }));
+  }, [dispatch,date]);
+
+  const [filterValue, setFilterValue] = React.useState("");
+  const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
+  const [visibleColumns, setVisibleColumns] = React.useState(
+    new Set(INITIAL_VISIBLE_COLUMNS)
+  );
+  const [statusFilter, setStatusFilter] = React.useState("all");
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [sortDescriptor, setSortDescriptor] = React.useState({
+    column: "age",
+    direction: "ascending",
+  });
+  const [page, setPage] = React.useState(1);
+
+  const formatTimestamp = (timestamp) => {
+    const timestampInSeconds = Number(timestamp);
+    if (isNaN(timestampInSeconds)) {
+      return "Invalid timestamp";
+    }
+    const date = new Date(timestampInSeconds * 1000);
+
+    if (date.toString() === "Invalid Date") {
+      return "Invalid date";
+    }
+
+    const formattedDate = new Intl.DateTimeFormat("en-US", {
+      weekday: "short", // 'Mon'
+      month: "short", // 'Nov'
+      day: "numeric", // '25'
+      hour: "numeric", // '1'
+      minute: "numeric", // '59'
+      hour12: true, // 12-hour format with AM/PM
+    }).format(date);
+
+    return formattedDate.toLowerCase();
+  };
+
+  const pages = Math.ceil(payments?.length / rowsPerPage);
+
+  const hasSearchFilter = Boolean(filterValue);
+
+  const headerColumns = React.useMemo(() => {
+    if (visibleColumns === "all") return columns;
+
+    return columns.filter((column) =>
+      Array.from(visibleColumns).includes(column.uid)
+    );
+  }, [visibleColumns]);
+
+  const filteredItems = React.useMemo(() => {
+    let filteredUsers = Array.isArray(payments) ? [...payments] : [];
+
+    if (hasSearchFilter) {
+      filteredUsers = filteredUsers.filter((user) =>
+        user?.bookingDetails?.fullName.toLowerCase().includes(filterValue)
+      );
+    }
+    if (
+      statusFilter !== "all" &&
+      Array.from(statusFilter).length !== statusOptions.length
+    ) {
+      filteredUsers = filteredUsers.filter((user) =>
+        Array.from(statusFilter).includes(user.status)
+      );
+    }
+
+    return filteredUsers;
+  }, [payments, filterValue, statusFilter]);
+
+  const items = React.useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    return filteredItems.slice(start, end);
+  }, [page, filteredItems, rowsPerPage]);
+
+  const sortedItems = React.useMemo(() => {
+    return [...items].sort((a, b) => {
+      const first = a[sortDescriptor.column];
+      const second = b[sortDescriptor.column];
+      const cmp = first < second ? -1 : first > second ? 1 : 0;
+
+      return sortDescriptor.direction === "descending" ? -cmp : cmp;
+    });
+  }, [sortDescriptor, items]);
+
+  const renderCell = React.useCallback((user, columnKey) => {
+    const cellValue = user[columnKey];
+
+    switch (columnKey) {
+      case "name":
+        return (
+          <p className="text-bold text-sm capitalize text-default-500">
+            {user?.bookingDetails?.fullName}
+          </p>
+        );
+      case "bookingId":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize text-default-500">
+              {user?.bookingDetails?.bookingId}
+            </p>
+          </div>
+        );
+      case "whatsappNumber":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize text-default-500">
+              {user?.bookingDetails?.whatsappNumber}
+            </p>
+          </div>
+        );
+      case "Occasionobject":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize text-default-500">
+              {user?.bookingDetails?.Occasionobject}
+            </p>
+          </div>
+        );
+      case "createdAt":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize text-default-500">
+              {formatTimestamp(user?.created_at)}
+            </p>
+          </div>
+        );
+      case "method":
+        return (
+          <div className="flex flex-col items-start">
+            <Chip color="success" size="sm" className="text-white uppercase">
+              {" "}
+              {user?.method}
+            </Chip>
+          </div>
+        );
+      case "TotalAmount":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-sm capitalize text-default-500">
+              ₹{(user?.amount / 100).toFixed(2)}
+            </p>
+          </div>
+        );
+      case "actions":
+        return (
+          <div className="relative flex justify-end items-center gap-2">
+            <Button
+              size="sm"
+              className="rounded-sm text-xs  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+            >
+              View Details
             </Button>
           </div>
+        );
+      default:
+        return cellValue;
+    }
+  }, []);
+
+  const onNextPage = React.useCallback(() => {
+    if (page < pages) {
+      setPage(page + 1);
+    }
+  }, [page, pages]);
+
+  const onPreviousPage = React.useCallback(() => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  }, [page]);
+
+  const onRowsPerPageChange = React.useCallback((e) => {
+    setRowsPerPage(Number(e));
+    setPage(1);
+  }, []);
+
+  const onSearchChange = React.useCallback((value) => {
+    const query = value.target.value;
+    if (query.trim()) {
+      setFilterValue(query);
+      setPage(1);
+    } else {
+      setFilterValue("");
+    }
+  }, []);
+
+  const topContent = React.useMemo(() => {
+    return (
+      <div className="flex flex-col gap-4 sticky top-0 z-50 bg-white py-4">
+        <div>
+          <p className="text-lg font-semibold">Payments</p>
         </div>
-
-        <Tabs defaultValue="all" className="w-full">
-          <TabsList>
-            <TabsTrigger 
-              value="all" 
-              className="data-[state=active]:border-b-2 data-[state=active]:border-blue-600"
-            >
-              All Payments
-            </TabsTrigger>
-            <TabsTrigger 
-              value="advance"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-blue-600"
-            >
-              Advance Payments
-            </TabsTrigger>
-            <TabsTrigger 
-              value="completed"
-              className="data-[state=active]:border-b-2 data-[state=active]:border-blue-600"
-            >
-              Completed Payments
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-
-        <div className="border rounded-lg overflow-hidden">
-          <Table>
-            <TableHeader className="bg-blue-600">
-              <TableRow>
-                <TableHead className="text-white">Name</TableHead>
-                <TableHead className="text-white">Booking_ID</TableHead>
-                <TableHead className="text-white">Contact No.</TableHead>
-                <TableHead className="text-white">Occasion</TableHead>
-                <TableHead className="text-white">Received On</TableHead>
-                <TableHead className="text-white">Method</TableHead>
-                <TableHead className="text-white text-right">Amount</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {payments.map((payment) => (
-                <TableRow key={payment.id}>
-                  <TableCell className="font-medium">{payment.name}</TableCell>
-                  <TableCell>{payment.bookingId}</TableCell>
-                  <TableCell>
-                    <a 
-                      href={`tel:${payment.contactNo}`} 
-                      className="text-blue-600 hover:underline"
-                    >
-                      {payment.contactNo}
-                    </a>
-                  </TableCell>
-                  <TableCell>{payment.occasion}</TableCell>
-                  <TableCell>{payment.receivedOn}</TableCell>
-                  <TableCell>{payment.method}</TableCell>
-                  <TableCell className="text-right">
-                    <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full">
-                      {payment.amount}
-                    </span>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <div className="flex justify-between gap-3 items-end">
+          <div className="relative w-full sm:max-w-[40%]">
+            <Input
+              type="text"
+              placeholder="Search by name..."
+              value={filterValue}
+              onChange={onSearchChange}
+              className="pr-8 h-12"
+            />
+            {filterValue && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="absolute inset-y-0 right-0 px-3 flex items-center"
+                onClick={() => setFilterValue("")}
+              >
+                <X className="h-4 w-4" />
+                <span className="sr-only">Clear search</span>
+              </Button>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            <RazorpayDatePicker/>
+           
+            <Select onValueChange={onRowsPerPageChange}>
+              <SelectTrigger className="w-24 h-12">
+                <SelectValue placeholder="Rows per page:" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel> Rows per page:</SelectLabel>
+                  <SelectItem value="10">10</SelectItem>
+                  <SelectItem value="20">20</SelectItem>
+                  <SelectItem value="30">30</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select> 
+          </div>
         </div>
       </div>
-    </ScrollArea>
-  )
+    );
+  }, [
+    filterValue,
+    statusFilter,
+    visibleColumns,
+    onSearchChange,
+    onRowsPerPageChange,
+    payments?.length,
+    hasSearchFilter,
+  ]);
+
+  const bottomContent = React.useMemo(() => {
+    return (
+      <div className="py-2 px-2 flex justify-between items-center">
+        <span className="w-[30%] text-small text-default-400">
+          {selectedKeys === "all"
+            ? "All items selected"
+            : `${selectedKeys.size} of ${filteredItems.length} selected`}
+        </span>
+        <Pagination
+          isCompact
+          classNames={{
+            wrapper: "gap-0 overflow-visible h-10 p-1 rounded ",
+            item: "w-8 h-8 text-small rounded-none bg-transparent",
+            cursor: " bg-gradient-to-b shadow-lg from-[#F30278] to-[#F30278]",
+          }}
+          showControls
+          showShadow
+          color="primary"
+          page={page}
+          total={pages}
+          onChange={setPage}
+        />
+        <div className="hidden sm:flex w-[30%] justify-end gap-2">
+          <Button
+            className="bg-[#205093] text-white"
+            isDisabled={pages === 1}
+            size="sm"
+            variant="flat"
+            onClick={onPreviousPage}
+          >
+            Previous
+          </Button>
+          <Button
+            className="bg-[#205093] text-white"
+            isDisabled={pages === 1}
+            size="sm"
+            variant="flat"
+            onClick={onNextPage}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
+    );
+  }, [selectedKeys, items.length, page, pages, hasSearchFilter]);
+
+  const classNames = React.useMemo(
+    () => ({
+      wrapper: ["h-screen", "max-w-3xl"],
+      th: ["bg-[#004AAD]", "text-white", "border-b", "border-divider"],
+      td: [
+        "p-4",
+        "border-b",
+        // changing the rows border radius
+        // first
+        "group-data-[first=true]:first:before:rounded-none",
+        "group-data-[first=true]:last:before:rounded-none",
+        // middle
+        "group-data-[middle=true]:before:rounded-none",
+        // last
+        "group-data-[last=true]:first:before:rounded-none",
+        "group-data-[last=true]:last:before:rounded-none",
+      ],
+    }),
+    []
+  );
+
+  return (
+    <>
+      {/* {loading ? (
+        <div className="w-full h-screen flex justify-center items-center">
+          <Spinner color="danger" />
+        </div>
+      ) : ( */}
+      <Table
+        isCompact
+        className="px-4"
+        removeWrapper
+        aria-label="Example table with custom cells, pagination and sorting"
+        bottomContent={bottomContent}
+        bottomContentPlacement="outside"
+        classNames={classNames}
+        selectedKeys={selectedKeys}
+        //   selectionMode="multiple"
+        sortDescriptor={sortDescriptor}
+        topContent={topContent}
+        topContentPlacement="outside"
+        onSelectionChange={setSelectedKeys}
+        onSortChange={setSortDescriptor}
+      >
+        <TableHeader columns={headerColumns}>
+          {(column) => (
+            <TableColumn
+              key={column.uid}
+              align={column.uid === "actions" ? "center" : "start"}
+              allowsSorting={column.sortable}
+            >
+              {column.name}
+            </TableColumn>
+          )}
+        </TableHeader>
+        <TableBody
+          isLoading={loading}
+          loadingContent={<div className="flex justify-center items-center "><Spinner color="danger" /></div>}
+          emptyContent={"No Payments found"}
+          items={sortedItems}
+        >
+          {(item) => (
+            <TableRow key={item.id}>
+              {(columnKey) => (
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      {/* )} */}
+    </>
+  );
 }
