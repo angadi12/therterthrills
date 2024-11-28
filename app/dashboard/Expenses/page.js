@@ -10,9 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Filter, Plus } from "lucide-react";
+import { Plus,Trash2  } from "lucide-react";
 import { useEffect, useState } from "react";
-import { X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -28,51 +27,26 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useDispatch, useSelector } from "react-redux";
-import { setOpenexpense } from "@/lib/Redux/expensesSlice";
+import {
+  fetchExpensesByBranchAndDate,
+  setOpenexpense,
+  setSelectedExpenseId,
+} from "@/lib/Redux/expensesSlice";
 import { fetchBranches, setSelectedBranch } from "@/lib/Redux/BranchSlice";
 import { fetchtheaterbybranchid } from "@/lib/Redux/theaterSlice";
 import { Spinner } from "@nextui-org/react";
-import { CreateExpanseapi, UpadteExpenseapi } from "@/lib/API/Expenses";
+import { CreateExpanseapi, UpadteExpenseapi,Deleteexpanse } from "@/lib/API/Expenses";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-
-const expenses = [
-  {
-    id: 1,
-    name: "Food Items",
-    date: "28-10-2024",
-    description: "Cost of snacks, drinks, and restocking",
-    amount: "2999/-",
-  },
-  {
-    id: 2,
-    name: "Electricity Bill",
-    date: "28-10-2024",
-    description: "Power expenses for projectors, lighting",
-    amount: "2999/-",
-  },
-  {
-    id: 3,
-    name: "Internet Bill",
-    date: "28-10-2024",
-    description: "Monthly charges for internet",
-    amount: "2999/-",
-  },
-  {
-    id: 4,
-    name: "Decorations",
-    date: "28-10-2024",
-    description: "Costs for themed decorations, balloons etc",
-    amount: "2999/-",
-  },
-  {
-    id: 5,
-    name: "Party Supplies",
-    date: "28-10-2024",
-    description: "Plates, napkins, cups, and utensils",
-    amount: "2999/-",
-  },
-];
+import ExpenseDatePicker from "@/components/Dashboardcomponent/Expensedaterange";
+import { format } from "date-fns";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "@nextui-org/react";
 
 export default function ExpensesTable() {
   const { toast } = useToast();
@@ -93,7 +67,10 @@ export default function ExpensesTable() {
   const { branchtheatre, branchtheatreloading, branchtheatreerror } =
     useSelector((state) => state.theater);
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [isloading, setLoading] = useState(false);
+  const { expenses, loading, error,selectedExpenseId } = useSelector((state) => state.expenses);
+  const [delteloading, setDeleteloading] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
 
   const Handleopenexpense = () => {
     dispatch(setOpenexpense(!setopenexpense));
@@ -152,7 +129,7 @@ export default function ExpensesTable() {
         toast({
           title: "Success!",
           description: "Expense created successfully!",
-          action: <ToastAction altText="Dismiss">Okay</ToastAction>,
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
         setFormData({
           name: "",
@@ -164,12 +141,19 @@ export default function ExpensesTable() {
         });
         setLoading(false);
         dispatch(setOpenexpense(!setopenexpense));
+        dispatch(
+          fetchExpensesByBranchAndDate({
+            branchId: selectedBranchId,
+            from: "",
+            to: "",
+          })
+        );
       }
     } catch (error) {
       toast({
         title: "Failed to create expense.",
         description: error.message || "Something went wrong.",
-        variant: "destructive",
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
       setLoading(false);
     } finally {
@@ -177,64 +161,124 @@ export default function ExpensesTable() {
     }
   };
 
+  const Deletehandle = async (id) => {
+    setDeleteloading(true);
+    try {
+      const response = await Deleteexpanse(id);
+      if (response.status === true) {
+        toast({
+          title: "Deleted!",
+          description: "expense has been deleted",
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+        setDeleteloading(false);
+        setIsDelete(!isDelete);
+        dispatch(
+          fetchExpensesByBranchAndDate({
+            branchId: selectedBranchId,
+            from: "",
+            to: "",
+          })
+        );
+      }
+    } catch (error) {
+      toast({
+        title: "Failed to delete expense",
+        description: error,
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });
+      setDeleteloading(false);
+    }
+  };
+
   return (
     <>
-      <section className="w-full mx-auto p-6">
+      <section className="w-full mx-auto p-6 h-screen">
         <div className="space-y-4">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center sticky top-4 z-50 bg-white">
             <h1 className="text-2xl font-bold">Expenses</h1>
-            <div className="flex space-x-2">
-              <Input type="search" placeholder="Search" className="w-64" />
-              <Button variant="outline" size="icon">
-                <Filter className="h-4 w-4" />
-              </Button>
+            <div className="flex items-center space-x-2">
+              <ExpenseDatePicker />
+
               <Button
                 onClick={Handleopenexpense}
                 isIconOnly
-                className="bg-[#F30278] hover:bg-pink-600"
+                className="bg-[#F30278] hover:bg-pink-600 h-12 rounded-md w-6"
               >
                 <Plus className="h-4 w-4 text-white" />
               </Button>
             </div>
           </div>
 
-          <div className="border rounded-lg overflow-hidden">
-            <Table>
-              <TableHeader className="bg-[#004AAD]">
-                <TableRow>
-                  <TableHead className="text-white font-medium">Name</TableHead>
-                  <TableHead className="text-white font-medium">Date</TableHead>
-                  <TableHead className="text-white font-medium">
-                    Description
-                  </TableHead>
-                  <TableHead className="text-white font-medium">
-                    Amount
-                  </TableHead>
-                  <TableHead className="text-white font-medium text-right">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {expenses.map((expense) => (
-                  <TableRow key={expense.id}>
-                    <TableCell className="font-medium">
-                      {expense.name}
-                    </TableCell>
-                    <TableCell>{expense.date}</TableCell>
-                    <TableCell>{expense.description}</TableCell>
-                    <TableCell>{expense.amount}</TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        size="sm"
-                        className=" rounded-sm  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-                      >
-                        Modify
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
+          <div className="border rounded-lg overflow-hidden z-0">
+            <Table className="z-0">
+              {loading ? ( // Show spinner when data is loading
+                <div className="flex justify-center py-8">
+                  <Spinner color="danger" />
+                </div>
+              ) : expenses.length > 0 ? ( // Show table if expenses are available
+                <>
+                  <TableHeader className="bg-[#004AAD]">
+                    <TableRow>
+                      <TableHead className="text-white font-medium">
+                        category
+                      </TableHead>
+                      <TableHead className="text-white font-medium">
+                        Date
+                      </TableHead>
+                      <TableHead className="text-white font-medium">
+                        Description
+                      </TableHead>
+                      {/* <TableHead className="text-white font-medium">
+                       Branch
+                      </TableHead> */}
+                      <TableHead className="text-white font-medium">
+                        Theater
+                      </TableHead>
+                      <TableHead className="text-white font-medium">
+                        Amount
+                      </TableHead>
+                      <TableHead className="text-white font-medium text-right">
+                        Actions
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {expenses.map((expense) => (
+                      <TableRow key={expense?._id}>
+                        <TableCell className="font-medium">
+                          {expense?.category}
+                        </TableCell>
+                        <TableCell>
+                          {format(new Date(expense?.createdAt), "yyyy-MM-dd")}
+                        </TableCell>
+                        <TableCell>{expense?.name}</TableCell>
+                        {/* <TableCell>{expense?.branch?.Branchname}</TableCell> */}
+                        <TableCell>{expense?.theater?.name}</TableCell>
+                        <TableCell>{expense?.amount}</TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                          isIconOnly
+                            onPress={() => {
+                              dispatch(setSelectedExpenseId(expense?._id)),
+                                setIsDelete(!isDelete);
+                            }}
+                            size="sm"
+                            className="rounded-sm border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)]"
+                          >
+                            <Trash2 />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </>
+              ) : (
+                // Show message if no expenses are available
+                <div className="flex justify-center py-8 text-gray-500">
+                  No expenses found.
+                </div>
+              )}
             </Table>
           </div>
         </div>
@@ -352,7 +396,7 @@ export default function ExpensesTable() {
             </div>
             <Button
               onPress={handleSubmit}
-              isLoading={loading}
+              isLoading={isloading}
               className="px-8 py-0.5 rounded-sm w-48  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
             >
               Add Expense
@@ -360,6 +404,45 @@ export default function ExpensesTable() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <Modal
+        isDismissable={false}
+        isKeyboardDismissDisabled={true}
+        backdrop="opaque"
+        isOpen={isDelete}
+        onOpenChange={setIsDelete}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col text-center">
+                Confirm Delete
+              </ModalHeader>
+              <ModalBody>
+                <p>Are you sure you want to Delete?</p>
+              </ModalBody>
+              <ModalFooter className="flex justify-center items-center text-center">
+                <Button
+                  isLoading={delteloading}
+                  onPress={() => {
+                    Deletehandle(selectedExpenseId);
+                  }}
+                  className="px-8 py-0.5 rounded-sm w-48 bg-[#F30278] text-white"
+                >
+                  Yes
+                </Button>
+                <Button
+                  size="md"
+                  onPress={() => setIsDelete(false)}
+                  className="px-8 py-0.5 rounded-sm w-48 bg-[#004AAD] text-white"
+                >
+                  No
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 }

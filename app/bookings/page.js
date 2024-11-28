@@ -130,7 +130,7 @@ const Page = () => {
           )}
         </div>
         </Tab>
-        <Tab
+        {/* <Tab
           key="Cart"
           title={
             <div className="flex items-center space-x-2">
@@ -141,7 +141,7 @@ const Page = () => {
           }
         >
 
-        </Tab>
+        </Tab> */}
       </Tabs>
 
 
