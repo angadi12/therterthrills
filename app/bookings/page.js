@@ -11,6 +11,8 @@ import {
   selectBookings,
 } from "@/lib/Redux/bookingSlice";
 import TheatreCardSkeleton from "@/components/Bookingcomponents/TheatreCardSkeleton";
+import {Tabs, Tab, Chip} from "@nextui-org/react";
+import { MonitorPlay,CalendarOff,ShoppingBag } from 'lucide-react';
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -18,6 +20,23 @@ const Page = () => {
   const bookings = useSelector(selectBookings);
   const loading = useSelector(selectBookingLoading);
   const error = useSelector(selectBookingError);
+
+
+  const currentDate = new Date();
+
+  // Filter Active and Recent bookings
+  const activeBookings = bookings.filter((booking) => {
+    const bookingDate = new Date(booking.date); // Adjust if the date field is named differently
+    return bookingDate >= currentDate;
+  });
+
+  const recentBookings = bookings.filter((booking) => {
+    const bookingDate = new Date(booking.date); // Adjust if the date field is named differently
+    return bookingDate < currentDate;
+  });
+
+
+
 
   useEffect(() => {
     dispatch(fetchBookingByUserId(user?._id));
@@ -38,25 +57,96 @@ const Page = () => {
 
       <section className="w-11/12 mx-auto flex flex-col gap-4 justify-center items-start md:py-20 py-8">
         <p className="md:text-3xl text-xl font-medium md:mb-8">My Bookings</p>
-        <div className="w-full grid md:grid-cols-3 grid-cols-1 justify-center items-stretch place-content-center gap-4">
+        <Tabs 
+        className="w-full"
+        aria-label="Options" 
+        color="primary" 
+        variant="underlined"
+        classNames={{
+            tabList:"gap-6 w-full relative   rounded-none p-2 border-b  border-divider",
+            cursor: "w-full bg-[#F30278] ",
+            tab: "w-full px-0 h-12 flex flex-col justify-center items-center",
+            tabContent: "group-data-[selected=true]:text-[#004AAD] ",
+          }}
+      >
+        <Tab
+          key="Active"
+          title={
+            <div className="flex items-center space-x-2">
+             <MonitorPlay className="text-tiny md:text-sm hidden md:block "/>
+              <span>Active Booking</span>
+              <Chip size="sm" className=" hidden md:flex justify-center items-center" color="danger" variant={`${activeBookings?.length===0?"faded":"solid"}`}>{activeBookings?.length}</Chip>
+            </div>
+          }
+        >
+            <div className="w-full py-6 grid md:grid-cols-3 grid-cols-1 justify-center items-stretch place-content-center gap-4">
           {loading ? (
             Array.from({ length: 6 }).map((_, index) => (
               <TheatreCardSkeleton key={index} />
             ))
           ) : (
             <>
-              {bookings.length === 0 ? (
-                <p className="col-span-3 text-center text-lg font-medium">
+              {activeBookings?.length === 0 ? (
+                <p className="col-span-3 text-center h-60 flex justify-center items-center w-full text-lg font-medium">
                   No Booking available.
                 </p>
               ) : (
-                bookings.map((booking, index) => (
+                activeBookings?.map((booking, index) => (
                   <Bookingcard key={index} booking={booking} />
                 ))
               )}
             </>
           )}
         </div>
+        </Tab>
+        <Tab
+          key="Recent"
+          title={
+            <div className="flex items-center space-x-2">
+             <CalendarOff className=" hidden md:block"/>
+              <span>Recent Booking</span>
+              <Chip size="sm"  className=" hidden md:flex justify-center items-center"  color="danger" variant={`${recentBookings?.length===0?"faded":"solid"}`} >{recentBookings?.length}</Chip>
+            </div>
+          }
+        >
+
+<div className="w-full py-6 grid md:grid-cols-3 grid-cols-1 justify-center items-stretch place-content-center gap-4">
+          {loading ? (
+            Array.from({ length: 6 }).map((_, index) => (
+              <TheatreCardSkeleton key={index} />
+            ))
+          ) : (
+            <>
+              {recentBookings?.length === 0 ? (
+                <p className="col-span-3 text-center h-60 flex justify-center items-center w-full text-lg font-medium">
+                  No Booking available.
+                </p>
+              ) : (
+                recentBookings?.map((booking, index) => (
+                  <Bookingcard key={index} booking={booking} />
+                ))
+              )}
+            </>
+          )}
+        </div>
+        </Tab>
+        <Tab
+          key="Cart"
+          title={
+            <div className="flex items-center space-x-2">
+             <ShoppingBag className=" hidden md:block" />
+              <span>Cart</span>
+              <Chip size="sm" className=" hidden md:flex justify-center items-center"  color="danger" variant="solid">0</Chip>
+            </div>
+          }
+        >
+
+        </Tab>
+      </Tabs>
+
+
+
+  
       </section>
     </main>
   );

@@ -211,8 +211,7 @@ export default function Footer() {
           color="primary"
           variant="underlined"
           classNames={{
-            tabList:
-              "gap-6 w-full relative   rounded-none p-2  border-b border-divider",
+            tabList:"gap-6 w-full relative   rounded-none p-2  border-b border-divider",
             cursor: "w-full bg-[#F30278] ",
             tab: "w-full px-0 h-12 flex flex-col justify-center items-center",
             tabContent: "group-data-[selected=true]:text-[#004AAD] ",
