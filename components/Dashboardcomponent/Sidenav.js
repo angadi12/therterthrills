@@ -1,22 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import {
-  SquareChevronDown,
-  LogOut,
-  ShoppingCart,
-  LayoutDashboard,
-  PackageSearch,
   Hotel,
-  QrCode,
-  Armchair,
-  SquareMenu,
-  ReceiptIndianRupee,
-  Users,
-  FileText,
+  UsersRound ,
+  LogOut,
+  Theater,
+  LayoutDashboard,
+  Mail,
   PanelLeftOpen,
   PanelLeftClose,
-  Settings,
-  User,
+  Clapperboard ,
+  HandCoins ,
   IndianRupee,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -200,7 +194,7 @@ const Sidenav = () => {
                 }`}
               >
                 {!isMinimized ? (
-                  <FileText size={20} />
+                  <Hotel  size={20} />
                 ) : (
                   <Tooltip
                     classNames={{
@@ -214,7 +208,7 @@ const Sidenav = () => {
                     content="Manage Branches"
                     placement="right"
                   >
-                    <FileText size={20} />
+                    <Hotel size={20} />
                   </Tooltip>
                 )}
                 {!isMinimized && (
@@ -234,7 +228,7 @@ const Sidenav = () => {
                 }`}
               >
                 {!isMinimized ? (
-                  <MdTableRestaurant size={20} />
+                  <UsersRound  size={20} />
                 ) : (
                   <Tooltip
                     classNames={{
@@ -248,7 +242,7 @@ const Sidenav = () => {
                     content="Manage Admins"
                     placement="right"
                   >
-                    <Armchair size={20} />
+                   <UsersRound  size={20} />
                   </Tooltip>
                 )}
                 {!isMinimized && <span>Manage Admins</span>}
@@ -264,7 +258,7 @@ const Sidenav = () => {
                 }`}
               >
                 {!isMinimized ? (
-                  <MdTableRestaurant size={20} />
+                  <Theater  size={20} />
                 ) : (
                   <Tooltip
                     classNames={{
@@ -278,7 +272,7 @@ const Sidenav = () => {
                     content="Manage Theatres"
                     placement="right"
                   >
-                    <Armchair size={20} />
+                   <Theater  size={20} />
                   </Tooltip>
                 )}
                 {!isMinimized && <span>Manage Theatres</span>}
@@ -294,7 +288,7 @@ const Sidenav = () => {
                 }`}
               >
                 {!isMinimized ? (
-                  <QrCode size={20} />
+                  <Clapperboard  size={20} />
                 ) : (
                   <Tooltip
                     classNames={{
@@ -308,7 +302,7 @@ const Sidenav = () => {
                     content="Your Bookings"
                     placement="right"
                   >
-                    <QrCode size={20} />
+                    <Clapperboard  size={20} />
                   </Tooltip>
                 )}
                 {!isMinimized && <span>Your Bookings</span>}
@@ -354,7 +348,7 @@ const Sidenav = () => {
                 }`}
               >
                 {!isMinimized ? (
-                  <QrCode size={20} />
+                  <HandCoins  size={20} />
                 ) : (
                   <Tooltip
                     classNames={{
@@ -368,7 +362,7 @@ const Sidenav = () => {
                     content="Expenses"
                     placement="right"
                   >
-                    <QrCode size={20} />
+                    <HandCoins  size={20} />
                   </Tooltip>
                 )}
                 {!isMinimized && <span>Expenses</span>}
@@ -384,7 +378,7 @@ const Sidenav = () => {
                 }`}
               >
                 {!isMinimized ? (
-                  <QrCode size={20} />
+                  <Mail  size={20} />
                 ) : (
                   <Tooltip
                     classNames={{
@@ -398,7 +392,7 @@ const Sidenav = () => {
                     content="Messages"
                     placement="right"
                   >
-                    <QrCode size={20} />
+                    <Mail  size={20} />
                   </Tooltip>
                 )}
                 {!isMinimized && <span>Messages</span>}

@@ -32,6 +32,7 @@ import { IoMenu } from "react-icons/io5";
 // import { fetchNotificationByBranch } from "@/lib/NotificationSlice";
 import Cookies from "js-cookie";
 import { clearUser ,openLoginModal} from "@/lib/Redux/authSlice";
+import NotificationSheet from "./Notificationsheet";
 
 export default function Navbarr() {
   const router = useRouter();
@@ -199,6 +200,7 @@ export default function Navbarr() {
                 alt="Bellicon"
               />
             </Badge> */}
+            <NotificationSheet/>
 
             <Dropdown placement="bottom-end">
               <DropdownTrigger>

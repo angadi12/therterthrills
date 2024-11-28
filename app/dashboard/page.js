@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Calendar, ChevronDown, ChevronLeft, ChevronRight, ChevronRightIcon, Clock, MapPin } from 'lucide-react'
 import { Button } from "@nextui-org/react"
 import { Card, CardContent } from "@/components/ui/card"
@@ -9,11 +9,34 @@ import Totalbookicon from "@/public/asset/Totalbookicon.png"
 import Pendingbookicon from "@/public/asset/Pendingbookicon.png"
 import Completedicon from "@/public/asset/Completedicon.png"
 import Image from 'next/image'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 
 export default function BookingDashboard() {
   const [dateRange, setDateRange] = useState('25-10-2024 to 28-10-2024')
   const [selectedTheatre, setSelectedTheatre] = useState('Silver Theatre')
   const [selectedYear, setSelectedYear] = useState('2024')
+  const [api, setApi] = useState()
+  const [current, setCurrent] = useState(0)
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    if (!api) {
+      return
+    }
+
+    setCount(api.scrollSnapList().length)
+    setCurrent(api.selectedScrollSnap())
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap())
+    })
+  }, [api])
 
   const branches = [
     { name: 'Branch - 1', total: 12, pending: 2 },
@@ -110,48 +133,54 @@ export default function BookingDashboard() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-          <Card className="rounded-none shadow-none">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">Our Branches</h2>
-                <span className="text-green-500 font-medium">Live</span>
-              </div>
-              <div className="relative">
-                <div className="flex overflow-x-auto space-x-4 pb-4">
-                  {branches.map((branch, index) => (
-                    <div key={index} className="flex-none w-48 border rounded-lg p-4">
-                      <div className="w-12 h-12 bg-[#004AAD] rounded-full flex items-center justify-center mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="white" className="w-6 h-6">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                        </svg>
-                      </div>
-                      <h3 className="font-medium mb-2">{branch.name}</h3>
-                      <div className="flex justify-between text-sm">
-                        <span>Total</span>
-                        <span>Pending</span>
-                      </div>
-                      <div className="flex justify-between font-bold">
-                        <span>{branch.total}</span>
-                        <span>{branch.pending}</span>
-                      </div>
-                    </div>
-                  ))}
+        <Card className="rounded-none shadow-none">
+      <CardContent className="p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">Our Branches</h2>
+          <span className="text-green-500 font-medium">Live</span>
+        </div>
+        <Carousel
+          setApi={setApi}
+          className="w-full"
+          opts={{
+            align: "start",
+          }}
+        >
+          <CarouselContent className="-ml-2 md:-ml-4">
+            {branches.map((branch, index) => (
+              <CarouselItem key={index} className="pl-2 md:pl-4 md:basis-1/3 lg:basis-1/3">
+                <div className="p-4 border rounded-lg">
+                  <div className="w-12 h-12 bg-[#004AAD] rounded-full flex items-center justify-center mb-4">
+                    <MapPin className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="font-medium mb-2">{branch.name}</h3>
+                  <div className="flex justify-between text-sm">
+                    <span>Total</span>
+                    <span>Pending</span>
+                  </div>
+                  <div className="flex justify-between font-bold">
+                    <span>{branch.total}</span>
+                    <span>{branch.pending}</span>
+                  </div>
                 </div>
-                <button className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md">
-                  <ChevronLeft className="h-6 w-6 text-gray-600" />
-                </button>
-                <button className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md">
-                  <ChevronRight className="h-6 w-6 text-gray-600" />
-                </button>
-              </div>
-              <div className="flex justify-center mt-4 space-x-2">
-                <div className="w-2 h-2 rounded-full bg-[#004AAD]"></div>
-                <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-                <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-              </div>
-            </CardContent>
-          </Card>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="left-0" />
+          <CarouselNext className="right-0" />
+        </Carousel>
+        <div className="flex justify-center mt-4 space-x-2">
+          {Array.from({ length: count }).map((_, index) => (
+            <div
+              key={index}
+              className={`w-2 h-2 rounded-full ${
+                index === current ? "bg-[#004AAD]" : "bg-gray-300"
+              }`}
+            />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
 
           <Card className="rounded-none shadow-none">
             <CardContent className="p-6">

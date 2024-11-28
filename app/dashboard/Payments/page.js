@@ -1,13 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@nextui-org/react";
 import { Input } from "@/components/ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchPayments,
+  fetchsinglePayments,
+  setSelectedpaymentid,
   selectPayments,
   selectPaymentsError,
   selectPaymentsLoading,
+  selectSinglePayment,
+  selectSinglePaymentError,
+  selectSinglePaymentLoading,
 } from "@/lib/Redux/paymentSlice";
 import {
   Table,
@@ -39,8 +44,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import RazorpayDatePicker, { DateRangePicker } from "@/components/Dashboardcomponent/Daterange";
-
+import RazorpayDatePicker, {
+  DateRangePicker,
+} from "@/components/Dashboardcomponent/Daterange";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Copy, ExternalLink } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  useDisclosure,
+  ModalFooter,
+} from "@nextui-org/react";
 
 const INITIAL_VISIBLE_COLUMNS = [
   "name",
@@ -70,19 +94,29 @@ const columns = [
 ];
 
 export default function PaymentsTable() {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const dispatch = useDispatch();
   const payments = useSelector(selectPayments);
   const loading = useSelector(selectPaymentsLoading);
   const error = useSelector(selectPaymentsError);
   const date = useSelector((state) => state.payments.dateRange);
+  const Selectedpaymentid = useSelector(
+    (state) => state.payments.Selectedpaymentid
+  );
 
-
-
-
+  const singlePayment = useSelector(selectSinglePayment);
+  const singleLoading = useSelector(selectSinglePaymentLoading);
+  const singleError = useSelector(selectSinglePaymentError);
 
   useEffect(() => {
     dispatch(fetchPayments({ from: date?.from, to: date?.to }));
-  }, [dispatch,date]);
+  }, [dispatch, date]);
+
+  useEffect(() => {
+    if (Selectedpaymentid) {
+      dispatch(fetchsinglePayments(Selectedpaymentid));
+    }
+  }, [dispatch, Selectedpaymentid]);
 
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
@@ -232,11 +266,14 @@ export default function PaymentsTable() {
         return (
           <div className="relative flex justify-end items-center gap-2">
             <Button
+              onPress={() => {
+                onOpenChange(!isOpen), dispatch(setSelectedpaymentid(user?.id));
+              }}
               size="sm"
               className="rounded-sm text-xs  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
             >
               View Details
-            </Button>
+            </Button>{" "}
           </div>
         );
       default:
@@ -274,9 +311,6 @@ export default function PaymentsTable() {
   const topContent = React.useMemo(() => {
     return (
       <div className="flex flex-col gap-4 sticky top-0 z-50 bg-white py-4">
-        <div>
-          <p className="text-lg font-semibold">Payments</p>
-        </div>
         <div className="flex justify-between gap-3 items-end">
           <div className="relative w-full sm:max-w-[40%]">
             <Input
@@ -288,19 +322,20 @@ export default function PaymentsTable() {
             />
             {filterValue && (
               <Button
-                variant="ghost"
+                variant="light"
+                isIconOnly
                 size="sm"
-                className="absolute inset-y-0 right-0 px-3 flex items-center"
+                className="absolute inset-y-0 right-0 px-3 top-2 flex items-center"
                 onClick={() => setFilterValue("")}
               >
-                <X className="h-4 w-4" />
+                <X size={15} className="h-8 w-8 text-pink-700" />
                 <span className="sr-only">Clear search</span>
               </Button>
             )}
           </div>
           <div className="flex items-center gap-2">
-            <RazorpayDatePicker/>
-           
+            <RazorpayDatePicker />
+
             <Select onValueChange={onRowsPerPageChange}>
               <SelectTrigger className="w-24 h-12">
                 <SelectValue placeholder="Rows per page:" />
@@ -313,7 +348,7 @@ export default function PaymentsTable() {
                   <SelectItem value="30">30</SelectItem>
                 </SelectGroup>
               </SelectContent>
-            </Select> 
+            </Select>
           </div>
         </div>
       </div>
@@ -377,7 +412,7 @@ export default function PaymentsTable() {
   const classNames = React.useMemo(
     () => ({
       wrapper: ["h-screen", "max-w-3xl"],
-      th: ["bg-[#004AAD]", "text-white", "border-b", "border-divider"],
+      th: ["bg-[#004AAD]", "text-white", "border-b", "border-divider","sticky","top-20","z-10"],
       td: [
         "p-4",
         "border-b",
@@ -431,7 +466,11 @@ export default function PaymentsTable() {
         </TableHeader>
         <TableBody
           isLoading={loading}
-          loadingContent={<div className="flex justify-center items-center "><Spinner color="danger" /></div>}
+          loadingContent={
+            <div className="flex justify-center items-center ">
+              <Spinner color="danger" />
+            </div>
+          }
           emptyContent={"No Payments found"}
           items={sortedItems}
         >
@@ -444,7 +483,146 @@ export default function PaymentsTable() {
           )}
         </TableBody>
       </Table>
-      {/* )} */}
+
+      <Modal
+        backdrop="opaque"
+        isOpen={isOpen}
+        size="3xl"
+        onOpenChange={onOpenChange}
+        motionProps={{
+          variants: {
+            enter: {
+              y: 0,
+              opacity: 1,
+              transition: {
+                duration: 0.3,
+                ease: "easeOut",
+              },
+            },
+            exit: {
+              y: -20,
+              opacity: 0,
+              transition: {
+                duration: 0.2,
+                ease: "easeIn",
+              },
+            },
+          },
+        }}
+      >
+        <ModalContent>
+          {(onClose) => (
+            singleLoading? <ModalBody> <div className="flex justify-center items-center h-80"><Spinner color="danger" /></div></ModalBody> : <>
+              <ModalHeader className="flex flex-col gap-1">
+                <div className="flex items-center justify-between px-4">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl font-semibold">
+                      {" "}
+                      ₹{(singlePayment?.amount / 100).toFixed(2)}
+                    </span>
+                    <Badge variant="secondary" className="rounded-md">
+                      {singlePayment?.captured ? (
+                        <Badge className={"bg-green-400"}>captured</Badge>
+                      ) : (
+                        <Badge className={"bg-red-400"}>not captured</Badge>
+
+                      )}
+                    </Badge>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Created on: {formatTimestamp(singlePayment?.created_at)}
+                  </div>
+                </div>
+              </ModalHeader>
+              <ModalBody>
+                <div className="grid grid-cols-1 gap-6 w-full mx-auto">
+                  <div className="space-y-6">
+                    <div className="rounded-lg border">
+                      <div className="bg-muted px-4 py-3 font-semibold">
+                        Details
+                      </div>
+                      <ScrollArea className="h-[400px]">
+                        <div className="p-4">
+                          <dl className="space-y-4">
+                            <div className="grid grid-cols-3 gap-4">
+                              <dt className="text-sm font-medium text-muted-foreground">
+                                Payment ID
+                              </dt>
+                              <dd className="col-span-2 flex items-center gap-2 text-sm">
+                                {singlePayment?.id}
+                                
+                              </dd>
+                            </div>
+                            <div className="grid grid-cols-3 gap-4">
+                              <dt className="text-sm font-medium text-muted-foreground">
+                                Bank RRN
+                              </dt>
+                              <dd className="col-span-2 text-sm">
+                                {singlePayment?.acquirer_data?.rrn}
+                              </dd>
+                            </div>
+                            <div className="grid grid-cols-3 gap-4">
+                              <dt className="text-sm font-medium text-muted-foreground">
+                                Order ID
+                              </dt>
+                              <dd className="col-span-2 flex items-center gap-2 text-sm">
+                                {singlePayment?.order_id}
+                               
+                              </dd>
+                            </div>
+                            <div className="grid grid-cols-3 gap-4">
+                              <dt className="text-sm font-medium text-muted-foreground">
+                                Payment method
+                              </dt>
+                              <dd className="col-span-2 text-sm">
+                                {singlePayment?.method} ({singlePayment?.vpa})
+                              </dd>
+                            </div>
+                            <div className="grid grid-cols-3 gap-4">
+                              <dt className="text-sm font-medium text-muted-foreground">
+                                Customer details
+                              </dt>
+                              <dd className="col-span-2 space-y-1 text-sm">
+                                <div className="flex items-center gap-2">
+                                  {singlePayment?.contact}
+                                
+                                </div>
+                                <div>{singlePayment?.email}</div>
+                              </dd>
+                            </div>
+                            <div className="grid grid-cols-3 gap-4">
+                              <dt className="text-sm font-medium text-muted-foreground">
+                                Total Fee
+                              </dt>
+                              <dd className="col-span-2 space-y-1 text-sm">
+                                <div>₹{(singlePayment?.fee/100).toFixed(2)}</div>
+                                <div className="text-muted-foreground">
+                                  Razorpay Fee +₹{((singlePayment?.fee - singlePayment?.tax)/100).toFixed(2)}
+                                </div>
+                                <div className="text-muted-foreground">
+                                  GST +₹{(singlePayment?.tax/100).toFixed(2)}
+                                </div>
+                              </dd>
+                            </div>
+                            <div className="grid grid-cols-3 gap-4">
+                              <dt className="text-sm font-medium text-muted-foreground">
+                                Description
+                              </dt>
+                              <dd className="col-span-2 text-sm">
+                                {singlePayment?.description}
+                              </dd>
+                            </div>
+                          </dl>
+                        </div>
+                      </ScrollArea>
+                    </div>
+                  </div>
+                </div>
+              </ModalBody>
+            </> 
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 }

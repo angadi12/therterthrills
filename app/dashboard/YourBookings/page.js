@@ -22,56 +22,6 @@ import { fetchtheaterbybranchid } from "@/lib/Redux/theaterSlice";
 import { Spinner } from "@nextui-org/react";
 import { format } from "date-fns";
 
-const events = [
-  {
-    id: 1,
-    icon: "🎂",
-    name: "Birthday",
-    venue: "Bronze Theatre",
-    location: "Lingampally",
-    eventType: "Birthday Party",
-    members: 4,
-    date: "17-10-2024",
-    time: "9:00 AM - 12:30 PM",
-    features: ["Fog Effects", "Cheese Cake", "20 Photos"],
-  },
-  {
-    id: 2,
-    icon: "👥",
-    name: "Reunion",
-    venue: "Bronze Theatre",
-    location: "Lingampally",
-    eventType: "Reunion Party",
-    members: 4,
-    date: "17-10-2024",
-    time: "9:00 AM - 12:30 PM",
-    features: ["Fog Effects", "20 Photos"],
-  },
-  {
-    id: 3,
-    icon: "💍",
-    name: "Proposal",
-    venue: "Bronze Theatre",
-    location: "Lingampally",
-    eventType: "Proposal",
-    members: 4,
-    date: "17-10-2024",
-    time: "9:00 AM - 12:30 PM",
-    features: ["LED Lights", "Red Velvet", "50 Photos"],
-  },
-  {
-    id: 4,
-    icon: "👋",
-    name: "Farewell",
-    venue: "Bronze Theatre",
-    location: "Lingampally",
-    eventType: "Proposal",
-    members: 4,
-    date: "17-10-2024",
-    time: "9:00 AM - 12:30 PM",
-    features: ["LED Lights", "Red Velvet", "50 Photos"],
-  },
-];
 
 export default function ActiveEvents() {
   const [activeEvents, setActiveEvents] = useState([]);
@@ -108,33 +58,40 @@ export default function ActiveEvents() {
 
   useEffect(() => {
     const today = new Date();
-  
+
     // Filter active events (today's bookings)
-    const active = Theaterbooking?.filter((booking) => {
-      const bookingDate = new Date(booking.date);
-      return bookingDate.toDateString() === today.toDateString(); // Check if it's the same day
-    }) || [];
-  
+    const active =
+      Theaterbooking?.filter((booking) => {
+        const bookingDate = new Date(booking.date);
+        return bookingDate.toDateString() === today.toDateString(); // Check if it's the same day
+      }) || [];
+
     // Filter upcoming events (future bookings)
-    const upcoming = Theaterbooking?.filter((booking) => {
-      const bookingDate = new Date(booking.date);
-      return bookingDate > today; // Check if the date is in the future
-    }) || [];
-  
+    const upcoming =
+      Theaterbooking?.filter((booking) => {
+        const bookingDate = new Date(booking.date);
+        return bookingDate > today; // Check if the date is in the future
+      }) || [];
+
     // Filter completed events (past bookings with completed payment)
-    const completed = Theaterbooking?.filter((booking) => {
-      const bookingDate = new Date(booking.date);
-      return booking.paymentStatus === "completed" && bookingDate < today; // Check if date is in the past and payment is completed
-    }) || [];
-  
+    const completed =
+      Theaterbooking?.filter((booking) => {
+        const bookingDate = new Date(booking.date);
+        return booking.paymentStatus === "completed" && bookingDate < today; // Check if date is in the past and payment is completed
+      }) || [];
+
     // Update state
     setActiveEvents(active);
     setUpcomingEvents(upcoming);
     setCompletedEvents(completed);
-  
-  }, [Theaterbooking,Selectedtheaterbyid,Theatererror]); // Re-run the filter logic whenever Theaterbooking changes
-  
-  
+  }, [Theaterbooking, Selectedtheaterbyid, Theatererror]); // Re-run the filter logic whenever Theaterbooking changes
+
+  useEffect(() => {
+    if (branchtheatre?.length > 0 && !Selectedtheaterbyid) {
+      dispatch(Setselectedtheaterid(branchtheatre[0]._id));
+    }
+  }, [branchtheatre, Selectedtheaterbyid, dispatch]);
+
 
   return (
     <section className="w-full mx-auto bg-white">
@@ -175,9 +132,6 @@ export default function ActiveEvents() {
             </SelectContent>
           </Select>
 
-          {/* <Button variant="outline" size="icon">
-            <Filter className="h-4 w-4" />
-          </Button> */}
         </div>
       </div>
 
