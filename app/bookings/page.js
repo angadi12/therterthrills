@@ -11,7 +11,7 @@ import {
   selectBookings,
 } from "@/lib/Redux/bookingSlice";
 import TheatreCardSkeleton from "@/components/Bookingcomponents/TheatreCardSkeleton";
-import { Tabs, Tab, Chip } from "@nextui-org/react";
+import { Tabs, Tab, Chip, Spinner } from "@nextui-org/react";
 import { MonitorPlay, CalendarOff, ShoppingBag } from "lucide-react";
 
 const Page = () => {
@@ -51,7 +51,7 @@ const Page = () => {
         </p>
       </div>
 
-      <section className="w-11/12 mx-auto flex flex-col gap-4 justify-center items-center md:py-20 py-8">
+      <section className="md:w-11/12 w-full px-2 md:px-0 mx-auto flex flex-col gap-4 justify-center items-center md:py-20 py-4">
         <p className="md:text-3xl text-xl font-medium md:mb-8">My Bookings</p>
         <Tabs
           className="w-full"
@@ -85,11 +85,13 @@ const Page = () => {
               </div>
             }
           >
-            <div className="w-full mx-auto   py-6 grid md:grid-cols-3 grid-cols-1 justify-center items-stretch place-content-center gap-4 md:gap-8">
+            <div className="w-full mx-auto   md:py-6 grid md:grid-cols-3 grid-cols-1 justify-center items-stretch place-content-center gap-4 md:gap-8">
               {loading ? (
-                Array.from({ length: 6 }).map((_, index) => (
-                  <TheatreCardSkeleton key={index} />
-                ))
+                <div className="flex justify-center items-center w-full h-60">
+                <Spinner color="danger" />
+
+                </div>
+
               ) : (
                 <>
                   {activeBookings?.length === 0 ? (
@@ -126,9 +128,11 @@ const Page = () => {
           >
             <div className="w-full py-6 mx-auto grid md:grid-cols-3 grid-cols-1 justify-center items-stretch place-content-center gap-4 md:gap-8">
               {loading ? (
-                Array.from({ length: 6 }).map((_, index) => (
-                  <TheatreCardSkeleton key={index} />
-                ))
+                <div className="flex justify-center items-center w-full h-60">
+                <Spinner color="danger" />
+
+                </div>
+              
               ) : (
                 <>
                   {recentBookings?.length === 0 ? (

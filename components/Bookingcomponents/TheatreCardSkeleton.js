@@ -31,7 +31,7 @@ export default function TheatreCardSkeleton() {
         </div>
 
         {/* Title Skeleton */}
-        <Skeleton className="w-2/3 h-6 mb-2" />
+        <Skeleton className="md:w-2/3 w-full h-6 mb-2" />
 
         {/* Capacity and Decoration Skeleton */}
         <div className="flex gap-2 mb-4">
@@ -44,7 +44,7 @@ export default function TheatreCardSkeleton() {
         </div>
 
         {/* Theatre Overview Skeleton */}
-        <Skeleton className="w-1/3 h-5 mb-2" />
+        <Skeleton className="md:w-1/3 w-full h-5 mb-2" />
         <div className="flex flex-col gap-2 mb-4">
           {[...Array(3)].map((_, index) => (
             <div key={index} className="flex gap-2 items-center">
@@ -55,7 +55,7 @@ export default function TheatreCardSkeleton() {
         </div>
 
         {/* Slot Skeleton */}
-        <Skeleton className="w-1/4 h-5 mb-2" />
+        <Skeleton className="md:w-1/4 w-full h-5 mb-2" />
         <div className="grid grid-cols-2 gap-2">
           {[...Array(4)].map((_, index) => (
             <Skeleton key={index} className="w-full h-8 rounded" />
