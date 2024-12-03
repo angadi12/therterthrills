@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Button } from "@nextui-org/react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,7 @@ import { useState } from "react";
 
 export default function Contactform() {
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -54,7 +54,7 @@ export default function Contactform() {
         description: "First Name is required.",
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
-      setIsLoading(false)
+      setIsLoading(false);
       valid = false;
     }
     if (!formData.lastName) {
@@ -63,7 +63,7 @@ export default function Contactform() {
         description: "Last Name is required.",
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
-      setIsLoading(false)
+      setIsLoading(false);
       valid = false;
     }
     if (!formData.mobileNumber || !/^\d{10}$/.test(formData.mobileNumber)) {
@@ -72,7 +72,7 @@ export default function Contactform() {
         description: "Valid Mobile Number is required.",
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
-      setIsLoading(false)
+      setIsLoading(false);
       valid = false;
     }
     // if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -90,7 +90,7 @@ export default function Contactform() {
         description: "Please select an occasion.",
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
-      setIsLoading(false)
+      setIsLoading(false);
       valid = false;
     }
     if (formData.addOns.length === 0) {
@@ -99,22 +99,19 @@ export default function Contactform() {
         description: "Please select at least one add-on.",
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
-      setIsLoading(false)
+      setIsLoading(false);
       valid = false;
     }
 
     return valid;
   };
 
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true)
-
+    setIsLoading(true);
 
     if (!validate()) {
-      return; 
+      return;
     }
 
     const ticketData = {
@@ -128,13 +125,13 @@ export default function Contactform() {
     };
     try {
       const response = await CreatTicket(ticketData);
-      if(response.status==="success"){
+      if (response.status === "success") {
         toast({
           title: "message sent",
           description: "Your message has been sent successfully.",
           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
-        setIsLoading(false)
+        setIsLoading(false);
         setFormData({
           firstName: "",
           lastName: "",
@@ -144,7 +141,6 @@ export default function Contactform() {
           addOns: [],
           details: "",
         });
-  
       }
     } catch (error) {
       console.error("Error creating ticket:", error);
@@ -153,7 +149,7 @@ export default function Contactform() {
         description: "failed to send try again.",
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
@@ -194,13 +190,15 @@ export default function Contactform() {
               <Input
                 placeholder="First Name"
                 className="h-12"
+                type="text"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleInputChange}
               />
               <Input
                 placeholder="Last Name"
-                 name="lastName"
+                type="text"
+                name="lastName"
                 className="h-12"
                 value={formData.lastName}
                 onChange={handleInputChange}
@@ -209,8 +207,8 @@ export default function Contactform() {
             <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
               <Input
                 placeholder="Mobile Number"
-                  name="mobileNumber"
-                type="tel"
+                name="mobileNumber"
+                type="number"
                 className="h-12"
                 value={formData.mobileNumber}
                 onChange={handleInputChange}
@@ -218,7 +216,7 @@ export default function Contactform() {
               <Input
                 placeholder="E-Mail Address (Optional)"
                 type="email"
-                   name="email"
+                name="email"
                 className="h-12"
                 value={formData.email}
                 onChange={handleInputChange}
@@ -238,13 +236,17 @@ export default function Contactform() {
                   <SelectItem value="Anniversary">Anniversary</SelectItem>
                   <SelectItem value="Reunion">Reunion</SelectItem>
                   <SelectItem value="Baby Shower">Baby Shower</SelectItem>
-                  <SelectItem value="Marriage Proposal">Marriage Proposal</SelectItem>
+                  <SelectItem value="Marriage Proposal">
+                    Marriage Proposal
+                  </SelectItem>
                   <SelectItem value="Romantic Date">Romantic Date</SelectItem>
                   <SelectItem value="Business Meet">Business Meet</SelectItem>
                   <SelectItem value="Bride to be">Bride to be</SelectItem>
                   <SelectItem value="Groom to be">Groom to be</SelectItem>
                   <SelectItem value="Bride to be">Bride to be</SelectItem>
-                  <SelectItem value="Congratulations">Congratulations</SelectItem>
+                  <SelectItem value="Congratulations">
+                    Congratulations
+                  </SelectItem>
                   <SelectItem value="Love Proposal">Love Proposal</SelectItem>
                 </SelectContent>
               </Select>
@@ -263,13 +265,15 @@ export default function Contactform() {
             <Textarea
               className="min-h-[100px]"
               placeholder="Details (Optional)"
-               name="details"
+              name="details"
               value={formData.details}
               onChange={handleInputChange}
             />
-            <Button  isLoading={isLoading}   type="submit"
-             className="px-8 py-0.5 rounded-none md:w-48 w-full  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-             >
+            <Button
+              isLoading={isLoading}
+              type="submit"
+              className="px-8 py-0.5 rounded-none md:w-48 w-full  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+            >
               Submit
             </Button>
           </form>

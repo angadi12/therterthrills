@@ -70,7 +70,7 @@ const Upcomingevents = () => {
           >
             <SelectTrigger
               id="location-select"
-              className="w-60  h-10 flex items-center gap-2"
+              className="w-60 h-10 flex items-center gap-2"
             >
               <SelectValue placeholder="Select Theater">
                 {branchtheatreloading ? (
@@ -85,11 +85,19 @@ const Upcomingevents = () => {
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {branchtheatre?.map((theater) => (
-                <SelectItem key={theater?._id} value={theater?._id}>
-                  {theater?.name}
-                </SelectItem>
-              ))}
+              {branchtheatreloading ? (
+                <div className="p-2 text-center">Loading theaters...</div>
+              ) : branchtheatre?.length > 0 ? (
+                branchtheatre.map((theater) => (
+                  <SelectItem key={theater?._id} value={theater?._id}>
+                    {theater?.name}
+                  </SelectItem>
+                ))
+              ) : (
+                <div className="p-1 text-center text-sm ">
+                  No theaters available
+                </div>
+              )}
             </SelectContent>
           </Select>
         </div>

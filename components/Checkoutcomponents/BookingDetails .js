@@ -53,7 +53,7 @@ const BookingDetails = ({ theater }) => {
               <Input
                 placeholder="Full Name"
                 className="h-12"
-                value={bookingDetails.fullName}
+                value={bookingDetails?.fullName}
                 onChange={(e) => handleInputChange("fullName", e.target.value)}
               />
             </div>

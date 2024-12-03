@@ -69,33 +69,41 @@ const Newbooking = () => {
             <span className="text-pink-500">({activeEvents?.length})</span>
           </h2>
           <Select
-            onValueChange={(value) => dispatch(Setselectedtheaterid(value))}
-            value={Selectedtheaterbyid}
-          >
-            <SelectTrigger
-              id="location-select"
-              className="w-60  h-10 flex items-center gap-2"
+              onValueChange={(value) => dispatch(Setselectedtheaterid(value))}
+              value={Selectedtheaterbyid}
             >
-              <SelectValue placeholder="Select Theater">
+              <SelectTrigger
+                id="location-select"
+                className="w-60 h-10 flex items-center gap-2"
+              >
+                <SelectValue placeholder="Select Theater">
+                  {branchtheatreloading ? (
+                    <Spinner color="danger" size="sm" />
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      {branchtheatre?.find(
+                        (theater) => theater?._id === Selectedtheaterbyid
+                      )?.name || "Select Theater"}
+                    </div>
+                  )}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
                 {branchtheatreloading ? (
-                  <Spinner color="danger" size="sm" />
+                  <div className="p-2 text-center">Loading theaters...</div>
+                ) : branchtheatre?.length > 0 ? (
+                  branchtheatre.map((theater) => (
+                    <SelectItem key={theater?._id} value={theater?._id}>
+                      {theater?.name}
+                    </SelectItem>
+                  ))
                 ) : (
-                  <div className="flex items-center gap-2">
-                    {branchtheatre?.find(
-                      (theater) => theater?._id === Selectedtheaterbyid
-                    )?.name || "Select Theater"}
+                  <div className="p-1 text-center text-sm ">
+                    No theaters available
                   </div>
                 )}
-              </SelectValue>
-            </SelectTrigger>
-            <SelectContent>
-              {branchtheatre?.map((theater) => (
-                <SelectItem key={theater?._id} value={theater?._id}>
-                  {theater?.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              </SelectContent>
+            </Select>
         </div>
         <div className="space-y-4">
           {Theaterloading ? (
