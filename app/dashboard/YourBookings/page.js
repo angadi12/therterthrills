@@ -22,6 +22,20 @@ import { fetchtheaterbybranchid } from "@/lib/Redux/theaterSlice";
 import { Spinner } from "@nextui-org/react";
 import { format } from "date-fns";
 
+import Birthdayicon from "@/public/asset/Birthdayicon.png";
+import GlassWater from "@/public/asset/GlassWater.png";
+import Users1 from "@/public/asset/Users.png";
+import PartyPopper from "@/public/asset/PartyPopper.png";
+import BabyIcon from "@/public/asset/BabyIcon.png";
+import HeartHandshake from "@/public/asset/HeartHandshake.png";
+import Heart from "@/public/asset/Heart.png";
+import Briefcase from "@/public/asset/Briefcase.png";
+import Bridetobe from "@/public/asset/Bridetobe.png";
+import Gromtobe from "@/public/asset/Gromtobe.png";
+import Momtobe from "@/public/asset/Momtobe.png";
+import Loveproposal from "@/public/asset/Loveproposal.png";
+import Congratulations from "@/public/asset/Congratulations.png";
+import Image from "next/image";
 
 export default function ActiveEvents() {
   const [activeEvents, setActiveEvents] = useState([]);
@@ -92,6 +106,23 @@ export default function ActiveEvents() {
     }
   }, [branchtheatre, Selectedtheaterbyid, dispatch]);
 
+
+
+  const iconMapping = {
+    Birthday: Birthdayicon,
+    Anniversary: GlassWater,
+    Reunion: Users1,
+    Farewell: PartyPopper,
+    "Baby Shower": BabyIcon,
+    Proposal: HeartHandshake,
+    "Romantic Date": Heart,
+    "Business Meet": Briefcase,
+    "Bride to be": Bridetobe,
+    "Groom to be": Gromtobe,
+    "Mom to be": Momtobe,
+    "Love Proposal": Loveproposal,
+    Congratulations: Congratulations,
+  };
 
   return (
     <section className="w-full mx-auto bg-white">
@@ -168,7 +199,11 @@ export default function ActiveEvents() {
                           className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
                         >
                           <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
-                            {event?.icon}
+                          <Image
+                                src={iconMapping[event?.Occasionobject] || ""}
+                                alt={event?.Occasionobject}
+                                className="w-8 h-8 object-cover"
+                              />
                           </div>
                           <div className="flex-grow">
                             <h2 className="text-xl font-semibold">
@@ -298,7 +333,11 @@ export default function ActiveEvents() {
                           className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
                         >
                           <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
-                            {event?.icon}
+                          <Image
+                                src={iconMapping[event?.Occasionobject] || ""}
+                                alt={event?.Occasionobject}
+                                className="w-8 h-8 object-cover"
+                              />
                           </div>
                           <div className="flex-grow">
                             <h2 className="text-xl font-semibold">
@@ -428,7 +467,11 @@ export default function ActiveEvents() {
                           className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
                         >
                           <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
-                            {event?.icon}
+                          <Image
+                                src={iconMapping[event?.Occasionobject] || ""}
+                                alt={event?.Occasionobject}
+                                className="w-8 h-8 object-cover"
+                              />
                           </div>
                           <div className="flex-grow">
                             <h2 className="text-xl font-semibold">
@@ -558,7 +601,11 @@ export default function ActiveEvents() {
                           className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
                         >
                           <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
-                            {event?.icon}
+                          <Image
+                                src={iconMapping[event?.Occasionobject] || ""}
+                                alt={event?.Occasionobject}
+                                className="w-8 h-8 object-cover"
+                              />
                           </div>
                           <div className="flex-grow">
                             <h2 className="text-xl font-semibold">
@@ -688,7 +735,11 @@ export default function ActiveEvents() {
                           className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
                         >
                           <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
-                            {event?.icon}
+                          <Image
+                                src={iconMapping[event?.Occasionobject] || ""}
+                                alt={event?.Occasionobject}
+                                className="w-8 h-8 object-cover"
+                              />
                           </div>
                           <div className="flex-grow">
                             <h2 className="text-xl font-semibold">
