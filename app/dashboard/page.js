@@ -26,7 +26,7 @@ export default function BookingDashboard() {
 
   useEffect(() => {
     dispatch(fetchBranches()).then(() => setIsLoading(false));
-  }, [dispatch,selectedBranchId]);
+  }, [dispatch]);
 
 
   useEffect(() => {
@@ -36,7 +36,9 @@ export default function BookingDashboard() {
   }, [selectedBranchId, dispatch]);
 
 
-  console.log("dtats",branchSummaryData)
+
+console.log("data",branchSummaryData)
+
 
 if(status==="loading"){
   return <DashboardSkeleton/>
@@ -64,7 +66,7 @@ if(status==="loading"){
               </div>
               <div>
                 <p className="text-sm font-medium">Active Bookings</p>
-                <p className="text-3xl font-bold">{branchSummaryData[0]?.activeBookings||0}</p>
+                <p className="text-3xl font-bold">{branchSummaryData[0]?.activeBookings ||0}</p>
               </div>
             </CardContent>
           </Card>
@@ -79,7 +81,7 @@ if(status==="loading"){
               </div>
               <div>
                 <p className="text-sm font-medium">Upcoming Bookings</p>
-                <p className="text-3xl font-bold">{branchSummaryData[0]?.upcomingBookings || 0}</p>
+                <p className="text-3xl font-bold">{branchSummaryData[0]?.upcomingBookings ||0}</p>
               </div>
             </CardContent>
           </Card>
@@ -94,7 +96,7 @@ if(status==="loading"){
               </div>
               <div>
                 <p className="text-sm font-medium">Completed Bookings</p>
-                <p className="text-3xl font-bold">{branchSummaryData[0]?.completedBookings||0}</p>
+                <p className="text-3xl font-bold">{branchSummaryData[0]?.completedBookings ||0}</p>
               </div>
             </CardContent>
           </Card>

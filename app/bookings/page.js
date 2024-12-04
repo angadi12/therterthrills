@@ -88,10 +88,8 @@ const Page = () => {
             <div className="w-full mx-auto   md:py-6 grid md:grid-cols-3 grid-cols-1 justify-center items-stretch place-content-center gap-4 md:gap-8">
               {loading ? (
                 <div className="flex justify-center items-center w-full h-60">
-                <Spinner color="danger" />
-
+                  <Spinner color="danger" />
                 </div>
-
               ) : (
                 <>
                   {activeBookings?.length === 0 ? (
@@ -129,10 +127,8 @@ const Page = () => {
             <div className="w-full py-6 mx-auto grid md:grid-cols-3 grid-cols-1 justify-center items-stretch place-content-center gap-4 md:gap-8">
               {loading ? (
                 <div className="flex justify-center items-center w-full h-60">
-                <Spinner color="danger" />
-
+                  <Spinner color="danger" />
                 </div>
-              
               ) : (
                 <>
                   {recentBookings?.length === 0 ? (

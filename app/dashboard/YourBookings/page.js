@@ -14,6 +14,7 @@ import { Filter, Plus, MapPin, Users, Calendar, Clock } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  fetchBookingById,
   fetchBookingByTheaterId,
   fetchUnsavedBookingByTheaterId,
   Setselectedtheaterid,
@@ -21,6 +22,21 @@ import {
 import { fetchtheaterbybranchid } from "@/lib/Redux/theaterSlice";
 import { Spinner } from "@nextui-org/react";
 import { format } from "date-fns";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
+import {
+  Cake,
+  Camera,
+  Phone,
+  Mail,
+  CreditCard,
+} from "lucide-react";
 
 import Birthdayicon from "@/public/asset/Birthdayicon.png";
 import GlassWater from "@/public/asset/GlassWater.png";
@@ -38,9 +54,11 @@ import Congratulations from "@/public/asset/Congratulations.png";
 import Image from "next/image";
 
 export default function ActiveEvents() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeEvents, setActiveEvents] = useState([]);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [completedEvents, setCompletedEvents] = useState([]);
+  const [bookId, Setbookid] = useState("");
   const dispatch = useDispatch();
   const {
     Theaterbooking,
@@ -50,6 +68,10 @@ export default function ActiveEvents() {
     UnsavedTheaterbooking,
     UnsavedTheaterloading,
     UnsavedTheatererror,
+
+    singlebooking,
+    bookingloading,
+    bookingerror,
   } = useSelector((state) => state.booking);
   const { branchtheatre, branchtheatreloading, branchtheatreerror } =
     useSelector((state) => state.theater);
@@ -106,8 +128,6 @@ export default function ActiveEvents() {
     }
   }, [branchtheatre, Selectedtheaterbyid, dispatch]);
 
-
-
   const iconMapping = {
     Birthday: Birthdayicon,
     Anniversary: GlassWater,
@@ -124,8 +144,160 @@ export default function ActiveEvents() {
     Congratulations: Congratulations,
   };
 
+  useEffect(() => {
+    if (bookId) {
+      dispatch(fetchBookingById(bookId));
+    }
+  }, [dispatch, bookId]);
+
+  const formattedDate =
+  singlebooking?.date && !isNaN(new Date(singlebooking?.date))
+      ? format(new Date(singlebooking?.date), "yyyy-MM-dd")
+      : null;
+
+  const BookingDetailsDialog = () => (
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <DialogContent className="sm:max-w-[900px] md:h-auto h-96 flex flex-col">
+        <DialogHeader>
+          <DialogTitle className="text-[#004AAD]">Booking Details</DialogTitle>
+        </DialogHeader>
+        <ScrollArea className="flex-grow">
+          <div className="grid md:grid-cols-2 grid-cols-1 gap-8 p-6">
+            <div className="space-y-6 md:border-r md:pr-4 md:border-[#F30278]">
+              <div>
+                <h2 className="text-2xl font-bold text-[#004AAD]">
+                  {singlebooking?.Occasionobject}
+                </h2>
+                <p className="text-lg font-semibold text-[#F30278]">
+                  Booking ID: {singlebooking?.bookingId}
+                </p>
+                <p className="text-lg font-semibold text-[#F30278]">
+                  Total: ₹{singlebooking?.TotalAmount}/-
+                </p>
+              </div>
+              <Separator className="bg-[#F30278]" />
+              <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+                <div className="flex items-center">
+                  <Calendar className="w-4 h-4 mr-2 text-[#004AAD]" />
+                  <span className="text-sm">{formattedDate}</span>
+                </div>
+                <div className="flex items-center">
+                  <Users className="w-4 h-4 mr-2 text-[#004AAD]" />
+                  <span className="text-sm">
+                    {singlebooking?.numberOfPeople} Members
+                  </span>
+                </div>
+                <div className="flex items-center">
+                  <Phone className="w-4 h-4 mr-2 text-[#004AAD]" />
+                  <span className="text-sm">{singlebooking?.whatsappNumber}</span>
+                </div>
+                <div className="flex items-center">
+                  <Mail className="w-4 h-4 mr-2 text-[#004AAD]" />
+                  <span className="text-sm">{singlebooking?.email}</span>
+                </div>
+              </div>
+              <Separator className="bg-[#F30278]" />
+              <div>
+                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
+                  Cake Details
+                </h3>
+                <p>
+                  Eggless:{" "}
+                  <span className="text-[#F30278]">
+                    {singlebooking?.isEggless ? "Yes" : "No"}
+                  </span>
+                </p>
+                <p>
+                  Cake Text:{" "}
+                  <span className="text-[#F30278]">{singlebooking?.cakeText}</span>
+                </p>
+                <p>
+                  Nick Name:{" "}
+                  <span className="text-[#F30278]">{singlebooking?.nickname}</span>
+                </p>
+                <p>
+                  Partner Nickname:{" "}
+                  <span className="text-[#F30278]">
+                    {singlebooking?.partnerNickname}
+                  </span>
+                </p>
+                {singlebooking?.Cakes &&
+                  Object?.values(singlebooking?.Cakes).map((cake, index) => (
+                    <p key={index} className="text-sm">
+                      {cake?.name} x {cake?.quantity} -{" "}
+                      <span className="text-[#F30278]">
+                        ₹{cake?.price * cake?.quantity}
+                      </span>
+                    </p>
+                  ))}
+              </div>
+            </div>
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
+                  Add-Ons
+                </h3>
+                <div className="grid grid-cols-2 gap-2">
+                  {singlebooking?.Addons?.decorations &&
+                    Object.entries(singlebooking.Addons.decorations).map(
+                      ([key, value]) => (
+                        <div key={key}>
+                          {/* Render your content using key and value */}
+                          {key}: {value}
+                        </div>
+                      )
+                    )}
+                  {singlebooking?.Addons?.roses &&
+                    Object?.entries(singlebooking?.Addons?.roses).map(
+                      ([name, count]) => (
+                        <p key={name} className="text-sm">
+                          {name} x{" "}
+                          <span className="text-[#F30278]">{count}</span>
+                        </p>
+                      )
+                    )}
+                  {singlebooking?.Addons?.photography.map((item, index) => (
+                    <p key={index} className="text-sm text-[#F30278]">
+                      {item}
+                    </p>
+                  ))}
+                </div>
+              </div>
+              <Separator className="bg-[#F30278]" />
+              <div>
+                <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
+                  Payment Details
+                </h3>
+                <div className="flex items-center mb-2">
+                  <CreditCard className="w-4 h-4 mr-2 text-[#004AAD]" />
+                  <span>
+                    Status:{" "}
+                    <span className="text-[#F30278]">
+                      {singlebooking?.paymentStatus}
+                    </span>
+                  </span>
+                </div>
+                <p>
+                  Amount Paid:{" "}
+                  <span className="text-[#F30278]">
+                    ₹{singlebooking?.paymentAmount}/-
+                  </span>
+                </p>
+                <p>
+                  Order ID:{" "}
+                  <span className="text-[#F30278]">{singlebooking?.orderId}</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
+  );
+
   return (
     <section className="w-full mx-auto bg-white">
+    <BookingDetailsDialog/>
       <div className="flex justify-between  items-center py-4  sticky top-0 bg-white z-50 p-4">
         <div className="flex items-center space-x-4">
           <h1 className="text-2xl font-bold">
@@ -162,7 +334,6 @@ export default function ActiveEvents() {
               ))}
             </SelectContent>
           </Select>
-
         </div>
       </div>
 
@@ -199,11 +370,11 @@ export default function ActiveEvents() {
                           className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
                         >
                           <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
-                          <Image
-                                src={iconMapping[event?.Occasionobject] || ""}
-                                alt={event?.Occasionobject}
-                                className="w-8 h-8 object-cover"
-                              />
+                            <Image
+                              src={iconMapping[event?.Occasionobject] || ""}
+                              alt={event?.Occasionobject}
+                              className="w-8 h-8 object-cover"
+                            />
                           </div>
                           <div className="flex-grow">
                             <h2 className="text-xl font-semibold">
@@ -296,8 +467,14 @@ export default function ActiveEvents() {
                                 </p>
                               ))}
                           </div>
-                          <Button className="bg-[#EF0000] text-white">
-                            Cancel
+                          <Button
+                            onPress={() => {
+                              setIsModalOpen(!isModalOpen),
+                                Setbookid(event?._id);
+                            }}
+                            className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                          >
+                            View Details
                           </Button>
                         </div>
                       ))}
@@ -333,11 +510,11 @@ export default function ActiveEvents() {
                           className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
                         >
                           <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
-                          <Image
-                                src={iconMapping[event?.Occasionobject] || ""}
-                                alt={event?.Occasionobject}
-                                className="w-8 h-8 object-cover"
-                              />
+                            <Image
+                              src={iconMapping[event?.Occasionobject] || ""}
+                              alt={event?.Occasionobject}
+                              className="w-8 h-8 object-cover"
+                            />
                           </div>
                           <div className="flex-grow">
                             <h2 className="text-xl font-semibold">
@@ -430,8 +607,14 @@ export default function ActiveEvents() {
                                 </p>
                               ))}
                           </div>
-                          <Button className="bg-[#EF0000] text-white">
-                            Cancel
+                          <Button
+                            onPress={() => {
+                              setIsModalOpen(!isModalOpen),
+                                Setbookid(event?._id);
+                            }}
+                            className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                          >
+                            View Details
                           </Button>
                         </div>
                       ))}
@@ -467,11 +650,11 @@ export default function ActiveEvents() {
                           className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
                         >
                           <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
-                          <Image
-                                src={iconMapping[event?.Occasionobject] || ""}
-                                alt={event?.Occasionobject}
-                                className="w-8 h-8 object-cover"
-                              />
+                            <Image
+                              src={iconMapping[event?.Occasionobject] || ""}
+                              alt={event?.Occasionobject}
+                              className="w-8 h-8 object-cover"
+                            />
                           </div>
                           <div className="flex-grow">
                             <h2 className="text-xl font-semibold">
@@ -564,8 +747,14 @@ export default function ActiveEvents() {
                                 </p>
                               ))}
                           </div>
-                          <Button className="bg-[#EF0000] text-white">
-                            Cancel
+                          <Button
+                            onPress={() => {
+                              setIsModalOpen(!isModalOpen),
+                                Setbookid(event?._id);
+                            }}
+                            className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                          >
+                            View Details
                           </Button>
                         </div>
                       ))}
@@ -601,11 +790,11 @@ export default function ActiveEvents() {
                           className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
                         >
                           <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
-                          <Image
-                                src={iconMapping[event?.Occasionobject] || ""}
-                                alt={event?.Occasionobject}
-                                className="w-8 h-8 object-cover"
-                              />
+                            <Image
+                              src={iconMapping[event?.Occasionobject] || ""}
+                              alt={event?.Occasionobject}
+                              className="w-8 h-8 object-cover"
+                            />
                           </div>
                           <div className="flex-grow">
                             <h2 className="text-xl font-semibold">
@@ -698,8 +887,8 @@ export default function ActiveEvents() {
                                 </p>
                               ))}
                           </div>
-                          <Button className="bg-[#EF0000] text-white">
-                            Cancel
+                          <Button className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] ">
+                            Send Reminder
                           </Button>
                         </div>
                       ))}
@@ -735,11 +924,11 @@ export default function ActiveEvents() {
                           className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
                         >
                           <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
-                          <Image
-                                src={iconMapping[event?.Occasionobject] || ""}
-                                alt={event?.Occasionobject}
-                                className="w-8 h-8 object-cover"
-                              />
+                            <Image
+                              src={iconMapping[event?.Occasionobject] || ""}
+                              alt={event?.Occasionobject}
+                              className="w-8 h-8 object-cover"
+                            />
                           </div>
                           <div className="flex-grow">
                             <h2 className="text-xl font-semibold">
@@ -832,8 +1021,14 @@ export default function ActiveEvents() {
                                 </p>
                               ))}
                           </div>
-                          <Button className="bg-[#EF0000] text-white">
-                            Cancel
+                          <Button
+                            onPress={() => {
+                              setIsModalOpen(!isModalOpen),
+                                Setbookid(event?._id);
+                            }}
+                            className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                          >
+                            View Details
                           </Button>
                         </div>
                       ))}
