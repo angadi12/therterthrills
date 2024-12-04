@@ -25,44 +25,17 @@ import {
   ModalFooter,
 } from "@nextui-org/react";
 import Createtheater from "@/components/Contactuscomponents/Createtheater";
-
-const expenses = [
-  {
-    id: 1,
-    name: "Food Items",
-    date: "28-10-2024",
-    description: "Cost of snacks, drinks, and restocking",
-    amount: "2999/-",
-  },
-  {
-    id: 2,
-    name: "Electricity Bill",
-    date: "28-10-2024",
-    description: "Power expenses for projectors, lighting",
-    amount: "2999/-",
-  },
-  {
-    id: 3,
-    name: "Internet Bill",
-    date: "28-10-2024",
-    description: "Monthly charges for internet",
-    amount: "2999/-",
-  },
-  {
-    id: 4,
-    name: "Decorations",
-    date: "28-10-2024",
-    description: "Costs for themed decorations, balloons etc",
-    amount: "2999/-",
-  },
-  {
-    id: 5,
-    name: "Party Supplies",
-    date: "28-10-2024",
-    description: "Plates, napkins, cups, and utensils",
-    amount: "2999/-",
-  },
-];
+import { Setselectedtheaterid } from "@/lib/Redux/bookingSlice";
+import { fetchBranches } from "@/lib/Redux/BranchSlice";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import CouponOfferForm from "@/components/Dashboardcomponent/Addcoupon";
 
 export default function Managetheatre() {
   const dispatch = useDispatch();
@@ -74,18 +47,23 @@ export default function Managetheatre() {
     openupdatetheatre,
   } = useSelector((state) => state.theater);
   const { selectedBranchId } = useSelector((state) => state.branches);
+  const { Selectedtheaterbyid } = useSelector((state) => state.booking);
 
   useEffect(() => {
     if (selectedBranchId) {
       dispatch(fetchtheaterbybranchid(selectedBranchId));
     }
-  }, []);
+  }, [dispatch, selectedBranchId]);
 
   console.log(branchtheatre);
 
   const handleopentheatre = () => {
     dispatch(setopentheatre(!opentheatre));
   };
+
+  useEffect(() => {
+    dispatch(fetchBranches());
+  }, [dispatch]);
 
   return (
     <>
@@ -106,72 +84,84 @@ export default function Managetheatre() {
             </div>
           )}
 
-         { branchtheatre?.length > 0 && <div className="space-y-4">
-            <div className="flex justify-between items-center p-2">
-              <h1 className="text-2xl font-bold">Manage Theatres</h1>
-              <div className="flex items-center space-x-2">
-                <Input type="search" placeholder="Search" className="w-64" />
-                <Button
-                  onPress={handleopentheatre}
-                  isIconOnly
-                  className="bg-[#F30278] hover:bg-pink-600"
-                >
-                  <Plus className="h-4 w-4 text-white" />
-                </Button>
+          {branchtheatre?.length > 0 && (
+            <div className="space-y-4">
+              <div className="flex justify-between items-center p-2">
+                <h1 className="text-2xl font-bold">Manage Theatres</h1>
+                <div className="flex items-center space-x-2">
+                  {/* <Input type="search" placeholder="Search" className="w-64" /> */}
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline">Add Coupon/Offer</Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[600px] ">
+                      <DialogHeader>
+                      </DialogHeader>
+                      <ScrollArea>
+
+                      <CouponOfferForm/>
+                      </ScrollArea>
+                    </DialogContent>
+                  </Dialog>
+                  <Button
+                    onPress={handleopentheatre}
+                    isIconOnly
+                    className="bg-[#F30278] hover:bg-pink-600"
+                  >
+                    <Plus className="h-4 w-4 text-white" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="border rounded-none overflow-hidden">
+                <Table>
+                  <TableHeader className="bg-[#004AAD]">
+                    <TableRow>
+                      <TableHead className="text-white font-medium">
+                        Name
+                      </TableHead>
+                      <TableHead className="text-white font-medium">
+                        Location
+                      </TableHead>
+                      <TableHead className="text-white font-medium">
+                        Branch
+                      </TableHead>
+                      <TableHead className="text-white font-medium">
+                        Capacity
+                      </TableHead>
+                      <TableHead className="text-white font-medium">
+                        Price
+                      </TableHead>
+                      <TableHead className="text-white font-medium text-center">
+                        Actions
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {branchtheatre?.map((Theater) => (
+                      <TableRow key={Theater.id}>
+                        <TableCell className="font-medium">
+                          {Theater.name}
+                        </TableCell>
+                        <TableCell>{Theater.location}</TableCell>
+                        <TableCell>{Theater?.branch?.Branchname}</TableCell>
+                        <TableCell>{Theater.groupSize}</TableCell>
+                        <TableCell>₹{Theater.price}</TableCell>
+                        <TableCell className="text-center ">
+                          <Button
+                            size="sm"
+                            className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                          >
+                            View Details
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               </div>
             </div>
-
-           <div className="border rounded-none overflow-hidden">
-              <Table>
-                <TableHeader className="bg-[#004AAD]">
-                  <TableRow>
-                    <TableHead className="text-white font-medium">
-                      Name
-                    </TableHead>
-                    <TableHead className="text-white font-medium">
-                      Location
-                    </TableHead>
-                    <TableHead className="text-white font-medium">
-                      Branch
-                    </TableHead>
-                    <TableHead className="text-white font-medium">
-                      Capacity
-                    </TableHead>
-                    <TableHead className="text-white font-medium">
-                     Price
-                    </TableHead>
-                    <TableHead className="text-white font-medium text-center">
-                      Actions
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {branchtheatre?.map(
-                    (Theater) =>
-                      (
-                        <TableRow key={Theater.id}>
-                          <TableCell className="font-medium">
-                            {Theater.name}
-                          </TableCell>
-                          <TableCell>{Theater.location}</TableCell>
-                          <TableCell>{Theater?.branch?.Branchname}</TableCell>
-                          <TableCell>{Theater.groupSize}</TableCell>
-                          <TableCell>₹{Theater.price}</TableCell>
-                          <TableCell className="text-center ">
-                            <Button
-                              size="sm"
-                              className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-                            >
-                              Modify
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      )
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </div>}
+          )}
         </ScrollArea>
       )}
 

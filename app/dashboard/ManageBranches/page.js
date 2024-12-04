@@ -34,6 +34,7 @@ import Updatebranch from "@/components/Dashboardcomponent/Updatebranch";
 import { Deletebranchapi } from "@/lib/API/Branch";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import Fetchadminandtheater from "@/components/Dashboardcomponent/Fetchadminandtheater";
 
 export default function ManageBranches() {
   const { toast } = useToast();
@@ -47,6 +48,8 @@ export default function ManageBranches() {
   const status = useSelector((state) => state.branches.status);
   const [delteloading, setDeleteloading] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
+
+
 
   useEffect(() => {
     dispatch(fetchBranches());
@@ -98,7 +101,7 @@ export default function ManageBranches() {
           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
         setDeleteloading(false);
-        setIsDelete(!isDelete)
+        setIsDelete(!isDelete);
         dispatch(fetchBranches());
       }
     } catch (error) {
@@ -169,28 +172,13 @@ export default function ManageBranches() {
                     </CardHeader>
                     <CardContent className="pb-2">
                       <Separator className="my-2" />
-                      <div className="flex space-x-2 ">
-                        <Badge
-                          variant="secondary"
-                          className="flex items-center  bg-slate-200 space-x-1"
-                        >
-                          <Users className="h-3 w-3 text-[#434343]" />
-                          <span className="text-[#434343]">1 Admin</span>
-                        </Badge>
-                        <Badge
-                          variant="secondary"
-                          className="flex items-center bg-slate-200 space-x-1"
-                        >
-                          <Monitor className="h-3 w-3 text-[#434343]" />
-                          <span className="text-[#434343]">3 Theatres</span>
-                        </Badge>
-                      </div>
+                     <Fetchadminandtheater branchi={branch?._id}/>
                       <Separator className="my-2" />
                       <div className="flex items-center space-x-4">
                         <Avatar>
                           <AvatarImage
                             src="/placeholder-avatar.jpg"
-                            alt={branch.Branchname}
+                            alt={branch?.Branchname}
                           />
                           <AvatarFallback>
                             {branch.Branchname.charAt(0)}
@@ -221,7 +209,10 @@ export default function ManageBranches() {
                         Modify
                       </Button>
                       <Button
-                      onPress={()=>{dispatch(Setbranchid(branch?._id)),setIsDelete(!isDelete)}}
+                        onPress={() => {
+                          dispatch(Setbranchid(branch?._id)),
+                            setIsDelete(!isDelete);
+                        }}
                         isIconOnly
                         variant="bordered"
                         className="px-2 absolute top-2 right-2 bg-white"
