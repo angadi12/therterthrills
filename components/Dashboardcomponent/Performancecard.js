@@ -27,6 +27,7 @@ import { fetchTheaterAnalytics } from "@/lib/Redux/dashboardSlice";
 import { fetchtheaterbybranchid } from "@/lib/Redux/theaterSlice";
 import { Setselectedtheaterid } from "@/lib/Redux/bookingSlice";
 import { Spinner } from "@nextui-org/react";
+import { color } from "framer-motion";
 
 const Performancecard = () => {
   const [selectedYear, setSelectedYear] = useState("");
@@ -144,6 +145,12 @@ const Performancecard = () => {
             <p>No theaters </p>
           </div>
         ) : (
+          <>
+         {loading?<div className="flex justify-center items-center h-40">
+
+         <Spinner color="danger"/>
+         </div>
+         :
           <ChartContainer config={chartConfig}>
             <BarChart accessibilityLayer data={data?.analytics}>
               <CartesianGrid vertical={false} />
@@ -170,6 +177,9 @@ const Performancecard = () => {
               />
             </BarChart>
           </ChartContainer>
+          }
+
+          </>
         )}
       </CardContent>
     </Card>

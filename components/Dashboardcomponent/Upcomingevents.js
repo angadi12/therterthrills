@@ -16,7 +16,7 @@ import {
 } from "@/lib/Redux/bookingSlice";
 import { fetchtheaterbybranchid } from "@/lib/Redux/theaterSlice";
 import { useRouter } from "next/navigation";
-
+import { Sendbookingremainder } from "@/lib/API/Booking";
 import Birthdayicon from "@/public/asset/Birthdayicon.png";
 import GlassWater from "@/public/asset/GlassWater.png";
 import Users1 from "@/public/asset/Users.png";
@@ -31,8 +31,11 @@ import Momtobe from "@/public/asset/Momtobe.png";
 import Loveproposal from "@/public/asset/Loveproposal.png";
 import Congratulations from "@/public/asset/Congratulations.png";
 import Image from "next/image";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 const Upcomingevents = () => {
+  const { toast } = useToast();
   const router = useRouter();
   const dispatch = useDispatch();
   const { Theaterbooking, Selectedtheaterbyid, Theaterloading, Theatererror } =
@@ -41,6 +44,7 @@ const Upcomingevents = () => {
     useSelector((state) => state.theater);
   const { selectedBranchId } = useSelector((state) => state.branches);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [loadingEvents, setLoadingEvents] = useState({});
 
   useEffect(() => {
     if (Selectedtheaterbyid) {
@@ -76,8 +80,6 @@ const Upcomingevents = () => {
 
   console.log(upcomingEvents);
 
-  
-
   const iconMapping = {
     Birthday: Birthdayicon,
     Anniversary: GlassWater,
@@ -92,6 +94,28 @@ const Upcomingevents = () => {
     "Mom to be": Momtobe,
     "Love Proposal": Loveproposal,
     Congratulations: Congratulations,
+  };
+
+  const handleSendReminder = async (eventId) => {
+    setLoadingEvents((prev) => ({ ...prev, [eventId]: true }));
+    try {
+      const result = await Sendbookingremainder(eventId);
+      if (result.success === true) {
+        toast({
+          title: "Reminder sent successfully!",
+          description: "Reminder has been sent successfully!",
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Failed to send reminder.",
+        description: "Error sending reminder",
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });
+    } finally {
+      setLoadingEvents((prev) => ({ ...prev, [eventId]: false }));
+    }
   };
 
   return (
@@ -161,12 +185,12 @@ const Upcomingevents = () => {
                     ) : (
                       upcomingEvents.map((event, index) => (
                         <div
-                          key={index}
+                          key={event._id}
                           className="flex items-center justify-between bg-white ring-1 ring-gray-200 p-4 rounded-lg shadow"
                         >
                           <div className="flex items-center space-x-4">
                             <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center text-2xl">
-                            <Image
+                              <Image
                                 src={iconMapping[event?.Occasionobject] || ""}
                                 alt={event?.Occasionobject}
                                 className="w-8 h-8 object-cover"
@@ -188,8 +212,11 @@ const Upcomingevents = () => {
                             </div>
                           </div>
                           <Button
+                            isLoading={loadingEvents[event._id] || false}
+                            onPress={() => handleSendReminder(event?._id)}
                             variant="outline"
-                            className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                            size="sm"
+                            className=" rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
                           >
                             Send Reminder
                           </Button>

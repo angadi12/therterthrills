@@ -52,13 +52,19 @@ import Momtobe from "@/public/asset/Momtobe.png";
 import Loveproposal from "@/public/asset/Loveproposal.png";
 import Congratulations from "@/public/asset/Congratulations.png";
 import Image from "next/image";
+import { Sendunsavedbookingmailbyid } from "@/lib/API/Booking";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 export default function ActiveEvents() {
+  const { toast } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeEvents, setActiveEvents] = useState([]);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [completedEvents, setCompletedEvents] = useState([]);
   const [bookId, Setbookid] = useState("");
+  const [loadingEvents, setLoadingEvents] = useState({});
+
   const dispatch = useDispatch();
   const {
     Theaterbooking,
@@ -77,7 +83,6 @@ export default function ActiveEvents() {
     useSelector((state) => state.theater);
   const { selectedBranchId } = useSelector((state) => state.branches);
 
-  console.log(UnsavedTheaterbooking);
 
   useEffect(() => {
     if (Selectedtheaterbyid) {
@@ -157,7 +162,7 @@ export default function ActiveEvents() {
 
   const BookingDetailsDialog = () => (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <DialogContent className="sm:max-w-[900px] md:h-auto h-96 flex flex-col">
+     {bookingloading?<div className="w-full   flex justify-center items-center"></div>: <DialogContent className="sm:max-w-[900px] md:h-auto h-96 flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-[#004AAD]">Booking Details</DialogTitle>
         </DialogHeader>
@@ -291,9 +296,33 @@ export default function ActiveEvents() {
             </div>
           </div>
         </ScrollArea>
-      </DialogContent>
+      </DialogContent>}
     </Dialog>
   );
+
+  const handleSendReminder = async (eventId) => {
+    setLoadingEvents((prev) => ({ ...prev, [eventId]: true }));
+    try {
+      const result = await Sendunsavedbookingmailbyid(eventId);
+      if (result.success === true) {
+        toast({
+          title: "Reminder sent successfully!",
+          description: "Reminder has been sent successfully!",
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Failed to send reminder.",
+        description: "Error sending reminder",
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });
+    } finally {
+      setLoadingEvents((prev) => ({ ...prev, [eventId]: false }));
+    }
+  };
+
+
 
   return (
     <section className="w-full mx-auto bg-white">
@@ -887,7 +916,11 @@ export default function ActiveEvents() {
                                 </p>
                               ))}
                           </div>
-                          <Button className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] ">
+                          <Button 
+                          size="sm"
+                           isLoading={loadingEvents[event._id] || false}
+                           onPress={() => handleSendReminder(event._id)}
+                          className=" rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] ">
                             Send Reminder
                           </Button>
                         </div>
