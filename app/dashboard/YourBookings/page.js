@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Filter, Plus, MapPin, Users, Calendar, Clock } from "lucide-react";
+import { Filter, Plus, MapPin, Users, Calendar, Clock ,Trash2} from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -52,9 +52,17 @@ import Momtobe from "@/public/asset/Momtobe.png";
 import Loveproposal from "@/public/asset/Loveproposal.png";
 import Congratulations from "@/public/asset/Congratulations.png";
 import Image from "next/image";
-import { Sendunsavedbookingmailbyid } from "@/lib/API/Booking";
+import { Deleteunsavedapi, Sendunsavedbookingmailbyid } from "@/lib/API/Booking";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "@nextui-org/modal";
+
 
 export default function ActiveEvents() {
   const { toast } = useToast();
@@ -63,7 +71,10 @@ export default function ActiveEvents() {
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [completedEvents, setCompletedEvents] = useState([]);
   const [bookId, Setbookid] = useState("");
+  const [Unsavedid, SetUnsavedid] = useState("");
   const [loadingEvents, setLoadingEvents] = useState({});
+  const [isDelete,setIsDelete]=useState(false)
+  const [delteloading, setDeleteloading] = useState(false);
 
   const dispatch = useDispatch();
   const {
@@ -322,9 +333,36 @@ export default function ActiveEvents() {
     }
   };
 
+  const Deletehandle = async (Unsavedid) => {
+    setDeleteloading(true);
+    try {
+      const response = await Deleteunsavedapi(Unsavedid);
+      if (response.status === "success") {
+        toast({
+          title: "Deleted!",
+          description: "message has been deleted",
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+        setDeleteloading(false);
+        setIsDelete(!isDelete);
+        dispatch(fetchUnsavedBookingByTheaterId(Selectedtheaterbyid));
+
+      }
+    } catch (error) {
+      toast({
+        title: "Failed to delete message",
+        description: error,
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });
+      setDeleteloading(false);
+    }
+  };
+
+
 
 
   return (
+    <>
     <section className="w-full mx-auto bg-white">
     <BookingDetailsDialog/>
       <div className="flex justify-between  items-center py-4  sticky top-0 bg-white z-50 p-4">
@@ -816,7 +854,7 @@ export default function ActiveEvents() {
                       {UnsavedTheaterbooking?.map((event) => (
                         <div
                           key={event._id}
-                          className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
+                          className="flex relative items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
                         >
                           <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
                             <Image
@@ -922,6 +960,9 @@ export default function ActiveEvents() {
                            onPress={() => handleSendReminder(event._id)}
                           className=" rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] ">
                             Send Reminder
+                          </Button>
+                          <Button onClick={()=>{setIsDelete(!isDelete),SetUnsavedid(event?._id)}} isIconOnly className="absolute top-0 right-0 rounded-sm text-[#F30278] bg-[#004AAD]/10">
+                          <Trash2 />
                           </Button>
                         </div>
                       ))}
@@ -1074,5 +1115,47 @@ export default function ActiveEvents() {
         </TabsContent>
       </Tabs>
     </section>
+
+
+    <Modal
+        isDismissable={false}
+        isKeyboardDismissDisabled={true}
+        backdrop="opaque"
+        isOpen={isDelete}
+        onOpenChange={setIsDelete}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col text-center">
+                Confirm Delete
+              </ModalHeader>
+              <ModalBody>
+                <p>Are you sure you want to Delete?</p>
+              </ModalBody>
+              <ModalFooter className="flex justify-center items-center text-center">
+                <Button
+                  isLoading={delteloading}
+                  onPress={() => {
+                    Deletehandle(Unsavedid);
+                  }}
+                  className="px-8 py-0.5 rounded-sm w-48 bg-[#F30278] text-white"
+                >
+                  Yes
+                </Button>
+                <Button
+                  size="md"
+                  onPress={() => setIsDelete(false)}
+                  className="px-8 py-0.5 rounded-sm w-48 bg-[#004AAD] text-white"
+                >
+                  No
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+
+    </>
   );
 }

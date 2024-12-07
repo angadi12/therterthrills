@@ -200,7 +200,7 @@ export default function Navbarr() {
                 alt="Bellicon"
               />
             </Badge> */}
-            <NotificationSheet/>
+            {/* <NotificationSheet/> */}
 
             <Dropdown placement="bottom-end">
               <DropdownTrigger>

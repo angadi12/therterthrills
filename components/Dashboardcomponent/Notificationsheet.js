@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Bell, MoreVertical, X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -11,6 +11,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { io } from "socket.io-client";
+import { useDispatch } from 'react-redux'
 
 
 
@@ -46,8 +48,43 @@ const notifications = [
 ]
 
 export default function NotificationSheet() {
+  const dispatch=useDispatch()
   const [open, setOpen] = React.useState(false)
   const unreadCount = notifications.filter(n => !n.isRead).length
+
+
+  const socket = useMemo(
+    () =>
+      io("http://localhost:9100", {
+        withCredentials: true,
+      }),
+    []
+  );
+
+
+  useEffect(() => {
+    // Fetch initial orders when the component mounts
+    // dispatch(fetchorders());
+
+    // Set up socket listeners for real-time updates
+    socket.on("connect", () => {
+      console.log("Connected to socket", socket.id);
+    });
+
+    socket.on("Messagecreated", (newContact) => {
+      console.log("New order received:", newContact);
+      // toast.success(`New order received: ${newContact.orderId}`);
+      // Optionally, you can dispatch an action to update the Redux store with the new order
+      // dispatch(fetchorders());
+    });
+
+    // Clean up the socket connection on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, [dispatch, socket]);
+
+
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>

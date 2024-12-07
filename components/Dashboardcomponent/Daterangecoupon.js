@@ -1,8 +1,6 @@
-'use client'
-
 import * as React from 'react'
 import { CalendarIcon } from 'lucide-react'
-import { DateRange } from 'react-day-picker'
+import { format } from 'date-fns'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -12,15 +10,23 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { format } from 'date-fns'
 
 export function DatePickerWithRange({
   className,
+  onDateChange, // New prop for notifying parent about date changes
 }) {
   const [date, setDate] = React.useState({
     from: new Date(),
     to: new Date(),
   })
+
+  // Update local state and notify parent
+  const handleDateChange = (newDate) => {
+    setDate(newDate)
+    if (onDateChange) {
+      onDateChange(newDate) // Pass the selected date range to parent
+    }
+  }
 
   return (
     <div className={cn('grid gap-2', className)}>
@@ -55,7 +61,7 @@ export function DatePickerWithRange({
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={handleDateChange} // Call handleDateChange on selection
             numberOfMonths={2}
           />
         </PopoverContent>
@@ -63,4 +69,3 @@ export function DatePickerWithRange({
     </div>
   )
 }
-
