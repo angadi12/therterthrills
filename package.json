@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fingerprintjs/fingerprintjs": "^4.5.1",
     "@nextui-org/react": "^2.4.8",
     "@radix-ui/react-accordion": "^1.2.1",
     "@radix-ui/react-avatar": "^1.1.1",

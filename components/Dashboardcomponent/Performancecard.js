@@ -60,7 +60,7 @@ const Performancecard = () => {
   }, [Selectedtheaterbyid, dispatch]);
 
   useEffect(() => {
-    if (branchtheatre?.length > 0 && !Selectedtheaterbyid) {
+    if (branchtheatre?.length > 0) {
       dispatch(Setselectedtheaterid(branchtheatre[0]._id));
     }
   }, [dispatch, branchtheatre, Selectedtheaterbyid, selectedBranchId]);

@@ -71,6 +71,9 @@ const CheckoutOnboarding = () => {
     useSelector((state) => state.theater);
   const { decorations, roses, photography } = useSelector(selectAddOns);
   const totalAmount = useSelector((state) => state.totalAmount.value);
+  const { couponCode, discount, isCouponApplied, error,deviceId } = useSelector(
+    (state) => state.coupon
+  );
 
   useEffect(() => {
     if (!selectedTheater & !selectedslotsid) {
@@ -222,6 +225,9 @@ const CheckoutOnboarding = () => {
       date: formattedDate,
       TotalAmount: totalAmount,
       paymentAmount: 750,
+      couponCode:couponCode,
+      deviceId:deviceId,
+      discountAmount:discount
     };
 
     const orderdata = {

@@ -6,6 +6,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectTotalAmount } from "@/lib/Redux/addOnsSlice";
 import { setTotalAmount } from "@/lib/Redux/totalAmountSlice";
 import { setExtraCharge } from "@/lib/Redux/checkoutSlice";
+import { ApplyCouponapi } from "@/lib/API/Coupon";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import Cookies from "js-cookie";
+
+import {
+  setCoupon,
+  setCouponError,
+  clearCoupon,
+} from "@/lib/Redux/couponSlice";
 
 const validCoupons = {
   WELCOME250: 250,
@@ -15,23 +25,35 @@ const validCoupons = {
 
 const Cart = ({ theater }) => {
   const dispatch = useDispatch();
-  const [couponCode, setCouponCode] = useState("");
+  const [couponInput, setCouponInput] = useState("");
+  const { toast } = useToast();
+
+  // const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(null);
-  const [error, setError] = useState("");
+  // const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { couponCode, discount, isCouponApplied, error,deviceId } = useSelector(
+    (state) => state.coupon
+  );
+  const { selectedTheater} =
+  useSelector((state) => state.theater);
+console.log(couponCode,discount,isCouponApplied,error,deviceId)
 
   const selectedCakes = useSelector((state) => state.cakes.selectedCakes);
   const addonsTotal = useSelector(selectTotalAmount);
-  const {addDecorations} = useSelector(
-    (state) => state.checkout
-  );
+  const { addDecorations } = useSelector((state) => state.checkout);
   const totalAmount = useSelector((state) => state.totalAmount.value);
 
   const decorationPrice =
     addDecorations === "yes" ? theater.minimumDecorationAmount : 0;
-    
-  const { bookingDetails, maxCapacity, extraPerPerson ,groupSize,ExtraCharge} = useSelector(
-    (state) => state.checkout
-  );
+
+  const {
+    bookingDetails,
+    maxCapacity,
+    extraPerPerson,
+    groupSize,
+    ExtraCharge,
+  } = useSelector((state) => state.checkout);
 
   // Calculate total price of selected cakes
   const calculateTotalCakesPrice = () => {
@@ -48,7 +70,6 @@ const Cart = ({ theater }) => {
     );
   };
 
-  
   useEffect(() => {
     // Calculate extra charge when numberOfPeople or maxCapacity changes
     if (bookingDetails?.numberOfPeople > groupSize) {
@@ -62,12 +83,10 @@ const Cart = ({ theater }) => {
     }
   }, [bookingDetails?.numberOfPeople, groupSize, extraPerPerson, dispatch]);
 
-console.log(bookingDetails?.numberOfPeople,groupSize,maxCapacity,extraPerPerson,ExtraCharge)
   // Calculate the total amount (cakes + addons + theatre - coupon)
   const calculateTotalAmount = () => {
     const cakesTotal = calculateTotalCakesPrice();
     const theatrePrice = theater.price;
-    const couponDiscount = appliedCoupon ? appliedCoupon.discount : 0;
 
     return (
       theatrePrice +
@@ -75,7 +94,7 @@ console.log(bookingDetails?.numberOfPeople,groupSize,maxCapacity,extraPerPerson,
       cakesTotal +
       decorationPrice +
       ExtraCharge -
-      couponDiscount
+      (isCouponApplied ? discount : 0)
     );
   };
 
@@ -86,23 +105,69 @@ console.log(bookingDetails?.numberOfPeople,groupSize,maxCapacity,extraPerPerson,
     selectedCakes,
     addonsTotal,
     decorationPrice,
-    appliedCoupon,
+    isCouponApplied,
+    discount,
     bookingDetails?.numberOfPeople,
-    ExtraCharge
+    ExtraCharge,
   ]);
 
-  const handleApplyCoupon = () => {
-    if (validCoupons[couponCode]) {
-      setAppliedCoupon({
-        code: couponCode,
-        discount: validCoupons[couponCode],
+  const handleApplyCoupon = async () => {
+    setLoading(true);
+    dispatch(setCouponError(""));
+
+
+    const encodedUserData = Cookies.get("User");
+
+    if (!encodedUserData) {
+      return null;
+    }
+    const decodedUserData = decodeURIComponent(encodedUserData);
+    const userData = JSON.parse(decodedUserData);
+
+    try {
+      const response = await ApplyCouponapi({
+        couponCode: couponInput,
+        orderValue: calculateTotalAmount(),
+        theaterId:selectedTheater,
+        userId:userData?._id,
+        deviceId:deviceId
       });
-      setError(""); // Clear error if coupon is valid
-    } else {
-      setError("Invalid coupon code");
-      setAppliedCoupon(null);
+
+      if (response.status === "success") {
+        dispatch(
+          setCoupon({
+            couponCode: couponInput,
+            discount: response.data.discountAmount,
+          })
+        );
+        toast({
+          title: "Coupon applied",
+          description: "Coupon applied",
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+        dispatch(setCouponError(""));
+      } else {
+        dispatch(setCouponError(response.message));
+        toast({
+          title: "failed",
+          description: response.message,
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+        dispatch(clearCoupon());
+      }
+    } catch (err) {
+      dispatch(setCouponError("Failed to apply coupon. Please try again."));
+      toast({
+        title: "failed",
+        description:"Failed to apply coupon. Please try again.",
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });
+      dispatch(clearCoupon());
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
     <div>
       <div className="bg-white p-4 rounded-md shadow ring-1 ring-gray-300">
@@ -133,12 +198,13 @@ console.log(bookingDetails?.numberOfPeople,groupSize,maxCapacity,extraPerPerson,
 
           <div className="flex justify-between text-green-600">
             <span>
-              Coupon Applied{" "}
-              {appliedCoupon ? `(${appliedCoupon.code})` : "(None)"}
+              Coupon Applied {isCouponApplied ? `(${couponCode})` : "(None)"}
             </span>
-            <span>-{appliedCoupon ? appliedCoupon.discount : 0}/-</span>
+            <span>-{isCouponApplied ? discount : 0}/-</span>
           </div>
+
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          {isCouponApplied && <p onClick={()=>dispatch(clearCoupon())} className="text-red-500 cursor-pointer text-sm mt-2">Remove coupon</p>}
         </div>
       </div>
       <div className="mt-6 flex items-center">
@@ -146,14 +212,15 @@ console.log(bookingDetails?.numberOfPeople,groupSize,maxCapacity,extraPerPerson,
           type="text"
           placeholder="Enter Coupon Code"
           value={couponCode}
-          onChange={(e) => setCouponCode(e.target.value)}
+          onChange={(e) => setCouponInput(e.target.value)}
           className="rounded-r-none h-12"
         />
         <Button
           onClick={handleApplyCoupon}
           className="rounded-l-none bg-[#F30278] text-white h-12"
+          disabled={loading}
         >
-          Apply
+          {loading ? "Applying..." : "Apply"}
         </Button>
       </div>
       <div className="w-full mt-4">

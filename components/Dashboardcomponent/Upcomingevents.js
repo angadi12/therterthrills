@@ -58,27 +58,53 @@ const Upcomingevents = () => {
     }
   }, [selectedBranchId, dispatch]);
 
+  // useEffect(() => {
+  //   const today = new Date();
+
+  //   // Filter active events (today's bookings)
+  //   const upcoming =
+  //     Theaterbooking?.filter((booking) => {
+  //       const bookingDate = new Date(booking.date);
+  //       return bookingDate > today; // Check if the date is in the future
+  //     }) || [];
+
+  //   // Update state
+  //   setUpcomingEvents(upcoming);
+  // }, [Theaterbooking, Selectedtheaterbyid, Theatererror]); //
+
   useEffect(() => {
     const today = new Date();
-
-    // Filter active events (today's bookings)
+    const indianTimeOffset = 330; // IST is UTC+5:30
+  
+    // Convert a UTC date to IST and format it as 'yyyy-mm-dd'
+    const convertToISTDateString = (utcDate) => {
+      const date = new Date(utcDate);
+      date.setMinutes(date.getMinutes() + indianTimeOffset); // Adjust for IST offset
+      return date.toISOString().split("T")[0]; // Extract 'yyyy-mm-dd' format
+    };
+  
+    // Get today's IST date in 'yyyy-mm-dd' format
+    const todayIST = convertToISTDateString(today);
+  
+    // Filter upcoming events (future bookings)
     const upcoming =
       Theaterbooking?.filter((booking) => {
-        const bookingDate = new Date(booking.date);
-        return bookingDate > today; // Check if the date is in the future
+        const bookingDateIST = convertToISTDateString(booking.date); // Convert booking date to IST
+        return bookingDateIST > todayIST; // Compare dates
       }) || [];
-
+  
     // Update state
     setUpcomingEvents(upcoming);
-  }, [Theaterbooking, Selectedtheaterbyid, Theatererror]); //
+  }, [Theaterbooking, Selectedtheaterbyid, Theatererror]); // Dependencies for re-running effect
+  
+
 
   useEffect(() => {
-    if (branchtheatre?.length > 0 && !Selectedtheaterbyid) {
+    if (branchtheatre?.length > 0) {
       dispatch(Setselectedtheaterid(branchtheatre[0]._id));
     }
-  }, [branchtheatre, Selectedtheaterbyid, dispatch]);
+  }, [branchtheatre, Selectedtheaterbyid, dispatch,selectedBranchId]);
 
-  console.log(upcomingEvents);
 
   const iconMapping = {
     Birthday: Birthdayicon,

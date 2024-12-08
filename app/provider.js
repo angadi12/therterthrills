@@ -12,11 +12,13 @@ import { usePathname } from "next/navigation";
 import Navbar from "@/components/Navbarcomponets/Nav";
 import Topfooter from "@/components/Footercomponets/Topfooter";
 import Footer from "@/components/Footercomponets/Footer";
+import useDeviceIdHook from '@/hooks/useDeviceId';
 
 export function NextuiProviderWrapper({ children }) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true); // Initial loading state for 5 seconds
   const pathname = usePathname();
+  useDeviceIdHook(); 
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -63,6 +65,7 @@ export function NextuiProviderWrapper({ children }) {
 
   return (
       <NextUIProvider>
+
         {pathname === "/dashboard" ||
         pathname.startsWith("/dashboard") ||
         pathname === "/Profile/settings" ||
