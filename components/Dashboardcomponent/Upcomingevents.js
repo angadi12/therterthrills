@@ -103,7 +103,7 @@ const Upcomingevents = () => {
     if (branchtheatre?.length > 0) {
       dispatch(Setselectedtheaterid(branchtheatre[0]._id));
     }
-  }, [branchtheatre, Selectedtheaterbyid, dispatch,selectedBranchId]);
+  }, [branchtheatre, dispatch,selectedBranchId]);
 
 
   const iconMapping = {

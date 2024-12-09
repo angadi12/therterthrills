@@ -60,10 +60,10 @@ const Performancecard = () => {
   }, [Selectedtheaterbyid, dispatch]);
 
   useEffect(() => {
-    if (branchtheatre?.length > 0) {
+    if (branchtheatre?.length > 0 ) {
       dispatch(Setselectedtheaterid(branchtheatre[0]._id));
     }
-  }, [dispatch, branchtheatre, Selectedtheaterbyid, selectedBranchId]);
+  }, [dispatch,branchtheatre,selectedBranchId]);
 
   // useEffect(() => {
   //   if (branchtheatreerror === "Something went wrong") {
@@ -92,7 +92,7 @@ const Performancecard = () => {
     },
   };
 
-  console.log(branchtheatreerror);
+  console.log(Selectedtheaterbyid);
 
   return (
     <Card className="rounded-none shadow-none">
