@@ -364,6 +364,7 @@ const Login = () => {
           storeUserDetails(idToken, response?.data?.user, dispatch, toast);
           dispatch(closeOtpModal());
           router.refresh(path);
+          setOtp("");
         } else {
           throw new Error(response.message);
         }
@@ -384,11 +385,16 @@ const Login = () => {
             );
             dispatch(closeOtpModal());
             router.refresh(path);
+            setOtp("")
           } else {
             throw new Error(createUserResponse.message);
+            setOtp("")
+
           }
         } else {
           throw new Error(response.message);
+          setOtp("")
+
         }
       }
     } catch (error) {
@@ -484,7 +490,9 @@ const Login = () => {
                   {" "}
                   <FaPhoneAlt size={30} className="text-[#F30278]" />
                   <Input
-                    type="number"
+                    type="tel"
+                    maxLength={10}
+                    
                     label="Mobile Number"
                     placeholder="Enter your mobile number"
                     value={phoneNumber}

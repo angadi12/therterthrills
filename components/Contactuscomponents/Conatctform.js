@@ -208,7 +208,8 @@ export default function Contactform() {
               <Input
                 placeholder="Mobile Number"
                 name="mobileNumber"
-                type="number"
+                type="tel"
+                maxLength={10}
                 className="h-12"
                 value={formData.mobileNumber}
                 onChange={handleInputChange}
@@ -227,10 +228,10 @@ export default function Contactform() {
                 className="h-12"
                 onValueChange={(value) => handleSelectChange("occasion", value)}
               >
-                <SelectTrigger className="h-12">
-                  <SelectValue placeholder="Occasion" />
+                <SelectTrigger className={`${formData.occasion.length>0? "h-12 text-black":"h-12 text-gray-500"}`}>
+                  <SelectValue placeholder="Occasion"  className="text-black"/>
                 </SelectTrigger>
-                <SelectContent className="h-60">
+                <SelectContent className="h-60 ">
                   <SelectItem value="birthday">Birthday</SelectItem>
                   <SelectItem value="Farewell">Farewell</SelectItem>
                   <SelectItem value="Anniversary">Anniversary</SelectItem>
@@ -250,9 +251,9 @@ export default function Contactform() {
                   <SelectItem value="Love Proposal">Love Proposal</SelectItem>
                 </SelectContent>
               </Select>
-              <Select className="h-12" onValueChange={handleAddOnsChange}>
-                <SelectTrigger className="h-12">
-                  <SelectValue placeholder="Add-Ons" />
+              <Select className="h-12 text-gray-400" onValueChange={handleAddOnsChange}>
+              <SelectTrigger className={`${formData.addOns.length>0? "h-12 text-black":"h-12 text-gray-500"}`}>
+              <SelectValue placeholder="Add-Ons" className="text-black" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="decoration">Decoration</SelectItem>

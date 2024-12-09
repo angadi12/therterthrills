@@ -47,9 +47,9 @@ const page = () => {
           
           <div className="  bg-white ring-1 ring-[#F30278] rounded-lg p-2 text-white flex gap-2 items-center">
             <div className="flex justify-center items-center h-10 w-10 p-2 rounded-full bg-[#F30278]">
-              <IoMail
+              <FaLocationDot
         
-                className=" h-8 w-8"
+                className=" h-6 w-6"
               />
             </div>
             <div>
@@ -86,7 +86,7 @@ const page = () => {
           
           <div className=" h-20 bg-white ring-1 ring-[#F30278] rounded-lg p-2 text-white flex gap-2 items-center">
             <div className="flex justify-center items-center h-10 w-10 p-2 rounded-full bg-[#F30278]">
-              <IoMail
+              <FaLocationDot
         
                 className=" h-8 w-8"
               />
