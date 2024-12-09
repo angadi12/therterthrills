@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus,Trash2  } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   Dialog,
@@ -35,7 +35,11 @@ import {
 import { fetchBranches, setSelectedBranch } from "@/lib/Redux/BranchSlice";
 import { fetchtheaterbybranchid } from "@/lib/Redux/theaterSlice";
 import { Spinner } from "@nextui-org/react";
-import { CreateExpanseapi, UpadteExpenseapi,Deleteexpanse } from "@/lib/API/Expenses";
+import {
+  CreateExpanseapi,
+  UpadteExpenseapi,
+  Deleteexpanse,
+} from "@/lib/API/Expenses";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import ExpenseDatePicker from "@/components/Dashboardcomponent/Expensedaterange";
@@ -68,7 +72,9 @@ export default function ExpensesTable() {
     useSelector((state) => state.theater);
   const [errors, setErrors] = useState({});
   const [isloading, setLoading] = useState(false);
-  const { expenses, loading, error,selectedExpenseId } = useSelector((state) => state.expenses);
+  const { expenses, loading, error, selectedExpenseId } = useSelector(
+    (state) => state.expenses
+  );
   const [delteloading, setDeleteloading] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
 
@@ -258,7 +264,7 @@ export default function ExpensesTable() {
                         <TableCell>{expense?.amount}</TableCell>
                         <TableCell className="text-right">
                           <Button
-                          isIconOnly
+                            isIconOnly
                             onPress={() => {
                               dispatch(setSelectedExpenseId(expense?._id)),
                                 setIsDelete(!isDelete);
@@ -321,10 +327,10 @@ export default function ExpensesTable() {
               </Select>
               <div className="grid grid-cols-2 gap-4">
                 <Select
-                  className="h-12"
+                  className="h-10"
                   onValueChange={(value) => handleSelectChange("branch", value)}
                 >
-                  <SelectTrigger className="h-12">
+                  <SelectTrigger className="h-10">
                     <SelectValue placeholder="Select Branch" />
                   </SelectTrigger>
                   <SelectContent>
@@ -349,7 +355,7 @@ export default function ExpensesTable() {
                 >
                   <SelectTrigger
                     id="location-select"
-                    className="w-full  h-10 flex items-center gap-2"
+                    className="w-full h-10 flex items-center gap-2"
                   >
                     <SelectValue placeholder="Select Theater">
                       {branchtheatreloading ? (
@@ -357,18 +363,26 @@ export default function ExpensesTable() {
                       ) : (
                         <div className="flex items-center gap-2">
                           {branchtheatre?.find(
-                            (theater) => theater?._id === formData?.theater
+                            (theater) => theater?._id === formData.theater
                           )?.name || "Select Theater"}
                         </div>
                       )}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
-                    {branchtheatre?.map((theater) => (
-                      <SelectItem key={theater?._id} value={theater?._id}>
-                        {theater?.name}
-                      </SelectItem>
-                    ))}
+                    {branchtheatreloading ? (
+                      <div className="p-2 text-center">Loading theaters...</div>
+                    ) : branchtheatre?.length > 0 ? (
+                      branchtheatre.map((theater) => (
+                        <SelectItem key={theater?._id} value={theater?._id}>
+                          {theater?.name}
+                        </SelectItem>
+                      ))
+                    ) : (
+                      <div className="p-1 text-center text-sm ">
+                        No theaters available
+                      </div>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
