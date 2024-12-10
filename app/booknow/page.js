@@ -54,8 +54,7 @@ const Page = () => {
   // }
 
   const isLoading = loading || locationsWithSlotsloading;
-  const noData =
-    !locationsWithSlots?.length &&  !isLoading;
+  const noData = !locationsWithSlots?.length && !isLoading;
 
   useEffect(() => {
     dispatch(setBookingField({ field: "numberOfPeople", value: 0 }));
