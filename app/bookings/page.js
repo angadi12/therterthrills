@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Mybookings from "@/public/asset/Mybookings.png";
 import Image from "next/image";
 import Bookingcard from "@/components/Bookingcomponents/Bookingcard";
@@ -20,23 +20,59 @@ const Page = () => {
   const bookings = useSelector(selectBookings);
   const loading = useSelector(selectBookingLoading);
   const error = useSelector(selectBookingError);
+  const [activeBookings, setActiveEvents] = useState([]);
+  const [recentBookings, setRecentEvents] = useState([]);
 
-  const currentDate = new Date();
+  // const currentDate = new Date();
 
-  // Filter Active and Recent bookings
-  const activeBookings = bookings.filter((booking) => {
-    const bookingDate = new Date(booking.date); // Adjust if the date field is named differently
-    return bookingDate >= currentDate;
-  });
+  // // Filter Active and Recent bookings
+  // const activeBookings = bookings.filter((booking) => {
+  //   const bookingDate = new Date(booking.date); // Adjust if the date field is named differently
+  //   return bookingDate >= currentDate;
+  // });
 
-  const recentBookings = bookings.filter((booking) => {
-    const bookingDate = new Date(booking.date); // Adjust if the date field is named differently
-    return bookingDate < currentDate;
-  });
+
+  // const recentBookings = bookings.filter((booking) => {
+  //   const bookingDate = new Date(booking.date); // Adjust if the date field is named differently
+  //   return bookingDate < currentDate;
+  // });
 
   useEffect(() => {
     dispatch(fetchBookingByUserId(user?._id));
   }, [dispatch, user]);
+
+  useEffect(() => {
+    const today = new Date();
+    const indianTimeOffset = 330; // IST is UTC+5:30
+  
+    // Convert a UTC date to IST and format it as 'yyyy-mm-dd'
+    const convertToISTDateString = (utcDate) => {
+      const date = new Date(utcDate);
+      date.setMinutes(date.getMinutes() + indianTimeOffset); // Adjust for IST offset
+      return date.toISOString().split("T")[0]; // Extract 'yyyy-mm-dd' format
+    };
+  
+    // Get today's IST date in 'yyyy-mm-dd' format
+    const todayIST = convertToISTDateString(today);
+  
+    // Filter active events (today's bookings)
+    const active =
+    bookings?.filter((booking) => {
+        const bookingDateIST = convertToISTDateString(booking?.date); // Convert booking date to IST
+        return bookingDateIST >= todayIST; // Check if it's the same day
+      }) || [];
+
+    const recent =
+    bookings?.filter((booking) => {
+        const bookingDateIST = convertToISTDateString(booking?.date); // Convert booking date to IST
+        return bookingDateIST < todayIST; // Check if it's the same day
+      }) || [];
+  
+    // Update state
+    setActiveEvents(active);
+    setRecentEvents(recent)
+  }, [bookings,dispatch,user]); // Dependencies for re-running effect
+
 
   return (
     <main className="pb-20 md:pb-0">
@@ -124,7 +160,7 @@ const Page = () => {
               </div>
             }
           >
-            <div className="w-full py-6 mx-auto grid md:grid-cols-3 grid-cols-1 justify-center items-stretch place-content-center gap-4 md:gap-8">
+            <div className="w-full md:py-6 mx-auto grid md:grid-cols-3 grid-cols-1 justify-center items-stretch place-content-center gap-4 md:gap-8">
               {loading ? (
                 <div className="flex justify-center items-center w-full h-60">
                   <Spinner color="danger" />

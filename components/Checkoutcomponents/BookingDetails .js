@@ -47,7 +47,7 @@ const BookingDetails = ({ theater }) => {
         <div className="space-y-7">
           <div className="grid md:grid-cols-2 grid-cols-1 justify-center items-center gap-4">
             <div className="w-full flex flex-col gap-1 items-start">
-              <Label>
+              <Label className="mb-2">
                 Full Name <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -58,8 +58,8 @@ const BookingDetails = ({ theater }) => {
               />
             </div>
             <div className="w-full flex flex-col gap-1 items-start">
-              <Label>
-                {theater?.groupSize} Capacity - Max {theater?.maxCapacity}
+            <Label className="mb-2">
+            {theater?.groupSize} Capacity - Max {theater?.maxCapacity}
                 <span className="text-red-500">*</span>
               </Label>
               {/* <Input
@@ -106,8 +106,8 @@ const BookingDetails = ({ theater }) => {
             </div> */}
 
             <div className="w-full flex flex-col gap-1 items-start">
-              <Label>
-                Whatsapp Number <span className="text-red-500">*</span>
+            <Label className="mb-2">
+            Whatsapp Number <span className="text-red-500">*</span>
               </Label>
               <Input
                 placeholder="Whatsapp Number"
@@ -119,7 +119,7 @@ const BookingDetails = ({ theater }) => {
               />
             </div>
           <div className="w-full flex flex-col gap-1 items-start">
-            <Label>
+              <Label className="mb-2">
               Email<span className="text-red-500">*</span>
             </Label>
             <Input

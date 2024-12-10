@@ -121,7 +121,7 @@ const Performancecard = () => {
               </SelectTrigger>
               <SelectContent>
                 {branchtheatreloading ? (
-                  <div className="p-2 text-center">Loading theaters...</div>
+                  <Spinner color="danger" size="sm" />
                 ) : branchtheatre?.length > 0 ? (
                   branchtheatre.map((theater) => (
                     <SelectItem key={theater?._id} value={theater?._id}>

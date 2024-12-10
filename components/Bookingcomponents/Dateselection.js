@@ -80,7 +80,7 @@ useEffect(()=>{
             htmlFor="location-select"
             className="block text-sm font-medium text-[#F30278] mb-1"
           >
-            Choose Location
+            Choose Theatre Location
           </label>
           <Select
             onValueChange={(value) => dispatch(setSelectedLocation(value))}
@@ -102,11 +102,19 @@ useEffect(()=>{
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {locations?.map((location) => (
-                <SelectItem key={location} value={location}>
-                  {location}
-                </SelectItem>
-              ))}
+              {locationsloading ? (
+                <Spinner color="danger" size="sm" />
+              ) : locations?.length > 0 ? (
+                locations.map((location) => (
+                    <SelectItem key={location} value={location}>
+                      {location}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <div className="p-1 text-center text-sm ">
+                    No theaters available
+                  </div>
+                )}
             </SelectContent>
           </Select>
         </div>

@@ -69,7 +69,7 @@ import {
   ModalBody,
   ModalFooter,
 } from "@nextui-org/modal";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 
 export default function ActiveEvents() {
@@ -507,13 +507,24 @@ export default function ActiveEvents() {
             </Button>
           </div>
         ) : (
-          <Tabs defaultValue="Active" className="w-full p-5">
-            <TabsList>
-              <TabsTrigger value="Active">Active</TabsTrigger>
-              <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
-              <TabsTrigger value="completed">Completed</TabsTrigger>
-              <TabsTrigger value="cancelled">Cancelled</TabsTrigger>
-              <TabsTrigger value="AllBooking">All Booking</TabsTrigger>
+          <Tabs defaultValue="Active" className="w-full pb-5 bg-white  ">
+            <TabsList className="grid h-14 border-b-1.5 w-full grid-cols-5 sticky top-16 bg-white z-50 px-2">
+            <Badge  color="danger" content={activeEvents?.length} isInvisible={activeEvents?.length === 0} size="md">
+              <TabsTrigger className="w-full" value="Active">Active</TabsTrigger>
+             </Badge>
+            <Badge  color="danger" content={upcomingEvents?.length} isInvisible={upcomingEvents?.length === 0} size="md">
+              <TabsTrigger className="w-full" value="upcoming">Upcoming</TabsTrigger>
+             </Badge>
+            <Badge  color="danger" content={completedEvents?.length} isInvisible={completedEvents?.length === 0} size="md">
+              <TabsTrigger className="w-full" value="completed">Completed</TabsTrigger>
+             </Badge>
+            <Badge  color="danger" content={UnsavedTheaterbooking?.length} isInvisible={UnsavedTheaterbooking?.length === 0} size="md">
+              <TabsTrigger className="w-full" value="cancelled">Cancelled</TabsTrigger>
+             </Badge>
+            <Badge  color="danger" content={Theaterbooking?.length} isInvisible={Theaterbooking?.length === 0} size="md">
+              <TabsTrigger className="w-full" value="AllBooking">All Booking</TabsTrigger>
+             </Badge>
+              
             </TabsList>
             <TabsContent value="upcoming">
               {Theaterloading ? (

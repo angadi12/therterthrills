@@ -71,28 +71,24 @@ const Newbooking = () => {
 
   useEffect(() => {
     const today = new Date();
-    const indianTimeOffset = 330; // IST is UTC+5:30
+    const indianTimeOffset = 330; 
   
-    // Convert a UTC date to IST and format it as 'yyyy-mm-dd'
     const convertToISTDateString = (utcDate) => {
       const date = new Date(utcDate);
-      date.setMinutes(date.getMinutes() + indianTimeOffset); // Adjust for IST offset
-      return date.toISOString().split("T")[0]; // Extract 'yyyy-mm-dd' format
+      date.setMinutes(date.getMinutes() + indianTimeOffset); 
+      return date.toISOString().split("T")[0]; 
     };
   
-    // Get today's IST date in 'yyyy-mm-dd' format
     const todayIST = convertToISTDateString(today);
   
-    // Filter active events (today's bookings)
     const active =
       Theaterbooking?.filter((booking) => {
-        const bookingDateIST = convertToISTDateString(booking.date); // Convert booking date to IST
-        return bookingDateIST === todayIST; // Check if it's the same day
+        const bookingDateIST = convertToISTDateString(booking.date); 
+        return bookingDateIST === todayIST; 
       }) || [];
   
-    // Update state
     setActiveEvents(active);
-  }, [Theaterbooking, Selectedtheaterbyid, Theatererror]); // Dependencies for re-running effect
+  }, [Theaterbooking, Selectedtheaterbyid, Theatererror]); 
   
 
 

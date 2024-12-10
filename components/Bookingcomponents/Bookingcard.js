@@ -343,21 +343,21 @@ export default function Bookingcard({ booking }) {
           <div className="grid grid-cols-2 gap-4">
             <div className="flex items-center">
               <Calendar className="w-4 h-4 mr-2" />
-              <span className="text-sm">{formattedDate}</span>
+              <span className="md:text-sm text-xs">{formattedDate}</span>
             </div>
             <div className="flex items-center">
               <Users className="w-4 h-4 mr-2" />
-              <span className="text-sm">
+              <span className="md:text-sm text-xs">
                 {booking?.numberOfPeople} Members
               </span>
             </div>
             <div className="flex items-center">
               <MapPin className="w-4 h-4 mr-2" />
-              <span className="text-sm">{booking?.theater?.location}</span>
+              <span className="md:text-sm text-xs">{booking?.theater?.location}</span>
             </div>
             <div className="flex items-center">
               <Clock className="w-4 h-4 mr-2" />
-              <span className="text-sm">
+              <span className="md:text-sm text-xs">
                 {booking?.slot?.startTime}-{booking?.slot?.endTime}
               </span>
             </div>

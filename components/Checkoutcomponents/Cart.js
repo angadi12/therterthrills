@@ -111,6 +111,15 @@ const Cart = ({ theater }) => {
   ]);
 
   const handleApplyCoupon = async () => {
+
+    if(!couponInput){
+     return toast({
+        title: "Coupon code required",
+        description: "Coupon applied",
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });
+    }
+
     setLoading(true);
     dispatch(setCouponError(""));
 
@@ -210,7 +219,7 @@ const Cart = ({ theater }) => {
         <Input
           type="text"
           placeholder="Enter Coupon Code"
-          value={couponCode}
+          value={couponInput}
           onChange={(e) => setCouponInput(e.target.value)}
           className="rounded-r-none h-12"
         />

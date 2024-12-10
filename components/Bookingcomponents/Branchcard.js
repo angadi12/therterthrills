@@ -13,7 +13,7 @@ export default function Branchcard({ branch }) {
   return (
     <Card className="w-full max-w-sm overflow-hidden">
       <CardContent className="space-y-4 pt-6">
-        <div className="relative aspect-[16/10] overflow-hidden rounded-lg">
+        <div className="relative w-full aspect-[16/10] overflow-hidden rounded-lg">
           <Image
             src={
               "https://firebasestorage.googleapis.com/v0/b/awt-website-769f8.appspot.com/o/Theaterimage2.png?alt=media&token=0c87c008-386c-46ea-996b-368beb3aa980"
@@ -24,6 +24,8 @@ export default function Branchcard({ branch }) {
           />
           <Button
             variant="solid"
+            onClick={() =>router.push(branch?.Locationlink)}
+
             className="absolute rounded-full bottom-4 right-4 bg-[#F30278] hover:bg-[#F30278]/90 text-white space-x-2"
             size="sm"
           >
@@ -31,7 +33,7 @@ export default function Branchcard({ branch }) {
             <span>View on Map</span>
           </Button>
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 flex flex-col justify-start items-start gap-4">
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-semibold">{branch?.Branchname} - <span className="text-xs text-[#F30278]">({branch?.location})</span></h3>
             <div className="flex items-center space-x-1">
@@ -39,7 +41,7 @@ export default function Branchcard({ branch }) {
               <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
             </div>
           </div>
-          <div className="flex py-4 justify-center rounded-sm gap-2 items-center w-60 text-[#F30278] bg-[#F30278]/10 ring-1 ring-[#F30278] p-2 font-semibold text-xs">
+          <div className="flex  justify-center rounded-sm gap-2 items-center w-60 text-[#F30278] bg-[#F30278]/10 ring-1 ring-[#F30278] p-2 font-semibold text-xs">
             <Utensils className="w-4 h-4" />
             <span>Food & Snacks Available</span>
           </div>

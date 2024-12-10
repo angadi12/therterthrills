@@ -89,11 +89,24 @@ export default function Branchselection() {
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {branches?.map((location) => (
+              {/* {branches?.map((location) => (
                 <SelectItem key={location} value={location._id}>
                   {location?.location} - {location?.Branchname}
                 </SelectItem>
-              ))}
+              ))} */}
+              {status === "loading"  ? (
+                <Spinner color="danger" size="sm" />
+              ) : branches?.length > 0 ? (
+                branches.map((location) => (
+                    <SelectItem key={location} value={location._id}>
+                    {location?.location} - {location?.Branchname}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <div className="p-1 text-center text-sm ">
+                    No Branches available
+                  </div>
+                )}
             </SelectContent>
           </Select>
         </div>
