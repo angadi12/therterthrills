@@ -73,7 +73,6 @@ export default function Navbarr() {
     }
   }, [branches, selectedKey, dispatch, user]);
 
-  console.log(selectedBranchId);
 
   // useEffect(() => {
   //   if (selectedBranchId) {
@@ -234,7 +233,7 @@ export default function Navbarr() {
       <Modal
         isDismissable={false}
         isKeyboardDismissDisabled={true}
-        backdrop="blur"
+        backdrop="opaque"
         isOpen={isOpen}
         onOpenChange={onOpenChange}
       >
@@ -250,7 +249,7 @@ export default function Navbarr() {
               <ModalFooter className="flex justify-center items-center text-center">
                 <Button
                   onPress={onClose}
-                  className="bg-[#205093] text-background"
+                  className="bg-[#004AAD] text-white"
                 >
                   OK
                 </Button>

@@ -152,7 +152,7 @@ const AddTheaterForm = () => {
     if (!formData.branch) return "branch  is required";
     if (!formData.slots) return "Theatre slots is required";
     if (!formData.status) return "Theatre status is required";
-    if (!formData.images) return "Location is required";
+    if (!formData.images) return "images is required";
     if (!formData.amenities) return "amenities is required";
     if (!formData.extraPerPerson) return "extra Per Person charge  is required";
     if (!formData.groupSize) return "Min Capacity is required";

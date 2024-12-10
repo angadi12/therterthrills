@@ -13,7 +13,7 @@ export default function Home() {
       <Hero />
       <FeaturesSection />
       <ExperienceSection />
-      <CustomServices />
+      <CustomServices/>
       <TestimonialGrid />
       <BlogGrid />
     </main>

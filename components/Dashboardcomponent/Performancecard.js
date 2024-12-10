@@ -92,7 +92,6 @@ const Performancecard = () => {
     },
   };
 
-  console.log(Selectedtheaterbyid);
 
   return (
     <Card className="rounded-none shadow-none">

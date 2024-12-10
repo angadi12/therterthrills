@@ -37,7 +37,6 @@ const Cart = ({ theater }) => {
   );
   const { selectedTheater} =
   useSelector((state) => state.theater);
-console.log(couponCode,discount,isCouponApplied,error,deviceId)
 
   const selectedCakes = useSelector((state) => state.cakes.selectedCakes);
   const addonsTotal = useSelector(selectTotalAmount);

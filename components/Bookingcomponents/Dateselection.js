@@ -32,6 +32,7 @@ export default function BookingHeader() {
   const { locations, locationsloading, date, selectedLocation} = useSelector(
     (state) => state.theater
   );
+  const { proccedwithbranchid } = useSelector((state) => state.booking);
 
   const formattedDate =
     date && !isNaN(new Date(date))
@@ -39,7 +40,7 @@ export default function BookingHeader() {
       : null;
 
   useEffect(() => {
-    dispatch(fetchTheaterLocations());
+    dispatch(fetchTheaterLocations(proccedwithbranchid));
   }, [selectedLocation]);
 
   const payload = { location: selectedLocation, date: formattedDate };
@@ -57,6 +58,11 @@ export default function BookingHeader() {
     setPopoverOpen(false); // Close the popover after selecting a date
   };
 
+useEffect(()=>{
+ if(locations?.length>0){
+  dispatch(setSelectedLocation(locations[0]))
+ }
+},[dispatch,locations])
 
   return (
     <div className="w-11/12 mx-auto md:py-12 py-6">

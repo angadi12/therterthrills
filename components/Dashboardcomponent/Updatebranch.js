@@ -35,7 +35,7 @@ const Updatebranch = () => {
             Branchname: result.data.Branchname,
             location: result.data.location,
             Number: result.data.Number,
-            code: result.data.code,
+            Locationlink: result.data.Locationlink,
           });
         } else {
           toast({
@@ -64,7 +64,7 @@ const Updatebranch = () => {
     Branchname: "",
     location: "",
     Number: "",
-    code: "",
+    Locationlink:"",
   });
 
   const handleChange = (e) => {
@@ -80,7 +80,7 @@ const Updatebranch = () => {
     } else if (!/^\d{10}$/.test(formData.Number)) {
       return "Phone Number must be 10 digits";
     }
-    if (!formData.code) return "code is required";
+    if (!formData.Locationlink) return "Location link is required";
     return null;
   };
 
@@ -163,14 +163,14 @@ const Updatebranch = () => {
             />
             <Input
               type="text"
-              name="code"
+              name="Locationlink"
               variant="bordered"
               color="primary"
               radius="sm"
               className="w-full h-12"
               size="lg"
-              placeholder="code"
-              value={formData.code}
+              placeholder="Location link"
+              value={formData.Locationlink}
               onChange={handleChange}
             />
           </div>

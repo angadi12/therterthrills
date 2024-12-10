@@ -80,7 +80,6 @@ const Createadmin = () => {
     setLoading(true);
 
     const result = await Createadminapi(formData);
-    console.log(result);
     if (result.status) {
       toast({
         title: "Admin created successfully",

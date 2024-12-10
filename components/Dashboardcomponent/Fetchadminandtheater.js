@@ -37,7 +37,6 @@ const Fetchadminandtheater = ({ branchi }) => {
   }
 
 
-console.log(branchData)
 
   //   const dispatch = useDispatch();
   //   const { branchDetailsData, branchDetailsloading, branchDetailserror } =
@@ -53,7 +52,6 @@ console.log(branchData)
   //     return <SkeletonLoader />;
   //   }
 
-  //   console.log(branchDetailsData);
 
   return (
     <div className="flex space-x-2 ">

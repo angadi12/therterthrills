@@ -37,7 +37,6 @@ export default function BookingDashboard() {
 
 
 
-console.log("data",branchSummaryData)
 
 
 if(status==="loading"){

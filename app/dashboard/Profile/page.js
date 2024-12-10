@@ -66,9 +66,7 @@ export default function ProfileSection() {
 
   const handleSave = () => {
     if (activeTab === 'personal') {
-      console.log('Saving profile data:', profileData)
     } else {
-      console.log('Resetting password:', passwordData)
     }
   }
 

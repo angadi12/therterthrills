@@ -106,7 +106,9 @@ const CheckoutOnboarding = () => {
         ]
       : [
           { component: <BookingDetails  theater={theater} />, name: "Booking Details" },
+          { component: <AddOns />, name: "Add-Ons" },
           { component: <Confirmation />, name: "Confirmation" },
+
         ];
 
   const renderStepComponent = () => steps[currentStep]?.component;
@@ -137,7 +139,7 @@ const CheckoutOnboarding = () => {
     if (!bookingDetails?.email.match(/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/))
       errors.email = "Email is invalid.";
 
-    if (!Occasionobject?.noInput && currentStep === 1) {
+    if (!Occasionobject?.noInput &&  addDecorations && currentStep===1) {
       if (!nickname) {
         errors.nickname = "Nickname is required.";
       }

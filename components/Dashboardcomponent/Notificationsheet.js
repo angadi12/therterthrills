@@ -68,11 +68,11 @@ export default function NotificationSheet() {
 
     // Set up socket listeners for real-time updates
     socket.on("connect", () => {
-      console.log("Connected to socket", socket.id);
+      // console.log("Connected to socket", socket.id);
     });
 
     socket.on("Messagecreated", (newContact) => {
-      console.log("New order received:", newContact);
+      // console.log("New order received:", newContact);
       // toast.success(`New order received: ${newContact.orderId}`);
       // Optionally, you can dispatch an action to update the Redux store with the new order
       // dispatch(fetchorders());

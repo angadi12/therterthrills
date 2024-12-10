@@ -71,7 +71,6 @@ const Updateadmin = () => {
 
   useEffect(() => {
     if (Admindata) {
-      console.log("branchid", Admindata?.branch?._id);
       setFormData({
         fullName: Admindata?.fullName,
         email: Admindata?.email,
@@ -82,7 +81,6 @@ const Updateadmin = () => {
     }
   }, [Admindata, branches]);
 
-  console.log(Admindata);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -131,7 +129,6 @@ const Updateadmin = () => {
     setLoading(true);
 
     const result = await Upadteadminapi(formData, selectedAdminid);
-    console.log(result);
     if (result.status) {
       toast({
         title: "Updated",

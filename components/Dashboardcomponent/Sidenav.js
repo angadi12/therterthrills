@@ -22,12 +22,25 @@ import { Tooltip } from "@nextui-org/react";
 import { MdTableRestaurant } from "react-icons/md";
 import { MdOutlineQrCode } from "react-icons/md";
 import { ScrollArea } from "../ui/scroll-area";
+import { useDispatch } from "react-redux";
+import { clearUser } from "@/lib/Redux/authSlice";
+import Cookies from "js-cookie";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@nextui-org/react";
 
 const Sidenav = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [selected, setSelected] = useState("Dashboard");
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isdelete, Setisdelete] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     switch (pathname) {
@@ -98,7 +111,18 @@ const Sidenav = () => {
     }
   };
 
+
+  const handleLogout = () => {
+    dispatch(clearUser());
+    Cookies.remove("token");
+    Cookies.remove("User");
+    router.refresh("/dashboard");
+  };
+
+
   return (
+
+    <>
     <aside
       className={` top-0 left-0 border-r border-gray-300  h-screen hidden md:flex lg:flex flex-col items-center bg-white transition-all duration-700 ease-in-out ${
         isMinimized ? "w-20" : "w-60"
@@ -106,7 +130,7 @@ const Sidenav = () => {
     >
       <div className="relative w-full flex items-center justify-center h-24">
         {!isMinimized && (
-          <Image className="h-24 w-32 object-contain" src={LOGO} alt="logo" />
+          <Image onClick={()=>router.push("/")} className="h-24 w-32 object-contain" src={LOGO} alt="logo" />
         )}
         <Button
           className="absolute top-2 right-0 bg-transparent text-[#004AAD]"
@@ -412,7 +436,8 @@ const Sidenav = () => {
             : "mt-auto flex w-20 justify-start items-start gap-4 px-2 sm:py-5 transition-all duration-700 ease-in-out"
         }
       >
-        <Button className="flex items-center w-full justify-start bg-transparent gap-4 text-white font-semibold ">
+        <Button                   onPress={() => Setisdelete(true)}
+ className="flex items-center w-full justify-start bg-transparent gap-4 text-white font-semibold ">
           {!isMinimized ? (
             <LogOut size={20} className="text-[#004AAD]" />
           ) : (
@@ -434,6 +459,46 @@ const Sidenav = () => {
         </Button>
       </nav>
     </aside>
+
+    <Modal
+        isDismissable={false}
+        isKeyboardDismissDisabled={true}
+        backdrop="opaque"
+        isOpen={isdelete}
+        onOpenChange={Setisdelete}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col text-center">
+                Confirm Logout
+              </ModalHeader>
+              <ModalBody>
+                <p>Are you sure you want to logout?</p>
+              </ModalBody>
+              <ModalFooter className="flex justify-center items-center text-center">
+                <Button
+                  onPress={() => {
+                    handleLogout();
+                    onClose();
+                  }}
+                  className="px-8 py-0.5 rounded-sm w-48 bg-[#F30278] text-white"
+                >
+                  Yes
+                </Button>
+                <Button
+                  size="md"
+                  onPress={() => Setisdelete(false)}
+                  className="px-8 py-0.5 rounded-sm w-48 bg-[#004AAD] text-white"
+                >
+                  No
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

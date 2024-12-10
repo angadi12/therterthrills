@@ -86,7 +86,6 @@ export default function Managetheatre() {
     }
   }, [dispatch, selectedBranchId]);
 
-  console.log(branchtheatre);
 
   const handleopentheatre = () => {
     dispatch(setopentheatre(!opentheatre));
