@@ -136,8 +136,12 @@ const CheckoutOnboarding = () => {
       errors.addDecorations = "Do you want to add decorations to your event?";
     if (!bookingDetails?.whatsappNumber.match(/^\d{10}$/))
       errors.whatsappNumber = "WhatsApp number must be 10 digits.";
-    if (!bookingDetails?.email.match(/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/))
+    if (
+      bookingDetails?.email &&
+      !bookingDetails.email.match(/^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/)
+    ) {
       errors.email = "Email is invalid.";
+    }
 
     if (!Occasionobject?.noInput &&  addDecorations && currentStep===1) {
       if (!nickname) {

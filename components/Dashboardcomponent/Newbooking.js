@@ -45,7 +45,7 @@ const Newbooking = () => {
 
   useEffect(() => {
     if (Selectedtheaterbyid) {
-      dispatch(fetchBookingByTheaterId(Selectedtheaterbyid));
+      dispatch(fetchBookingByTheaterId({ TheaterId: Selectedtheaterbyid, status: "Active" }));
     }
   }, [Selectedtheaterbyid, dispatch]);
 
@@ -69,26 +69,26 @@ const Newbooking = () => {
   //   setActiveEvents(active);
   // }, [Theaterbooking, Selectedtheaterbyid, Theatererror]); //
 
-  useEffect(() => {
-    const today = new Date();
-    const indianTimeOffset = 330; 
+  // useEffect(() => {
+  //   const today = new Date();
+  //   const indianTimeOffset = 330; 
   
-    const convertToISTDateString = (utcDate) => {
-      const date = new Date(utcDate);
-      date.setMinutes(date.getMinutes() + indianTimeOffset); 
-      return date.toISOString().split("T")[0]; 
-    };
+  //   const convertToISTDateString = (utcDate) => {
+  //     const date = new Date(utcDate);
+  //     date.setMinutes(date.getMinutes() + indianTimeOffset); 
+  //     return date.toISOString().split("T")[0]; 
+  //   };
   
-    const todayIST = convertToISTDateString(today);
+  //   const todayIST = convertToISTDateString(today);
   
-    const active =
-      Theaterbooking?.filter((booking) => {
-        const bookingDateIST = convertToISTDateString(booking.date); 
-        return bookingDateIST === todayIST; 
-      }) || [];
+  //   const active =
+  //     Theaterbooking?.filter((booking) => {
+  //       const bookingDateIST = convertToISTDateString(booking.date); 
+  //       return bookingDateIST === todayIST; 
+  //     }) || [];
   
-    setActiveEvents(active);
-  }, [Theaterbooking, Selectedtheaterbyid, Theatererror]); 
+  //   setActiveEvents(active);
+  // }, [Theaterbooking, Selectedtheaterbyid, Theatererror]); 
   
 
 
@@ -123,7 +123,7 @@ const Newbooking = () => {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">
             New Bookings{" "}
-            <span className="text-pink-500">({activeEvents?.length})</span>
+            <span className="text-pink-500">({Theaterbooking?.counts?.active})</span>
           </h2>
           <Select
               onValueChange={(value) => dispatch(Setselectedtheaterid(value))}
@@ -173,18 +173,18 @@ const Newbooking = () => {
           </div>
         ) : (
           <>
-            {activeEvents?.length === 0 ? (
+            {Theaterbooking?.data?.length === 0 ? (
               <div className="flex justify-center items-center w-full h-60">
                 <p>No Bookings available</p>
               </div>
             ) : (
               <>
-                {Theatererror === "Nobookings" ? (
+                {Theatererror === "No bookings found" ? (
                   <div className="flex justify-center items-center w-full h-60">
                     <p>No Bookings available</p>
                   </div>
                 ) : (
-                  activeEvents?.map((booking, index) => (
+                  Theaterbooking?.data?.map((booking, index) => (
                     <div
                       onClick={() => router.push("/dashboard/YourBookings")}
                       key={index}

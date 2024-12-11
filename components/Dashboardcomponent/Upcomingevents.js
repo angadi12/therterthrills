@@ -48,7 +48,7 @@ const Upcomingevents = () => {
 
   useEffect(() => {
     if (Selectedtheaterbyid) {
-      dispatch(fetchBookingByTheaterId(Selectedtheaterbyid));
+      dispatch(fetchBookingByTheaterId({ TheaterId: Selectedtheaterbyid, status: "upcoming" }));
     }
   }, [Selectedtheaterbyid, dispatch]);
 
@@ -72,30 +72,30 @@ const Upcomingevents = () => {
   //   setUpcomingEvents(upcoming);
   // }, [Theaterbooking, Selectedtheaterbyid, Theatererror]); //
 
-  useEffect(() => {
-    const today = new Date();
-    const indianTimeOffset = 330; // IST is UTC+5:30
+  // useEffect(() => {
+  //   const today = new Date();
+  //   const indianTimeOffset = 330; // IST is UTC+5:30
   
-    // Convert a UTC date to IST and format it as 'yyyy-mm-dd'
-    const convertToISTDateString = (utcDate) => {
-      const date = new Date(utcDate);
-      date.setMinutes(date.getMinutes() + indianTimeOffset); // Adjust for IST offset
-      return date.toISOString().split("T")[0]; // Extract 'yyyy-mm-dd' format
-    };
+  //   // Convert a UTC date to IST and format it as 'yyyy-mm-dd'
+  //   const convertToISTDateString = (utcDate) => {
+  //     const date = new Date(utcDate);
+  //     date.setMinutes(date.getMinutes() + indianTimeOffset); // Adjust for IST offset
+  //     return date.toISOString().split("T")[0]; // Extract 'yyyy-mm-dd' format
+  //   };
   
-    // Get today's IST date in 'yyyy-mm-dd' format
-    const todayIST = convertToISTDateString(today);
+  //   // Get today's IST date in 'yyyy-mm-dd' format
+  //   const todayIST = convertToISTDateString(today);
   
-    // Filter upcoming events (future bookings)
-    const upcoming =
-      Theaterbooking?.filter((booking) => {
-        const bookingDateIST = convertToISTDateString(booking.date); // Convert booking date to IST
-        return bookingDateIST > todayIST; // Compare dates
-      }) || [];
+  //   // Filter upcoming events (future bookings)
+  //   const upcoming =
+  //     Theaterbooking?.filter((booking) => {
+  //       const bookingDateIST = convertToISTDateString(booking.date); // Convert booking date to IST
+  //       return bookingDateIST > todayIST; // Compare dates
+  //     }) || [];
   
-    // Update state
-    setUpcomingEvents(upcoming);
-  }, [Theaterbooking, Selectedtheaterbyid, Theatererror]); // Dependencies for re-running effect
+  //   // Update state
+  //   setUpcomingEvents(upcoming);
+  // }, [Theaterbooking, Selectedtheaterbyid, Theatererror]); // Dependencies for re-running effect
   
 
 
@@ -198,18 +198,18 @@ const Upcomingevents = () => {
               </div>
             ) : (
               <>
-                {upcomingEvents?.length === 0 ? (
+                {Theaterbooking?.data?.length === 0 ? (
                   <div className="flex justify-center items-center w-full h-60">
                     <p>No Bookings available</p>
                   </div>
                 ) : (
                   <>
-                    {Theatererror === "Nobookings" ? (
+                    {Theatererror === "No bookings found" ? (
                       <div className="flex justify-center items-center w-full h-60">
                         <p>No Bookings available</p>
                       </div>
                     ) : (
-                      upcomingEvents.map((event, index) => (
+                      Theaterbooking?.data?.map((event, index) => (
                         <div
                           key={event._id}
                           className="flex items-center justify-between bg-white ring-1 ring-gray-200 p-4 rounded-lg shadow"

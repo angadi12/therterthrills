@@ -30,7 +30,7 @@ import {
 import { fetchtheaterbybranchid } from "@/lib/Redux/theaterSlice";
 import { Spinner } from "@nextui-org/react";
 import { format } from "date-fns";
-import { addMinutes } from "date-fns"; 
+import { addMinutes } from "date-fns";
 
 import {
   Dialog,
@@ -69,11 +69,11 @@ import {
   ModalBody,
   ModalFooter,
 } from "@nextui-org/modal";
-import { Badge } from "@nextui-org/react";
+import { Badge, Chip } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 
 export default function ActiveEvents() {
-  const router=useRouter()
+  const router = useRouter();
   const { toast } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeEvents, setActiveEvents] = useState([]);
@@ -84,7 +84,8 @@ export default function ActiveEvents() {
   const [loadingEvents, setLoadingEvents] = useState({});
   const [isDelete, setIsDelete] = useState(false);
   const [delteloading, setDeleteloading] = useState(false);
-
+  const [selectedTab, setSelectedTab] = useState("Active");
+  console.log(selectedTab);
   const dispatch = useDispatch();
   const {
     Theaterbooking,
@@ -105,10 +106,15 @@ export default function ActiveEvents() {
 
   useEffect(() => {
     if (Selectedtheaterbyid) {
-      dispatch(fetchBookingByTheaterId(Selectedtheaterbyid));
+      dispatch(
+        fetchBookingByTheaterId({
+          TheaterId: Selectedtheaterbyid,
+          status: selectedTab,
+        })
+      );
       dispatch(fetchUnsavedBookingByTheaterId(Selectedtheaterbyid));
     }
-  }, [Selectedtheaterbyid, dispatch]);
+  }, [Selectedtheaterbyid, dispatch, selectedTab]);
 
   useEffect(() => {
     if (selectedBranchId) {
@@ -116,88 +122,95 @@ export default function ActiveEvents() {
     }
   }, [selectedBranchId, dispatch]);
 
+  console.log(Theaterbooking.data);
+  console.log(Theatererror);
+
+  // useEffect(()=>{
+  // if(Theatererror==="No bookings found"){
+
+  // }
+  // },[Theatererror,Theaterbooking])
+
   // useEffect(() => {
   //   const today = new Date();
+  //   const indianTimeOffset = 330; // IST is UTC+5:30
 
-  //   // Filter active events (today's bookings)
-  //   const active =
-  //     Theaterbooking?.filter((booking) => {
-  //       const bookingDate = new Date(booking.date);
-  //       return bookingDate.toDateString() === today.toDateString(); // Check if it's the same day
-  //     }) || [];
+  //   // Convert a date to IST and format it as 'yyyy-mm-dd'
+  //   const convertToISTDateString = (utcDate) => {
+  //     const date = new Date(utcDate);
+  //     date.setMinutes(date.getMinutes() + indianTimeOffset);
+  //     return date.toISOString().split("T")[0]; // Returns the date in 'yyyy-mm-dd' format
+  //   };
 
-  //   // Filter upcoming events (future bookings)
-  //   const upcoming =
-  //     Theaterbooking?.filter((booking) => {
-  //       const bookingDate = new Date(booking.date);
-  //       return bookingDate > today; // Check if the date is in the future
-  //     }) || [];
+  //   // Get today's IST date in 'yyyy-mm-dd' format
+  //   const todayIST = convertToISTDateString(today);
 
-  //   // Filter completed events (past bookings with completed payment)
-  //   const completed =
-  //     Theaterbooking?.filter((booking) => {
-  //       const bookingDate = new Date(booking.date);
-  //       return booking.paymentStatus === "completed" && bookingDate < today; // Check if date is in the past and payment is completed
-  //     }) || [];
+  //   if (Theaterbooking?.length ) {
+  //     // Filter active events (today's bookings)
+  //     const active =
+  //       Theaterbooking?.filter((booking) => {
+  //         const bookingDateIST = convertToISTDateString(booking.date);
+  //         return bookingDateIST === todayIST;
+  //       }) || [];
 
-  //   // Update state
-  //   setActiveEvents(active);
-  //   setUpcomingEvents(upcoming);
-  //   setCompletedEvents(completed);
-  // }, [Theaterbooking, Selectedtheaterbyid, Theatererror]);
+  //     // Filter upcoming events (future bookings)
+  //     const upcoming =
+  //       Theaterbooking?.filter((booking) => {
+  //         const bookingDateIST = convertToISTDateString(booking.date);
+  //         return bookingDateIST > todayIST;
+  //       }) || [];
+
+  //     // Filter completed events (past bookings with completed payment)
+  //     const completed =
+  //       Theaterbooking?.filter((booking) => {
+  //         const bookingDateIST = convertToISTDateString(booking.date);
+  //         return (
+  //           booking.paymentStatus === "completed" && bookingDateIST < todayIST
+  //         );
+  //       }) || [];
+
+  //     // Update state
+
+  //     setActiveEvents(active);
+  //     setUpcomingEvents(upcoming);
+  //     setCompletedEvents(completed);
+  //   } else {
+  //     setActiveEvents([]);
+  //     setUpcomingEvents([]);
+  //     setCompletedEvents([]);
+  //   }
+  // }, [Theaterbooking, Selectedtheaterbyid,selectedTab]); // Ensure dependencies include theater-related changes
+
+  // useEffect(() => {
+  //   switch (selectedTab) {
+  //     case "Active":
+  //       setActiveEvents((prev) => [...prev]);
+  //       break;
+  //     case "upcoming":
+  //       setUpcomingEvents((prev) => [...prev]);
+  //       break;
+  //     case "completed":
+  //       setCompletedEvents((prev) => [...prev]);
+  //       break;
+  //     default:
+  //       setActiveEvents([]);
+  //       setUpcomingEvents([]);
+  //       setCompletedEvents([]);
+  //       break;
+  //   }
+  // }, [selectedTab]);
 
   useEffect(() => {
-    const today = new Date();
-    const indianTimeOffset = 330; // IST is UTC+5:30
-  
-    // Convert a date to IST and format it as 'yyyy-mm-dd'
-    const convertToISTDateString = (utcDate) => {
-      const date = new Date(utcDate);
-      date.setMinutes(date.getMinutes() + indianTimeOffset);
-      return date.toISOString().split("T")[0]; // Returns the date in 'yyyy-mm-dd' format
-    };
-  
-    // Get today's IST date in 'yyyy-mm-dd' format
-    const todayIST = convertToISTDateString(today);
-  
-    // Filter active events (today's bookings)
-    const active =
-      Theaterbooking?.filter((booking) => {
-        const bookingDateIST = convertToISTDateString(booking.date); // Convert booking date to IST
-        return bookingDateIST === todayIST; // Compare normalized dates
-      }) || [];
-  
-    // Filter upcoming events (future bookings)
-    const upcoming =
-      Theaterbooking?.filter((booking) => {
-        const bookingDateIST = convertToISTDateString(booking.date);
-        return bookingDateIST > todayIST; // Compare normalized dates
-      }) || [];
-  
-    // Filter completed events (past bookings with completed payment)
-    const completed =
-      Theaterbooking?.filter((booking) => {
-        const bookingDateIST = convertToISTDateString(booking.date);
-        return (
-          booking.paymentStatus === "completed" && bookingDateIST < todayIST
-        ); // Compare normalized dates
-      }) || [];
-  
-    // Update state
-    setActiveEvents(active);
-    setUpcomingEvents(upcoming);
-    setCompletedEvents(completed);
-  }, [Theaterbooking, Selectedtheaterbyid, Theatererror]);
-  
-  
-  
+    if (UnsavedTheaterbooking?.length) {
+      SetUnsavedid("");
+    }
+  }, [UnsavedTheaterbooking, Selectedtheaterbyid]);
 
   useEffect(() => {
     if (branchtheatre?.length > 0) {
       dispatch(Setselectedtheaterid(branchtheatre[0]._id));
     }
-  }, [branchtheatre,dispatch,selectedBranchId]);
-
+  }, [branchtheatre, dispatch, selectedBranchId]);
 
   const iconMapping = {
     Birthday: Birthdayicon,
@@ -250,17 +263,17 @@ export default function ActiveEvents() {
                   <p className="text-lg font-semibold text-[#F30278]">
                     Total: ₹{singlebooking?.TotalAmount}/-
                   </p>
-                  <Badge className={"bg-green-500 text-white"}>
+                  <Chip className={"bg-green-500 text-white"}>
                     ₹{singlebooking?.paymentAmount} Paid
-                  </Badge>
-                  <Badge className={"bg-red-500 text-white"}>
+                  </Chip>
+                  <Chip className={"bg-red-500 text-white"}>
                     ₹{singlebooking?.TotalAmount - singlebooking?.paymentAmount}{" "}
                     to pay
-                  </Badge>
+                  </Chip>
                   {singlebooking?.coupon && (
-                    <Badge className={"bg-yellow-500 text-white"}>
+                    <Chip className={"bg-yellow-500 text-white"}>
                       ₹{singlebooking?.discountAmount} Coupon discount
-                    </Badge>
+                    </Chip>
                   )}{" "}
                 </div>
                 <Separator className="bg-[#F30278]" />
@@ -449,17 +462,47 @@ export default function ActiveEvents() {
       <section className="w-full mx-auto bg-white">
         <BookingDetailsDialog />
         <div className="flex justify-between  items-center py-4  sticky top-0 bg-white z-50 p-4">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 w-full">
             <h1 className="text-2xl font-bold">
-              Active Events{" "}
+              {selectedTab === "Active" && "Active Events"}
+              {selectedTab === "upcoming" && "Upcoming Events"}
+              {selectedTab === "completed" && "Completed Events"}
+              {selectedTab === "cancelled" && "Cancelled Events"}
+              {selectedTab === "AllBooking" && "All  Booking"}
               {branchtheatreerror ? (
                 ""
               ) : (
-                <span className="text-pink-500">({activeEvents?.length})</span>
+                <>
+                  {selectedTab === "Active" && (
+                    <span className="text-pink-500">
+                      ({Theaterbooking?.counts?.active})
+                    </span>
+                  )}
+                  {selectedTab === "upcoming" && (
+                    <span className="text-pink-500">
+                      ({Theaterbooking?.counts?.upcoming})
+                    </span>
+                  )}
+                  {selectedTab === "completed" && (
+                    <span className="text-pink-500">
+                      ({Theaterbooking?.counts?.completed})
+                    </span>
+                  )}
+                  {selectedTab === "AllBooking" && (
+                    <span className="text-pink-500">
+                      ({Theaterbooking?.counts?.all})
+                    </span>
+                  )}
+                  {selectedTab === "cancelled" && (
+                    <span className="text-pink-500">
+                      ({UnsavedTheaterbooking?.length})
+                    </span>
+                  )}
+                </>
               )}
             </h1>
           </div>
-          <div className="flex items-center space-x-2 w-80 ">
+          <div className="flex items-center justify-end space-x-2 w-full ">
             <Select
               onValueChange={(value) => dispatch(Setselectedtheaterid(value))}
               value={Selectedtheaterbyid}
@@ -502,29 +545,70 @@ export default function ActiveEvents() {
         {branchtheatreerror ? (
           <div className="flex flex-col justify-center items-center w-full h-60">
             <p>No theatres </p>
-            <Button onClick={()=>router.push("/dashboard/ManageTheatres")} className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] ">
+            <Button
+              onClick={() => router.push("/dashboard/ManageTheatres")}
+              className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+            >
               Add theatre
             </Button>
           </div>
         ) : (
-          <Tabs defaultValue="Active" className="w-full pb-5 bg-white  ">
+          <Tabs
+            onValueChange={(value) => setSelectedTab(value)}
+            defaultValue="Active"
+            className="w-full pb-5 bg-white  "
+          >
             <TabsList className="grid h-14 border-b-1.5 w-full grid-cols-5 sticky top-16 bg-white z-50 px-2">
-            <Badge  color="danger" content={activeEvents?.length} isInvisible={activeEvents?.length === 0} size="md">
-              <TabsTrigger className="w-full" value="Active">Active</TabsTrigger>
-             </Badge>
-            <Badge  color="danger" content={upcomingEvents?.length} isInvisible={upcomingEvents?.length === 0} size="md">
-              <TabsTrigger className="w-full" value="upcoming">Upcoming</TabsTrigger>
-             </Badge>
-            <Badge  color="danger" content={completedEvents?.length} isInvisible={completedEvents?.length === 0} size="md">
-              <TabsTrigger className="w-full" value="completed">Completed</TabsTrigger>
-             </Badge>
-            <Badge  color="danger" content={UnsavedTheaterbooking?.length} isInvisible={UnsavedTheaterbooking?.length === 0} size="md">
-              <TabsTrigger className="w-full" value="cancelled">Cancelled</TabsTrigger>
-             </Badge>
-            <Badge  color="danger" content={Theaterbooking?.length} isInvisible={Theaterbooking?.length === 0} size="md">
-              <TabsTrigger className="w-full" value="AllBooking">All Booking</TabsTrigger>
-             </Badge>
-              
+              <Badge
+                color="danger"
+                content={Theaterbooking.counts?.active}
+                isInvisible={!Theaterbooking.counts?.active}
+                size="md"
+              >
+                <TabsTrigger className="w-full" value="Active">
+                  Active
+                </TabsTrigger>
+              </Badge>
+              <Badge
+                color="danger"
+                content={Theaterbooking?.counts?.upcoming}
+                isInvisible={!Theaterbooking?.counts?.upcoming}
+                size="md"
+              >
+                <TabsTrigger className="w-full" value="upcoming">
+                  Upcoming
+                </TabsTrigger>
+              </Badge>
+              <Badge
+                color="danger"
+                content={Theaterbooking?.counts?.completed}
+                isInvisible={!Theaterbooking?.counts?.completed}
+                size="md"
+              >
+                <TabsTrigger className="w-full" value="completed">
+                  Completed
+                </TabsTrigger>
+              </Badge>
+              <Badge
+                color="danger"
+                content={UnsavedTheaterbooking?.length}
+                isInvisible={UnsavedTheaterbooking?.length === 0}
+                size="md"
+              >
+                <TabsTrigger className="w-full" value="cancelled">
+                  Cancelled
+                </TabsTrigger>
+              </Badge>
+              <Badge
+                color="danger"
+                content={Theaterbooking?.counts?.all}
+                isInvisible={!Theaterbooking?.counts?.all}
+                size="md"
+              >
+                <TabsTrigger className="w-full" value="AllBooking">
+                  All Booking
+                </TabsTrigger>
+              </Badge>
             </TabsList>
             <TabsContent value="upcoming">
               {Theaterloading ? (
@@ -533,19 +617,19 @@ export default function ActiveEvents() {
                 </div>
               ) : (
                 <>
-                  {upcomingEvents?.length === 0 ? (
+                  {Theaterbooking?.data?.length === 0 ? (
                     <div className="flex justify-center items-center w-full h-[60vh]">
                       <p>No Bookings available</p>
                     </div>
                   ) : (
                     <>
-                      {Theatererror === "Nobookings" ? (
+                      {Theatererror === "No bookings found" ? (
                         <div className="flex justify-center items-center w-full h-[60vh]">
                           <p>No Bookings available</p>
                         </div>
                       ) : (
                         <div className="space-y-4 mt-4">
-                          {upcomingEvents?.map((event) => (
+                          {Theaterbooking?.data?.map((event) => (
                             <div
                               key={event._id}
                               className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
@@ -604,7 +688,7 @@ export default function ActiveEvents() {
                                   </div>
                                 </div>
                               </div>
-                              <div className="flex-shrink-0 space-y-2 text-blue-600 text-sm">
+                              {/* <div className="flex-shrink-0 space-y-2 text-blue-600 text-sm">
                                 {event?.selectedCakes &&
                                   Object.values(event?.selectedCakes)
                                     ?.slice(0, 1)
@@ -650,7 +734,7 @@ export default function ActiveEvents() {
                                       • {item}
                                     </p>
                                   ))}
-                              </div>
+                              </div> */}
                               <Button
                                 onPress={() => {
                                   setIsModalOpen(!isModalOpen),
@@ -676,19 +760,19 @@ export default function ActiveEvents() {
                 </div>
               ) : (
                 <>
-                  {activeEvents?.length === 0 ? (
+                  {Theaterbooking.data?.length === 0 ? (
                     <div className="flex justify-center items-center w-full h-[60vh]">
                       <p>No Bookings available</p>
                     </div>
                   ) : (
                     <>
-                      {Theatererror === "Nobookings" ? (
+                      {Theatererror === "No bookings found" ? (
                         <div className="flex justify-center items-center w-full h-[60vh]">
                           <p>No Bookings available</p>
                         </div>
                       ) : (
                         <div className="space-y-4 mt-4">
-                          {activeEvents?.map((event) => (
+                          {Theaterbooking.data?.map((event) => (
                             <div
                               key={event._id}
                               className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
@@ -747,7 +831,7 @@ export default function ActiveEvents() {
                                   </div>
                                 </div>
                               </div>
-                              <div className="flex-shrink-0 space-y-2 text-blue-600 text-sm">
+                              {/* <div className="flex-shrink-0 space-y-2 text-blue-600 text-sm">
                                 {event?.selectedCakes &&
                                   Object.values(event?.selectedCakes)
                                     ?.slice(0, 1)
@@ -793,7 +877,7 @@ export default function ActiveEvents() {
                                       • {item}
                                     </p>
                                   ))}
-                              </div>
+                              </div> */}
                               <Button
                                 onPress={() => {
                                   setIsModalOpen(!isModalOpen),
@@ -819,19 +903,19 @@ export default function ActiveEvents() {
                 </div>
               ) : (
                 <>
-                  {completedEvents?.length === 0 ? (
+                  {Theaterbooking.data?.length === 0 ? (
                     <div className="flex justify-center items-center w-full h-[60vh]">
                       <p>No Bookings available</p>
                     </div>
                   ) : (
                     <>
-                      {Theatererror === "Nobookings" ? (
+                      {Theatererror === "No bookings found" ? (
                         <div className="flex justify-center items-center w-full h-[60vh]">
                           <p>No Bookings available</p>
                         </div>
                       ) : (
                         <div className="space-y-4 mt-4">
-                          {completedEvents?.map((event) => (
+                          {Theaterbooking.data?.map((event) => (
                             <div
                               key={event._id}
                               className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
@@ -890,7 +974,7 @@ export default function ActiveEvents() {
                                   </div>
                                 </div>
                               </div>
-                              <div className="flex-shrink-0 space-y-2 text-blue-600 text-sm">
+                              {/* <div className="flex-shrink-0 space-y-2 text-blue-600 text-sm">
                                 {event?.selectedCakes &&
                                   Object.values(event?.selectedCakes)
                                     ?.slice(0, 1)
@@ -936,7 +1020,7 @@ export default function ActiveEvents() {
                                       • {item}
                                     </p>
                                   ))}
-                              </div>
+                              </div> */}
                               <Button
                                 onPress={() => {
                                   setIsModalOpen(!isModalOpen),
@@ -968,7 +1052,7 @@ export default function ActiveEvents() {
                     </div>
                   ) : (
                     <>
-                      {UnsavedTheatererror === "Nobookings" ? (
+                      {UnsavedTheatererror === "No bookings found" ? (
                         <div className="flex justify-center items-center w-full h-[60vh]">
                           <p>No Bookings available</p>
                         </div>
@@ -1033,7 +1117,7 @@ export default function ActiveEvents() {
                                   </div>
                                 </div>
                               </div>
-                              <div className="flex-shrink-0 space-y-2 text-blue-600 text-sm">
+                              {/* <div className="flex-shrink-0 space-y-2 text-blue-600 text-sm">
                                 {event?.selectedCakes &&
                                   Object.values(event?.selectedCakes)
                                     ?.slice(0, 1)
@@ -1079,7 +1163,7 @@ export default function ActiveEvents() {
                                       • {item}
                                     </p>
                                   ))}
-                              </div>
+                              </div> */}
                               <Button
                                 size="sm"
                                 isLoading={loadingEvents[event._id] || false}
@@ -1114,19 +1198,19 @@ export default function ActiveEvents() {
                 </div>
               ) : (
                 <>
-                  {Theaterbooking?.length === 0 ? (
+                  {Theaterbooking.data?.length === 0 ? (
                     <div className="flex justify-center items-center w-full h-[60vh]">
                       <p>No Bookings available</p>
                     </div>
                   ) : (
                     <>
-                      {Theatererror === "Nobookings" ? (
+                      {Theatererror === "No bookings found" ? (
                         <div className="flex justify-center items-center w-full h-[60vh]">
                           <p>No Bookings available</p>
                         </div>
                       ) : (
                         <div className="space-y-4 mt-4">
-                          {Theaterbooking?.map((event) => (
+                          {Theaterbooking.data?.map((event) => (
                             <div
                               key={event._id}
                               className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
@@ -1185,7 +1269,7 @@ export default function ActiveEvents() {
                                   </div>
                                 </div>
                               </div>
-                              <div className="flex-shrink-0 space-y-2 text-blue-600 text-sm">
+                              {/* <div className="flex-shrink-0 space-y-2 text-blue-600 text-sm">
                                 {event?.selectedCakes &&
                                   Object.values(event?.selectedCakes)
                                     ?.slice(0, 1)
@@ -1231,7 +1315,7 @@ export default function ActiveEvents() {
                                       • {item}
                                     </p>
                                   ))}
-                              </div>
+                              </div> */}
                               <Button
                                 onPress={() => {
                                   setIsModalOpen(!isModalOpen),

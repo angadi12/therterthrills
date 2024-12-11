@@ -34,6 +34,9 @@ export default function Footer() {
       case "/checkout":
         setactiveitem("Book");
         break;
+      case "/choosebranch":
+        setactiveitem("Book");
+        break;
       case "/Add-Ons":
         setactiveitem("Addons");
         break;
@@ -235,7 +238,7 @@ export default function Footer() {
             key="Book"
             title={
               <div
-                onClick={() => router.push("/booknow")}
+                onClick={() => router.push("/choosebranch")}
                 className="flex flex-col justify-center items-center gap-1"
               >
                 <Clapperboard className="h-6 w-6" />

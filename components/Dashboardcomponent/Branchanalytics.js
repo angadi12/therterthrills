@@ -38,12 +38,7 @@ const Branchanalytics = () => {
     });
   }, [api]);
 
-  const branches = [
-    { name: "Branch - 1", total: 12, pending: 2 },
-    { name: "Branch - 2", total: 12, pending: 2 },
-    { name: "Branch - 3", total: 12, pending: 2 },
-    { name: "Branch - 4", total: 12, pending: 2 },
-  ];
+ console.log(branchDataerror)
 
   return (
     <>
@@ -70,7 +65,7 @@ const Branchanalytics = () => {
                   }}
                 >
                   <CarouselContent className="-ml-2 md:-ml-4">
-                    {branchData && branchData?.map((branch, index) => (
+                    {branchData?.length>0 && branchData?.map((branch, index) => (
                       <CarouselItem
                         key={index}
                         className="pl-2 md:pl-4 md:basis-1/3 lg:basis-1/3"

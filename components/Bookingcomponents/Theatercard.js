@@ -1,5 +1,5 @@
 "use client";
-import { Star, Users, Wine } from "lucide-react";
+import { Star, Users, Wine ,CircleChevronRight} from "lucide-react";
 import { Button, Divider } from "@nextui-org/react";
 import {
   Card,
@@ -195,13 +195,9 @@ export default function TheatreCard({ theatre }) {
                 {(theatre?.amenities ?? []).map((item, index) => (
                   <div
                     key={index}
-                    className="flex gap-2 justify-start items-center"
+                    className="flex gap-2 justify-start items-start"
                   >
-                    <Image
-                      src={icon[index]}
-                      alt={item}
-                      className="object-contain "
-                    />
+                   <CircleChevronRight size={15} className="text-[#F30278] "/>
                     <p className="text-[#7A7A7A] font-medium " key={index}>
                       {item}
                     </p>

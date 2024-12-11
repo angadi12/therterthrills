@@ -112,7 +112,7 @@ export default function Branchselection() {
         </div>
       </div>
 
-      <div className="w-full h-full mx-auto py-20 grid md:grid-cols-3 grid-cols-1 gap-8 justify-center place-content-center items-stretch">
+      <div className="w-full h-full mx-auto md:py-20 py-6 md:pb-8 pb-12 grid md:grid-cols-3 grid-cols-1 gap-8 justify-center place-content-center items-stretch">
         {status === "loading" ? (
           Array.from({ length: 6 }).map((_, index) => (
             <Branchcardskeleton key={index} />

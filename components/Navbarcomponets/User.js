@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { LayoutDashboard, CalendarFold, LogOut, User } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {Avatar, AvatarIcon} from "@nextui-org/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,14 +61,23 @@ const UserComponent = () => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Avatar className="absolute right-4 p-1 rounded-full">
+          {/* <Avatar className="absolute right-4 p-1 rounded-full">
             <AvatarImage
-              src="https://github.com/shadcn.png"
+              src="https://images.unsplash.com/broken"
               alt="@THEATERTHRILLS"
               className=" rounded-full"
             />
             <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          </Avatar> */}
+            <Avatar
+            className="absolute right-4 p-1 rounded-full"
+            size="sm"
+              classNames={{
+                base: "bg-[#004AAD]",
+                icon: "text-white",
+              }}
+              icon={<AvatarIcon size={15} />}
+            />
         </DropdownMenuTrigger>
         {user ? (
           <DropdownMenuContent className="w-56">
