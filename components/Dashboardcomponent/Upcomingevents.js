@@ -52,6 +52,9 @@ const Upcomingevents = () => {
     }
   }, [Selectedtheaterbyid, dispatch]);
 
+  
+
+
   useEffect(() => {
     if (selectedBranchId) {
       dispatch(fetchtheaterbybranchid(selectedBranchId));
@@ -204,7 +207,7 @@ const Upcomingevents = () => {
                   </div>
                 ) : (
                   <>
-                    {Theatererror === "No bookings found" ? (
+                    {(Theatererror === "No bookings found" || Theaterbooking?.counts?.upcoming===0) ? (
                       <div className="flex justify-center items-center w-full h-60">
                         <p>No Bookings available</p>
                       </div>

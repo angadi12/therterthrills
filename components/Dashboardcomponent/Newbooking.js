@@ -50,6 +50,14 @@ const Newbooking = () => {
   }, [Selectedtheaterbyid, dispatch]);
 
   useEffect(() => {
+    if (Selectedtheaterbyid) {
+      dispatch(fetchBookingByTheaterId({ TheaterId: Selectedtheaterbyid, status: "Active" }));
+    }
+  }, [dispatch]);
+
+
+
+  useEffect(() => {
     if (selectedBranchId) {
       dispatch(fetchtheaterbybranchid(selectedBranchId));
     }
