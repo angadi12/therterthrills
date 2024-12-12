@@ -108,9 +108,9 @@ export default function PaymentsTable() {
   const singleLoading = useSelector(selectSinglePaymentLoading);
   const singleError = useSelector(selectSinglePaymentError);
 
-  useEffect(() => {
-    dispatch(fetchPayments({ from: date?.from, to: date?.to }));
-  }, [dispatch, date]);
+  // useEffect(() => {
+  //   dispatch(fetchPayments({ from: date?.from, to: date?.to }));
+  // }, [dispatch, date]);
 
   useEffect(() => {
     if (Selectedpaymentid) {
@@ -143,12 +143,12 @@ export default function PaymentsTable() {
     }
 
     const formattedDate = new Intl.DateTimeFormat("en-US", {
-      weekday: "short", // 'Mon'
-      month: "short", // 'Nov'
-      day: "numeric", // '25'
-      hour: "numeric", // '1'
-      minute: "numeric", // '59'
-      hour12: true, // 12-hour format with AM/PM
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
     }).format(date);
 
     return formattedDate.toLowerCase();
@@ -412,7 +412,15 @@ export default function PaymentsTable() {
   const classNames = React.useMemo(
     () => ({
       wrapper: ["h-screen", "max-w-3xl"],
-      th: ["bg-[#004AAD]", "text-white", "border-b", "border-divider","sticky","top-20","z-10"],
+      th: [
+        "bg-[#004AAD]",
+        "text-white",
+        "border-b",
+        "border-divider",
+        "sticky",
+        "top-20",
+        "z-10",
+      ],
       td: [
         "p-4",
         "border-b",
@@ -511,116 +519,129 @@ export default function PaymentsTable() {
         }}
       >
         <ModalContent>
-          {(onClose) => (
-            singleLoading? <ModalBody> <div className="flex justify-center items-center h-80"><Spinner color="danger" /></div></ModalBody> : <>
-              <ModalHeader className="flex flex-col gap-1">
-                <div className="flex items-center justify-between px-4">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl font-semibold">
-                      {" "}
-                      ₹{(singlePayment?.amount / 100).toFixed(2)}
-                    </span>
-                    <Badge variant="secondary" className="rounded-md">
-                      {singlePayment?.captured ? (
-                        <Badge className={"bg-green-400"}>captured</Badge>
-                      ) : (
-                        <Badge className={"bg-red-400"}>not captured</Badge>
-
-                      )}
-                    </Badge>
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Created on: {formatTimestamp(singlePayment?.created_at)}
-                  </div>
-                </div>
-              </ModalHeader>
+          {(onClose) =>
+            singleLoading ? (
               <ModalBody>
-                <div className="grid grid-cols-1 gap-6 w-full mx-auto">
-                  <div className="space-y-6">
-                    <div className="rounded-lg border">
-                      <div className="bg-muted px-4 py-3 font-semibold">
-                        Details
-                      </div>
-                      <ScrollArea className="h-[400px]">
-                        <div className="p-4">
-                          <dl className="space-y-4">
-                            <div className="grid grid-cols-3 gap-4">
-                              <dt className="text-sm font-medium text-muted-foreground">
-                                Payment ID
-                              </dt>
-                              <dd className="col-span-2 flex items-center gap-2 text-sm">
-                                {singlePayment?.id}
-                                
-                              </dd>
-                            </div>
-                            <div className="grid grid-cols-3 gap-4">
-                              <dt className="text-sm font-medium text-muted-foreground">
-                                Bank RRN
-                              </dt>
-                              <dd className="col-span-2 text-sm">
-                                {singlePayment?.acquirer_data?.rrn}
-                              </dd>
-                            </div>
-                            <div className="grid grid-cols-3 gap-4">
-                              <dt className="text-sm font-medium text-muted-foreground">
-                                Order ID
-                              </dt>
-                              <dd className="col-span-2 flex items-center gap-2 text-sm">
-                                {singlePayment?.order_id}
-                               
-                              </dd>
-                            </div>
-                            <div className="grid grid-cols-3 gap-4">
-                              <dt className="text-sm font-medium text-muted-foreground">
-                                Payment method
-                              </dt>
-                              <dd className="col-span-2 text-sm">
-                                {singlePayment?.method} ({singlePayment?.vpa})
-                              </dd>
-                            </div>
-                            <div className="grid grid-cols-3 gap-4">
-                              <dt className="text-sm font-medium text-muted-foreground">
-                                Customer details
-                              </dt>
-                              <dd className="col-span-2 space-y-1 text-sm">
-                                <div className="flex items-center gap-2">
-                                  {singlePayment?.contact}
-                                
-                                </div>
-                                <div>{singlePayment?.email}</div>
-                              </dd>
-                            </div>
-                            <div className="grid grid-cols-3 gap-4">
-                              <dt className="text-sm font-medium text-muted-foreground">
-                                Total Fee
-                              </dt>
-                              <dd className="col-span-2 space-y-1 text-sm">
-                                <div>₹{(singlePayment?.fee/100).toFixed(2)}</div>
-                                <div className="text-muted-foreground">
-                                  Razorpay Fee +₹{((singlePayment?.fee - singlePayment?.tax)/100).toFixed(2)}
-                                </div>
-                                <div className="text-muted-foreground">
-                                  GST +₹{(singlePayment?.tax/100).toFixed(2)}
-                                </div>
-                              </dd>
-                            </div>
-                            <div className="grid grid-cols-3 gap-4">
-                              <dt className="text-sm font-medium text-muted-foreground">
-                                Description
-                              </dt>
-                              <dd className="col-span-2 text-sm">
-                                {singlePayment?.description}
-                              </dd>
-                            </div>
-                          </dl>
-                        </div>
-                      </ScrollArea>
-                    </div>
-                  </div>
+                {" "}
+                <div className="flex justify-center items-center h-80">
+                  <Spinner color="danger" />
                 </div>
               </ModalBody>
-            </> 
-          )}
+            ) : (
+              <>
+                <ModalHeader className="flex flex-col gap-1">
+                  <div className="flex items-center justify-between px-4">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl font-semibold">
+                        {" "}
+                        ₹{(singlePayment?.amount / 100).toFixed(2)}
+                      </span>
+                      <Badge variant="secondary" className="rounded-md">
+                        {singlePayment?.captured ? (
+                          <Badge className={"bg-green-400"}>captured</Badge>
+                        ) : (
+                          <Badge className={"bg-red-400"}>not captured</Badge>
+                        )}
+                      </Badge>
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Created on: {formatTimestamp(singlePayment?.created_at)}
+                    </div>
+                  </div>
+                </ModalHeader>
+                <ModalBody>
+                  <div className="grid grid-cols-1 gap-6 w-full mx-auto">
+                    <div className="space-y-6">
+                      <div className="rounded-lg border">
+                        <div className="bg-muted px-4 py-3 font-semibold">
+                          Details
+                        </div>
+                        <ScrollArea className="h-[400px]">
+                          <div className="p-4">
+                            <dl className="space-y-4">
+                              <div className="grid grid-cols-3 gap-4">
+                                <dt className="text-sm font-medium text-muted-foreground">
+                                  Payment ID
+                                </dt>
+                                <dd className="col-span-2 flex items-center gap-2 text-sm">
+                                  {singlePayment?.id}
+                                </dd>
+                              </div>
+                              <div className="grid grid-cols-3 gap-4">
+                                <dt className="text-sm font-medium text-muted-foreground">
+                                  Bank RRN
+                                </dt>
+                                <dd className="col-span-2 text-sm">
+                                  {singlePayment?.acquirer_data?.rrn}
+                                </dd>
+                              </div>
+                              <div className="grid grid-cols-3 gap-4">
+                                <dt className="text-sm font-medium text-muted-foreground">
+                                  Order ID
+                                </dt>
+                                <dd className="col-span-2 flex items-center gap-2 text-sm">
+                                  {singlePayment?.order_id}
+                                </dd>
+                              </div>
+                              <div className="grid grid-cols-3 gap-4">
+                                <dt className="text-sm font-medium text-muted-foreground">
+                                  Payment method
+                                </dt>
+                                <dd className="col-span-2 text-sm">
+                                  {singlePayment?.method} ({singlePayment?.vpa})
+                                </dd>
+                              </div>
+                              <div className="grid grid-cols-3 gap-4">
+                                <dt className="text-sm font-medium text-muted-foreground">
+                                  Customer details
+                                </dt>
+                                <dd className="col-span-2 space-y-1 text-sm">
+                                  <div className="flex items-center gap-2">
+                                    {singlePayment?.contact}
+                                  </div>
+                                  <div>{singlePayment?.email}</div>
+                                </dd>
+                              </div>
+                              <div className="grid grid-cols-3 gap-4">
+                                <dt className="text-sm font-medium text-muted-foreground">
+                                  Total Fee
+                                </dt>
+                                <dd className="col-span-2 space-y-1 text-sm">
+                                  <div>
+                                    ₹{(singlePayment?.fee / 100).toFixed(2)}
+                                  </div>
+                                  <div className="text-muted-foreground">
+                                    Razorpay Fee +₹
+                                    {(
+                                      (singlePayment?.fee -
+                                        singlePayment?.tax) /
+                                      100
+                                    ).toFixed(2)}
+                                  </div>
+                                  <div className="text-muted-foreground">
+                                    GST +₹
+                                    {(singlePayment?.tax / 100).toFixed(2)}
+                                  </div>
+                                </dd>
+                              </div>
+                              <div className="grid grid-cols-3 gap-4">
+                                <dt className="text-sm font-medium text-muted-foreground">
+                                  Description
+                                </dt>
+                                <dd className="col-span-2 text-sm">
+                                  {singlePayment?.description}
+                                </dd>
+                              </div>
+                            </dl>
+                          </div>
+                        </ScrollArea>
+                      </div>
+                    </div>
+                  </div>
+                </ModalBody>
+              </>
+            )
+          }
         </ModalContent>
       </Modal>
     </>

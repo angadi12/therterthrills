@@ -12,14 +12,12 @@ import moment from "moment"; // Import moment for date handling
 
 const RazorpayDatePicker = () => {
   const dispatch = useDispatch();
-  const defaultFromDate = moment().subtract(7, 'days'); // 7 days ago
+  const defaultFromDate = moment().subtract(7, "days"); // 7 days ago
   const defaultToDate = moment(); // Today
 
   const [startDate, setStartDate] = useState(defaultFromDate);
   const [endDate, setEndDate] = useState(defaultToDate);
   const [focusedInput, setFocusedInput] = useState(null);
-
-
 
   useEffect(() => {
     if (startDate && endDate) {
@@ -28,21 +26,16 @@ const RazorpayDatePicker = () => {
       dispatch(setDateRange({ from: fromUnix, to: toUnix }));
       dispatch(fetchPayments({ from: fromUnix, to: toUnix }));
     }
-  }, [startDate, endDate, dispatch]); 
+  }, [startDate, endDate, dispatch]);
 
   const handleSearch = () => {
     if (startDate && endDate) {
       const fromUnix = Math.floor(startDate.toDate().getTime() / 1000);
       const toUnix = Math.floor(endDate.toDate().getTime() / 1000);
 
-      // Dispatch the fetchPayments thunk
       dispatch(fetchPayments({ from: fromUnix, to: toUnix }));
     }
   };
-
-
-
-
 
   return (
     <div className="flex gap-2 items-center">
@@ -57,8 +50,8 @@ const RazorpayDatePicker = () => {
         }}
         focusedInput={focusedInput}
         onFocusChange={setFocusedInput}
-          customInputIcon={<i className="text-[#F30278]">📅</i>}
-  displayFormat="DD/MM/YYYY"
+        customInputIcon={<i className="text-[#F30278]">📅</i>}
+        displayFormat="DD/MM/YYYY"
         isOutsideRange={() => false} // Allow all dates
         small
       />
