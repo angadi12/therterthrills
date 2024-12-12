@@ -143,7 +143,7 @@ const CheckoutOnboarding = () => {
       errors.email = "Email is invalid.";
     }
 
-    if (!Occasionobject?.noInput &&  addDecorations && currentStep===1) {
+    if (!Occasionobject?.noInput &&  addDecorations==="yes" && currentStep===1) {
       if (!nickname) {
         errors.nickname = "Nickname is required.";
       }

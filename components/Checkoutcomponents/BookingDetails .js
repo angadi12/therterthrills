@@ -112,6 +112,8 @@ const BookingDetails = ({ theater }) => {
               <Input
                 placeholder="Whatsapp Number"
                 className="h-12"
+                type="tel"
+                maxLength={10}
                 value={bookingDetails?.whatsappNumber}
                 onChange={(e) =>
                   handleInputChange("whatsappNumber", e.target.value)
