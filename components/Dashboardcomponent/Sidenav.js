@@ -33,6 +33,7 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/react";
+import Link from "next/link";
 
 const Sidenav = () => {
   const router = useRouter();
@@ -127,12 +128,14 @@ const Sidenav = () => {
       >
         <div className="relative w-full flex items-center justify-center h-24">
           {!isMinimized && (
+            <Link href={"https://www.thetheatrethrills.com"}>
             <Image
-              onClick={() =>pathname==="/dashboard/ManageAdmins"?router.push("https://www.thetheatrethrills.com/"): router.push("https://www.thetheatrethrills.com/")}
               className="h-24 w-32 object-contain"
               src={LOGO}
               alt="logo"
             />
+
+            </Link>
           )}
           <Button
             className="absolute top-2 right-0 bg-transparent text-[#004AAD]"
