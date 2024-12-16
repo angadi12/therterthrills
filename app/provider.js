@@ -1,6 +1,6 @@
 "use client";
 import { NextUIProvider } from "@nextui-org/react";
-import Loading from "../components/Homecomponents/loading";
+import dynamic from "next/dynamic";
 
 import { Suspense, useEffect, useState } from "react";
 import Login from "@/components/Authcomponents/Login";
@@ -13,6 +13,10 @@ import Navbar from "@/components/Navbarcomponets/Nav";
 import Topfooter from "@/components/Footercomponets/Topfooter";
 import Footer from "@/components/Footercomponets/Footer";
 import useDeviceIdHook from '@/hooks/useDeviceId';
+
+const Loading = dynamic(() => import("../components/Homecomponents/loading"), {
+  ssr: false, // Disable server-side rendering
+});
 
 export function NextuiProviderWrapper({ children }) {
   const dispatch = useDispatch();
@@ -37,8 +41,9 @@ export function NextuiProviderWrapper({ children }) {
 
       try {
         const result = await Checktokenexpired();
+        console.log("resultuiuiui",result)
         if (result?.user) {
-          dispatch(setUser(result.user));
+          dispatch(setUser(result?.user));
           dispatch(setIsAuthenticated());
           Cookies.set("User", JSON.stringify(result?.user));
         } else {

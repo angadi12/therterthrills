@@ -6,10 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Filter, Mail, Phone, Plus } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/hooks/use-toast";
-import { ToastAction } from "@/components/ui/toast";
 import {
   setFilterQuery as setAdminFilterQuery,
   Setopenadmin,
@@ -26,66 +23,11 @@ import {
   ModalFooter,
 } from "@nextui-org/react";
 import Updateadmin from "@/components/Dashboardcomponent/Updateadmin";
+import Image from "next/image";
 
-const admins = [
-  {
-    id: 1,
-    name: "Steve Smith",
-    status: "Active",
-    location: "Lingampally",
-    email: "stevesmiththrills@gmail.com",
-    phone: "+91-7839387483/8372987289",
-    avatarUrl: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 2,
-    name: "Steve Smith",
-    status: "Active",
-    location: "Lingampally",
-    email: "stevesmiththrills@gmail.com",
-    phone: "+91-7839387483/8372987289",
-    avatarUrl: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 3,
-    name: "Steve Smith",
-    status: "Active",
-    location: "Lingampally",
-    email: "stevesmiththrills@gmail.com",
-    phone: "+91-7839387483/8372987289",
-    avatarUrl: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 4,
-    name: "Steve Smith",
-    status: "Active",
-    location: "Lingampally",
-    email: "stevesmiththrills@gmail.com",
-    phone: "+91-7839387483/8372987289",
-    avatarUrl: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 5,
-    name: "Steve Smith",
-    status: "Active",
-    location: "Lingampally",
-    email: "stevesmiththrills@gmail.com",
-    phone: "+91-7839387483/8372987289",
-    avatarUrl: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    id: 6,
-    name: "Steve Smith",
-    status: "Active",
-    location: "Lingampally",
-    email: "stevesmiththrills@gmail.com",
-    phone: "+91-7839387483/8372987289",
-    avatarUrl: "/placeholder.svg?height=100&width=100",
-  },
-];
+
 
 export default function ManageAdmins() {
-  const { toast } = useToast();
   const dispatch = useDispatch();
   const { selectedBranchId, filterQuery, openadmin, openupdateadmin } =
     useSelector((state) => state.branches);
@@ -102,8 +44,8 @@ export default function ManageAdmins() {
     setFilteredAdmins(
       admins?.filter(
         (admin) =>
-          typeof admin.fullName === "string" &&
-          admin.fullName.toLowerCase().includes(filterQuery.toLowerCase())
+          typeof admin?.fullName === "string" &&
+          admin?.fullName?.toLowerCase().includes(filterQuery?.toLowerCase())
       )
     );
   }, [filterQuery, admins]);
@@ -124,6 +66,10 @@ export default function ManageAdmins() {
   const openupdateadminhandle = () => {
     dispatch(Setopenupdateadmin(!openupdateadmin));
   };
+
+
+
+
 
   return (
     <>
@@ -167,24 +113,23 @@ export default function ManageAdmins() {
             )}
 
             {filteredAdmins?.map(
-              (admin) =>
+              (admin,index) =>
                 adminsStatus === "succeeded" && (
                   <Card
-                    key={admin._id}
+                    key={index}
                     className="overflow-hidden shadow-none rounded-none ring-1 ring-gray-300"
                   >
                     <CardContent className="p-6">
                       <div className="flex justify-between items-start mb-4">
                         <div className="flex items-center space-x-4">
                           <Avatar className="w-16 h-16">
-                            <AvatarImage src={"/"} alt={admin?.fullName} />
                             <AvatarFallback>{admin?.fullName}</AvatarFallback>
                           </Avatar>
                           <div>
                             <h2 className="text-xl font-semibold">
-                              {admin.fullName}
+                              {admin?.fullName}
                             </h2>
-                            <p className="text-green-500">{admin.activate}</p>
+                            <p className="text-green-500">{admin?.activate}</p>
                           </div>
                         </div>
                         <Badge className="bg-[#F30278]">
@@ -194,11 +139,11 @@ export default function ManageAdmins() {
                       <div className="space-y-2">
                         <div className="flex items-center space-x-2 text-gray-600">
                           <Mail className="h-4 w-4" />
-                          <span className="text-sm">{admin.email}</span>
+                          <span className="text-sm">{admin?.email}</span>
                         </div>
                         <div className="flex items-center space-x-2 text-gray-600">
                           <Phone className="h-4 w-4" />
-                          <span className="text-sm">{admin.phoneNumber}</span>
+                          <span className="text-sm">{admin?.phoneNumber}</span>
                         </div>
                       </div>
                     </CardContent>

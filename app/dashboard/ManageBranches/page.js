@@ -177,7 +177,6 @@ export default function ManageBranches() {
                       <div className="flex items-center space-x-4">
                         <Avatar>
                           <AvatarImage
-                            src="/placeholder-avatar.jpg"
                             alt={branch?.Branchname}
                           />
                           <AvatarFallback>

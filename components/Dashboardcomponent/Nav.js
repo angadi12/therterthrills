@@ -148,6 +148,7 @@ export default function Navbarr() {
             {branches?.length > 0 && (
               <Autocomplete
                 color="danger"
+                
                 startContent={
                   <BsBuildingsFill className="text-[#005CFF]" size={24} />
                 }
@@ -158,14 +159,14 @@ export default function Navbarr() {
                 }}
                 size="md"
                 radius="sm"
-                variant="bordered"
+                variant=""
                 defaultItems={branches?.map((branch) => ({
                   key: branch?._id,
                   label: branch?.Branchname,
                   value: branch?._id,
                 }))}
                 placeholder="Select Branch"
-                className="w-60 bg-white rounded-lg uppercase"
+                className="w-60 bg-white border-1 rounded-lg uppercase"
                 selectedKey={selectedKey}
                 onSelectionChange={handleBranchSelect}
                 isDisabled={user?.role === "admin"}

@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { LayoutDashboard, CalendarFold, LogOut, User } from "lucide-react";
-import {Avatar, AvatarIcon} from "@nextui-org/react";
+import { Avatar, AvatarIcon } from "@nextui-org/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,28 +23,13 @@ import {
 import Link from "next/link";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { clearUser, openLoginModal, setUser } from "@/lib/Redux/authSlice";
-import Login from "../Authcomponents/Login";
+import { clearUser, openLoginModal } from "@/lib/Redux/authSlice";
 
 const UserComponent = () => {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userData, setUserData] = useState(null);
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth) || {}; 
   const [isDelete, setIsDelete] = useState(false);
   const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   // Check for user data in cookies or localStorage on component mount
-  //   const token = Cookies.get("token");
-  //   const userData = Cookies.get("User")
-  //     ? JSON.parse(Cookies.get("User"))
-  //     : null;42
-
-  //   if (token && userData) {
-  //     dispatch(setUser(userData));
-  //   }
-  // }, [dispatch]);
 
   const handleLoginClick = () => {
     dispatch(openLoginModal());
@@ -57,29 +42,23 @@ const UserComponent = () => {
     router.push("/");
   };
 
+
+
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          {/* <Avatar className="absolute right-4 p-1 rounded-full">
-            <AvatarImage
-              src="https://images.unsplash.com/broken"
-              alt="@THEATERTHRILLS"
-              className=" rounded-full"
-            />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar> */}
-            <Avatar
+          <Avatar
             className="absolute right-4 p-1 rounded-full"
             size="sm"
-              classNames={{
-                base: "bg-[#004AAD]",
-                icon: "text-white",
-              }}
-              icon={<AvatarIcon size={15} />}
-            />
+            classNames={{
+              base: "bg-[#004AAD]",
+              icon: "text-white",
+            }}
+            icon={<AvatarIcon size={15} />}
+          />
         </DropdownMenuTrigger>
-        {user ? (
+        {user && Object.keys(user).length > 0 ? ( 
           <DropdownMenuContent className="w-56">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -90,7 +69,7 @@ const UserComponent = () => {
                   <span>My Bookings</span>
                 </DropdownMenuItem>
               </Link>
-              {(user.role === "admin" || user.role === "superadmin") && (
+              {(user?.role === "admin" || user?.role === "superadmin") && (
                 <Link href="/dashboard">
                   <DropdownMenuItem>
                     <LayoutDashboard />
@@ -157,7 +136,6 @@ const UserComponent = () => {
           )}
         </ModalContent>
       </Modal>
-      {/* <Login/> */}
     </>
   );
 };
