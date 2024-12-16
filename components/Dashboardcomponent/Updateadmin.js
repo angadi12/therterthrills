@@ -161,7 +161,7 @@ const Updateadmin = () => {
           </div>
           <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-4 place-content-center justify-between items-start ">
             <div className="flex items-start gap-1 flex-col w-full">
-              <Label hthtmlFor="fullName">Full Name</Label>
+              <Label>Full Name</Label>
               <Input
                 type="text"
                 name="fullName"
@@ -176,7 +176,7 @@ const Updateadmin = () => {
               />
             </div>
             <div className="flex items-start gap-1 flex-col w-full">
-              <Label hthtmlFor="phoneNumber">Phone</Label>
+              <Label>Phone</Label>
               <Input
                 type="text"
                 color="primary"
@@ -194,7 +194,7 @@ const Updateadmin = () => {
           </div>
           <div className="w-full grid lg:grid-cols-1 grid-cols-1 gap-4 place-content-center justify-between items-start ">
             <div className="flex items-start gap-1 flex-col w-full">
-              <Label hthtmlFor="email">Email</Label>
+              <Label >Email</Label>
               <Input
                 type="text"
                 name="Email"
@@ -212,7 +212,7 @@ const Updateadmin = () => {
 
           <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-4 place-content-center justify-between items-start ">
             <div className="flex items-start gap-1 flex-col w-full">
-              <Label hthtmlFor="authType">Change Login type</Label>
+              <Label >Change Login type</Label>
               <Select
                 className="h-12"
                 value={formData?.authType}
@@ -228,7 +228,7 @@ const Updateadmin = () => {
               </Select>
             </div>
             <div className="flex items-start gap-1 flex-col w-full">
-              <Label hthtmlFor="branch"> Change Branch</Label>
+              <Label > Change Branch</Label>
               <Select
                 className="h-12"
                 value={formData?.branch}
