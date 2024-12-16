@@ -54,6 +54,7 @@ const Updateadmin = () => {
       setFetchingAdmin(true);
       try {
         const response = await Getadminbyid(selectedAdminid);
+        console.log(response); // Check the structure here
         if (response?.data) {
           SetAdmindata(response?.data?.admin);
         }
