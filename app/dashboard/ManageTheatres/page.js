@@ -10,12 +10,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Filter, Plus, Trash2 } from "lucide-react";
+import { Filter, Plus, Trash2, FilePenLine } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchtheaterbybranchid,
   fetchtheaterbyid,
   setopentheatre,
+  setopenupdatetheatre,
+  setUpdatetheaterid,
 } from "@/lib/Redux/theaterSlice";
 import { useEffect, useState } from "react";
 import {
@@ -59,6 +61,7 @@ import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { Deletetheatredapi } from "@/lib/API/Theater";
+import UpdateTheaterForm from "@/components/Contactuscomponents/Updatetheatre";
 
 export default function Managetheatre() {
   const { toast } = useToast();
@@ -86,9 +89,12 @@ export default function Managetheatre() {
     }
   }, [dispatch, selectedBranchId]);
 
-
   const handleopentheatre = () => {
     dispatch(setopentheatre(!opentheatre));
+  };
+
+  const handleopenupdatetheatre = () => {
+    dispatch(setopenupdatetheatre(!openupdatetheatre));
   };
 
   useEffect(() => {
@@ -341,6 +347,18 @@ export default function Managetheatre() {
                           </Button>
                           <Button
                             onClick={() => {
+                              dispatch(setUpdatetheaterid(Theater?._id)),
+                                dispatch(
+                                  setopenupdatetheatre(!openupdatetheatre)
+                                );
+                            }}
+                            isIconOnly
+                            variant="bordered"
+                          >
+                            <FilePenLine className="text-[#F30278]" />
+                          </Button>
+                          <Button
+                            onClick={() => {
                               setIsDelete(true), settheaterid(Theater?._id);
                             }}
                             isIconOnly
@@ -359,6 +377,49 @@ export default function Managetheatre() {
           </div>
         </ScrollArea>
       )}
+
+      <Modal
+        isDismissable={false}
+        isKeyboardDismissDisabled={true}
+        backdrop="opaque"
+        size="full"
+        scrollBehavior="inside"
+        isOpen={openupdatetheatre}
+        onOpenChange={handleopenupdatetheatre}
+        motionProps={{
+          variants: {
+            enter: {
+              y: 0,
+              opacity: 1,
+              transition: {
+                duration: 0.3,
+                ease: "easeOut",
+              },
+            },
+            exit: {
+              y: -20,
+              opacity: 0,
+              transition: {
+                duration: 0.2,
+                ease: "easeIn",
+              },
+            },
+          },
+        }}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col text-center gap-1">
+                Update Theater
+              </ModalHeader>
+              <ModalBody>
+                <UpdateTheaterForm />
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
 
       <Modal
         isDismissable={false}
