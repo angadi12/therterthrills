@@ -29,7 +29,7 @@ const Updateadmin = () => {
   const selectedBranchId = useSelector(
     (state) => state.branches.selectedBranchId
   );
-  const selectedAdminid = useSelector((state) => state.admin.selectedAdminid);
+  const selectedAdminid = useSelector((state) => state?.admin?.selectedAdminid ?? null);
 
   const [Admindata, SetAdmindata] = useState();
 
@@ -54,7 +54,7 @@ const Updateadmin = () => {
       setFetchingAdmin(true);
       try {
         const response = await Getadminbyid(selectedAdminid);
-        if (response.data) {
+        if (response?.data) {
           SetAdmindata(response?.data?.admin);
         }
       } catch (error) {

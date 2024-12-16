@@ -167,7 +167,7 @@ export default function ManageAdmins() {
       <Modal
         isDismissable={false}
         isKeyboardDismissDisabled={true}
-        backdrop="blur"
+        backdrop="opaque"
         size="4xl"
         isOpen={openadmin}
         onOpenChange={setopenmodel}
@@ -212,7 +212,7 @@ export default function ManageAdmins() {
       <Modal
         isDismissable={false}
         isKeyboardDismissDisabled={true}
-        backdrop="blur"
+        backdrop="opaque"
         size="4xl"
         isOpen={openupdateadmin}
         onOpenChange={openupdateadminhandle}
