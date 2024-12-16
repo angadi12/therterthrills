@@ -9,7 +9,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Createadminapi } from "@/lib/API/Admin";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchBranches, Setopenupdateadmin } from "@/lib/Redux/BranchSlice";
 import { fetchAdminsByBranchId, fetchAdminById } from "@/lib/Redux/AdminSlice";
@@ -64,9 +63,9 @@ const Updateadmin = () => {
       }
     };
 
-    if (selectedAdminid) {
+   
       fetchAdminData();
-    }
+   
   }, [selectedAdminid]);
 
   useEffect(() => {
@@ -79,7 +78,7 @@ const Updateadmin = () => {
         branch: Admindata.branch?._id,
       });
     }
-  }, [Admindata, branches]);
+  }, [Admindata]);
 
 
   const handleInputChange = (e) => {
