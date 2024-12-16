@@ -31,7 +31,7 @@ const Updateadmin = () => {
   );
   const selectedAdminid = useSelector((state) => state?.admin?.selectedAdminid ?? null);
 
-  const [Admindata, SetAdmindata] = useState();
+  const [Admindata, SetAdmindata] = useState(null);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -54,8 +54,7 @@ const Updateadmin = () => {
       setFetchingAdmin(true);
       try {
         const response = await Getadminbyid(selectedAdminid);
-        console.log(response); // Check the structure here
-        if (response?.data) {
+        if (response?.status==="success") {
           SetAdmindata(response?.data?.admin);
         }
       } catch (error) {
