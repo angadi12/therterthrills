@@ -48,25 +48,58 @@ const Updateadmin = () => {
   //     }
   //   }, [selectedAdminid]);
 
+  // useEffect(() => {
+  //   const fetchAdminData = async () => {
+  //     setFetchingAdmin(true);
+  //     try {
+  //       const response = await Getadminbyid(selectedAdminid);
+  //       if (response?.status==="success") {
+  //         SetAdmindata(response?.data?.admin);
+  //       }
+  //     } catch (error) {
+  //       console.error("Failed to fetch admin data:", error);
+  //     } finally {
+  //       setFetchingAdmin(false);
+  //     }
+  //   };
+
+   
+  //     fetchAdminData();
+   
+  // }, [selectedAdminid]);
   useEffect(() => {
+    if (!selectedAdminid) return; // Prevent fetch if no admin ID is available
+  
     const fetchAdminData = async () => {
       setFetchingAdmin(true);
       try {
         const response = await Getadminbyid(selectedAdminid);
-        if (response?.status==="success") {
+        if (response?.status === "success") {
           SetAdmindata(response?.data?.admin);
+        } else {
+          toast({
+            title: "Error",
+            description: "Failed to fetch admin data",
+            action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+          });
         }
       } catch (error) {
         console.error("Failed to fetch admin data:", error);
+        toast({
+          title: "Error",
+          description: "There was an error fetching admin data",
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
       } finally {
         setFetchingAdmin(false);
       }
     };
-
-   
-      fetchAdminData();
-   
+  
+    fetchAdminData();
   }, [selectedAdminid]);
+  
+
+
 
   useEffect(() => {
     if (Admindata) {
