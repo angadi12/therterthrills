@@ -128,14 +128,12 @@ const Sidenav = () => {
       >
         <div className="relative w-full flex items-center justify-center h-24">
           {!isMinimized && (
-            <Link href={"https://www.thetheatrethrills.com"}>
             <Image
               className="h-24 w-32 object-contain"
               src={LOGO}
               alt="logo"
             />
 
-            </Link>
           )}
           <Button
             className="absolute top-2 right-0 bg-transparent text-[#004AAD]"
