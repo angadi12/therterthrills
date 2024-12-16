@@ -76,6 +76,13 @@ const Updateadmin = () => {
         const response = await Getadminbyid(selectedAdminid);
         if (response?.status === "success") {
           SetAdmindata(response?.data?.admin);
+          setFormData({
+            fullName: response?.data?.admin?.fullName,
+            email: response?.data?.admin?.email,
+            phoneNumber: response?.data?.admin?.phoneNumber,
+            authType: response?.data?.admin?.authType,
+            branch: response?.data?.admin.branch?._id,
+          });
         } else {
           toast({
             title: "Error",
@@ -101,17 +108,17 @@ const Updateadmin = () => {
 
 
 
-  useEffect(() => {
-    if (Admindata) {
-      setFormData({
-        fullName: Admindata?.fullName,
-        email: Admindata?.email,
-        phoneNumber: Admindata?.phoneNumber,
-        authType: Admindata?.authType,
-        branch: Admindata.branch?._id,
-      });
-    }
-  }, [Admindata]);
+  // useEffect(() => {
+  //   if (Admindata) {
+  //     setFormData({
+  //       fullName: Admindata?.fullName,
+  //       email: Admindata?.email,
+  //       phoneNumber: Admindata?.phoneNumber,
+  //       authType: Admindata?.authType,
+  //       branch: Admindata.branch?._id,
+  //     });
+  //   }
+  // }, [Admindata]);
 
 
   const handleInputChange = (e) => {
