@@ -40,9 +40,22 @@ import { format } from "date-fns";
 import { fetchtheaterbyid } from "@/lib/Redux/theaterSlice";
 import Successmodal from "./Successmodal";
 import BookingSummarySkeleton from "@/components/Checkoutcomponents/Checkoutskeleton";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Label } from "@/components/ui/label"
 
 const CheckoutOnboarding = () => {
   const router = useRouter();
+  const [open, setOpen] = useState(false)
+  const [selectedOption, setSelectedOption] = useState(null)
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [opensucessmodal, setOpensuccesmodal] = useState(false);
   const [loading, setloading] = useState(false);
@@ -126,6 +139,13 @@ const CheckoutOnboarding = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
+
+
+  const handlePaymentSelection = (value) => {
+    setSelectedOption(value)
+  }
+
+  
 
   const validateFields = (bookingDetails) => {
     const errors = {};
@@ -421,6 +441,7 @@ const CheckoutOnboarding = () => {
             <Button
               disabled={currentStep >= steps.length - 1}
               onClick={handleProceed}
+              // onClick={()=>setOpen(!open)}
               className="px-8 py-0.5 w-48 rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
             >
               Proceed
@@ -455,6 +476,37 @@ const CheckoutOnboarding = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button variant="default">Select Payment Option</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Choose Payment Option</DialogTitle>
+            <DialogDescription>
+              Select whether you want to pay in advance or pay the full amount.
+            </DialogDescription>
+          </DialogHeader>
+          <RadioGroup className="gap-4" onValueChange={handlePaymentSelection} value={selectedOption || undefined}>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="advance" id="advance" />
+              <Label htmlFor="advance">Pay Advance</Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="full" id="full" />
+              <Label htmlFor="full">Pay Full Amount</Label>
+            </div>
+          </RadioGroup>
+          <DialogFooter>
+            <Button onClick={handleProceed} disabled={!selectedOption}>
+              Proceed
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
     </>
   );
 };

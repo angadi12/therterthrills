@@ -70,11 +70,11 @@ const CouponOfferForm = () => {
       if (field === "validPeriod") {
         return {
           ...prev,
-          validFrom: value.from
+          validFrom: value?.from
             ? formatISO(value.from, { representation: "date" })
             : null,
-          validUntil: value.to
-            ? formatISO(value.to, { representation: "date" })
+          validUntil: value?.to
+            ? formatISO(value?.to, { representation: "date" })
             : null,
         };
       } else {
