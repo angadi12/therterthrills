@@ -62,6 +62,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { Deletetheatredapi } from "@/lib/API/Theater";
 import UpdateTheaterForm from "@/components/Contactuscomponents/Updatetheatre";
+import { CouponManagementDialog } from "@/components/Dashboardcomponent/Couponmanagement";
 
 export default function Managetheatre() {
   const { toast } = useToast();
@@ -252,6 +253,7 @@ export default function Managetheatre() {
             <div className="flex justify-between items-center p-2">
               <h1 className="text-2xl font-bold">Manage Theatres</h1>
               <div className="flex items-center space-x-2">
+              <CouponManagementDialog/>
                 {/* <Input type="search" placeholder="Search" className="w-64" /> */}
                 {branchtheatre?.length > 0 && (
                   <Dialog>
