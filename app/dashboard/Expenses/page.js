@@ -101,17 +101,17 @@ export default function ExpensesTable() {
 
   const validateForm = () => {
     const errors = [];
-    if (!formData.name) errors.push("Expense name is required.");
-    if (!formData.description) errors.push("Description is required.");
-    if (!formData.amount || isNaN(Number(formData.amount)))
+    if (!formData?.name) errors.push("Expense name is required.");
+    if (!formData?.description) errors.push("Description is required.");
+    if (!formData?.amount || isNaN(Number(formData.amount)))
       errors.push("A valid amount is required.");
-    if (!formData.theater) errors.push("Please select a theater.");
-    if (!formData.branch) errors.push("Please select a branch.");
-    if (!formData.category) errors.push("Please select a category.");
+    if (!formData?.theater) errors.push("Please select a theater.");
+    if (!formData?.branch) errors.push("Please select a branch.");
+    if (!formData?.category) errors.push("Please select a category.");
 
     // Show errors via toast
-    if (errors.length > 0) {
-      errors.forEach((error) => {
+    if (errors?.length > 0) {
+      errors?.forEach((error) => {
         toast({
           title: "Validation Error",
           description: error,
@@ -222,7 +222,7 @@ export default function ExpensesTable() {
                 <div className="flex justify-center py-8">
                   <Spinner color="danger" />
                 </div>
-              ) : expenses.length > 0 ? ( // Show table if expenses are available
+              ) : expenses?.length > 0 ? ( // Show table if expenses are available
                 <>
                   <TableHeader className="bg-[#004AAD]">
                     <TableRow>
@@ -250,7 +250,7 @@ export default function ExpensesTable() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {expenses.map((expense) => (
+                    {expenses?.map((expense) => (
                       <TableRow key={expense?._id}>
                         <TableCell className="font-medium">
                           {expense?.category}
@@ -351,7 +351,7 @@ export default function ExpensesTable() {
                   onValueChange={(value) =>
                     handleSelectChange("theater", value)
                   }
-                  value={formData.theater}
+                  value={formData?.theater}
                 >
                   <SelectTrigger
                     id="location-select"
@@ -363,7 +363,7 @@ export default function ExpensesTable() {
                       ) : (
                         <div className="flex items-center gap-2">
                           {branchtheatre?.find(
-                            (theater) => theater?._id === formData.theater
+                            (theater) => theater?._id === formData?.theater
                           )?.name || "Select Theater"}
                         </div>
                       )}

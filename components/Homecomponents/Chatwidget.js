@@ -25,7 +25,7 @@ export default function ChatWidget() {
             className="absolute bottom-full mb-4 right-0"
           >
             <div className="bg-white rounded-2xl shadow-lg md:w-[300px] w-full p-6 relative">
-              <div className="absolute -bottom-2 right-6 w-4 h-4 bg-white transform rotate-45" />
+              <div className="absolute -bottom-2 md:right-6 right-3 w-4 h-4 bg-white transform rotate-45" />
 
               <button
                 onClick={() => setIsOpen(false)}

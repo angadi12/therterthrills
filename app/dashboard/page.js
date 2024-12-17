@@ -35,7 +35,7 @@ export default function BookingDashboard() {
   }, [selectedBranchId, dispatch]);
 
   if (status === "loading") {
-    return <DashboardSkeleton />;
+    return <DashboardSkeleton/>;
   }
 
   return (

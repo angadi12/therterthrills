@@ -168,7 +168,7 @@ export default function Bookingcard({ booking }) {
                 <p>
                   Amount Paid:{" "}
                   <span className="text-[#F30278]">
-                    ₹{booking?.paymentAmount}/-
+                  ₹{booking?.paymentType==="full"?booking?.TotalAmount:booking?.paymentAmount}/-
                   </span>
                 </p>
                 <p>
@@ -303,7 +303,7 @@ export default function Bookingcard({ booking }) {
                 <p>
                   Amount Paid:{" "}
                   <span className="text-[#F30278]">
-                    ₹{booking?.paymentAmount}/-
+                    ₹{booking?.paymentType==="full"?booking?.TotalAmount:booking?.paymentAmount}/-
                   </span>
                 </p>
                 <p>

@@ -268,11 +268,13 @@ export default function ActiveEvents() {
                     Total: ₹{singlebooking?.TotalAmount}/-
                   </p>
                   <Chip className={"bg-green-500 text-white"}>
-                    ₹{singlebooking?.paymentAmount} Paid
+                    {/* ₹{singlebooking?.paymentAmount} Paid */}
+                    ₹{singlebooking?.paymentType==="full"?singlebooking?.TotalAmount:singlebooking?.paymentAmount}/- paid
+
                   </Chip>
                   <Chip className={"bg-red-500 text-white"}>
-                    ₹{singlebooking?.TotalAmount - singlebooking?.paymentAmount}{" "}
-                    to pay
+                  ₹{singlebooking?.paymentType==="advance"?singlebooking?.TotalAmount - singlebooking?.paymentAmount:0}
+                    &nbsp;to pay
                   </Chip>
                   {singlebooking?.coupon && (
                     <Chip className={"bg-yellow-500 text-white"}>
@@ -391,7 +393,8 @@ export default function ActiveEvents() {
                   <p>
                     Amount Paid:{" "}
                     <span className="text-[#F30278]">
-                      ₹{singlebooking?.paymentAmount}/-
+                    ₹{singlebooking?.paymentType==="full"?singlebooking?.TotalAmount:singlebooking?.paymentAmount}/-
+
                     </span>
                   </p>
                   <p>

@@ -336,87 +336,132 @@ const UpdateTheaterForm = () => {
         <ScrollArea className="flex flex-col justify-center items-center gap-4 ">
           <div className="flex flex-col justify-center items-center gap-4 p-4">
             <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-4 place-content-center justify-between items-start ">
-              <Input
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="h-12"
-                placeholder="Theater Name"
-                required
-              />
-              <Input
-                name="location"
-                className="h-12"
-                value={formData.location}
-                onChange={handleChange}
-                placeholder="Location"
-                required
-              />
+              <div className="w-full flex flex-col gap-1 items-start">
+                <Label className="mb-2">
+                  Theatre name <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="h-12"
+                  placeholder="Theatre Name"
+                  required
+                />
+              </div>
+              <div className="w-full flex flex-col gap-1 items-start">
+                <Label className="mb-2">
+                  Theatre Location <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  name="location"
+                  className="h-12"
+                  value={formData.location}
+                  onChange={handleChange}
+                  placeholder="Location"
+                  required
+                />
+              </div>
             </div>
             <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-4 place-content-center justify-between items-start ">
-              <Input
-                name="maxCapacity"
-                value={formData.maxCapacity}
-                onChange={handleChange}
-                className="h-12"
-                placeholder="Enter Max Capacity"
-                required
-                type="number"
-              />
-              <Input
-                name="groupSize"
-                className="h-12"
-                value={formData.groupSize}
-                onChange={handleChange}
-                fullWidth
-                placeholder="Enter Min  Capacity"
-                type="number"
-              />
-            </div>
-
-            <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-4 place-content-center justify-between items-start ">
-              <Input
-                name="price"
-                className="h-12"
-                value={formData.price}
-                onChange={handleChange}
-                placeholder="Price"
-                required
-                type="number"
-              />
-              <Input
-                name="extraPerPerson"
-                className="h-12"
-                value={formData.extraPerPerson}
-                onChange={handleChange}
-                placeholder="Extra person charge"
-                required
-                type="number"
-              />
-            </div>
-
-            <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-4 place-content-center justify-between items-start ">
-              <Input
-                name="Locationlink"
-                className="h-12"
-                value={formData?.Locationlink}
-                onChange={handleChange}
-                placeholder="Location link"
-                required
-                type="text"
-              />
-              <Input
-                name="minimumDecorationAmount"
-                className="h-12"
-                value={formData.minimumDecorationAmount}
-                onChange={handleChange}
-                placeholder="Minimum Decoration Amount"
-                required
-                type="number"
-              />
+              <div className="w-full flex flex-col gap-1 items-start">
+                <Label className="mb-2">
+                  Max Capacity <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  name="maxCapacity"
+                  value={formData.maxCapacity}
+                  onChange={handleChange}
+                  className="h-12"
+                  placeholder="Enter Max Capacity"
+                  required
+                  type="number"
+                />
+              </div>
+              <div className="w-full flex flex-col gap-1 items-start">
+                <Label className="mb-2">
+                  Min Capacity <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  name="groupSize"
+                  className="h-12"
+                  value={formData.groupSize}
+                  onChange={handleChange}
+                  fullWidth
+                  placeholder="Enter Min  Capacity"
+                  type="number"
+                />
+              </div>
             </div>
 
             <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-4 place-content-center justify-between items-start ">
+              <div className="w-full flex flex-col gap-1 items-start">
+                <Label className="mb-2">
+                  Theatre Price <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  name="price"
+                  className="h-12"
+                  value={formData.price}
+                  onChange={handleChange}
+                  placeholder="Price"
+                  required
+                  type="number"
+                />
+              </div>
+              <div className="w-full flex flex-col gap-1 items-start">
+                <Label className="mb-2">
+                  Extra Person Charge <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  name="extraPerPerson"
+                  className="h-12"
+                  value={formData.extraPerPerson}
+                  onChange={handleChange}
+                  placeholder="Extra person charge"
+                  required
+                  type="number"
+                />
+              </div>
+            </div>
+
+            <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-4 place-content-center justify-between items-start ">
+              <div className="w-full flex flex-col gap-1 items-start">
+                <Label className="mb-2">
+                  Theatre Location Link <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  name="Locationlink"
+                  className="h-12"
+                  value={formData?.Locationlink}
+                  onChange={handleChange}
+                  placeholder="Location link"
+                  required
+                  type="text"
+                />
+              </div>
+              <div className="w-full flex flex-col gap-1 items-start">
+                <Label className="mb-2">
+                  Decoration Amount <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  name="minimumDecorationAmount"
+                  className="h-12"
+                  value={formData.minimumDecorationAmount}
+                  onChange={handleChange}
+                  placeholder="Minimum Decoration Amount"
+                  required
+                  type="number"
+                />
+              </div>
+            </div>
+
+            <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-4 place-content-center justify-between items-start ">
+              
+            <div className="w-full flex flex-col gap-1 items-start">
+                <Label className="mb-2">
+                Select Branch  <span className="text-red-500">*</span>
+                </Label>
               <Select
                 className="h-12"
                 value={formData?.branch}
@@ -436,6 +481,11 @@ const UpdateTheaterForm = () => {
                   ))}
                 </SelectContent>
               </Select>
+                </div>
+                <div className="w-full flex flex-col gap-1 items-start">
+                <Label className="mb-2">
+                Select Status <span className="text-red-500">*</span>
+                </Label>
               <Select
                 className="h-12"
                 value={formData?.status}
@@ -455,6 +505,7 @@ const UpdateTheaterForm = () => {
                   </SelectItem>
                 </SelectContent>
               </Select>
+                </div>
             </div>
 
             <div className="w-full mx-auto p-6 bg-white rounded-lg shadow-md">

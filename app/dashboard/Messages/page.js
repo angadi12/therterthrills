@@ -35,6 +35,7 @@ import {
 import {Deleteticket} from "@/lib/API/Contact"
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import moment from "moment";
 
 export default function MessagesSection() {
   const { toast } = useToast();
@@ -50,11 +51,25 @@ export default function MessagesSection() {
 const [isDelete,setIsDelete]=useState(false)
 const [delteloading, setDeleteloading] = useState(false);
 
+  const defaultFromDate = moment().subtract(7, "days");
+  const defaultToDate = moment();
 
+ const [startDate, setStartDate] = useState(defaultFromDate);
+  const [endDate, setEndDate] = useState(defaultToDate);
+
+
+  const handleFetch = () => {
+    const from = startDate ? moment(startDate).format("YYYY-MM-DD") : null;
+    const to = endDate ? moment(endDate).format("YYYY-MM-DD") : null;
+    dispatch(fetchContactsByDateRange({ from, to }));
+  };
+
+  // useEffect(() => {
+  //   dispatch(fetchContactsByDateRange({ from: null, to: null }));
+  // }, [dispatch]);
   useEffect(() => {
-    dispatch(fetchContactsByDateRange({ from: null, to: null }));
-  }, [dispatch]);
-
+    handleFetch(); 
+  }, []);
   // const filteredContacts = contacts.filter((contact) =>
   //   `${contact.firstName} ${contact.lastName}`
   //     .toLowerCase()
@@ -228,7 +243,6 @@ const [delteloading, setDeleteloading] = useState(false);
                       <div className="flex items-center space-x-4">
                         <Avatar>
                           <AvatarImage
-                            src="/placeholder.svg"
                             alt={contact?.firstName}
                           />
                           <AvatarFallback>

@@ -26,7 +26,7 @@ const Contactdaterange = () => {
 
   useEffect(() => {
     handleFetch(); 
-  }, []);
+  }, [startDate,endDate]);
 
   return (
     <div>

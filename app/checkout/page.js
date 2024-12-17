@@ -30,7 +30,7 @@ import {
   Createbooking,
   verifyPayment,
   CreateRazorpayorder,
-  Unsavedbooking
+  Unsavedbooking,
 } from "@/lib/API/Booking";
 import Cookies from "js-cookie";
 import { selectAddOns } from "@/lib/Redux/addOnsSlice";
@@ -48,14 +48,15 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
-} from "@/components/ui/dialog"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/dialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import Overlay from "@/components/Checkoutcomponents/Overlay";
 
 const CheckoutOnboarding = () => {
   const router = useRouter();
-  const [open, setOpen] = useState(false)
-  const [selectedOption, setSelectedOption] = useState(null)
+  const [open, setOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [opensucessmodal, setOpensuccesmodal] = useState(false);
   const [loading, setloading] = useState(false);
@@ -75,18 +76,15 @@ const CheckoutOnboarding = () => {
   const cakeText = useSelector((state) => state.cakes.cakeText);
   const isEggless = useSelector((state) => state.cakes.isEggless);
 
-  const {addDecorations} = useSelector(
-    (state) => state.checkout
-  );
+  const { addDecorations } = useSelector((state) => state.checkout);
 
   const selectedCakes = useSelector((state) => state.cakes.selectedCakes);
   const { selectedTheater, selectedslotsid, date, theater, theaterloading } =
     useSelector((state) => state.theater);
   const { decorations, roses, photography } = useSelector(selectAddOns);
   const totalAmount = useSelector((state) => state.totalAmount.value);
-  const { couponCode, discount, isCouponApplied, error,deviceId } = useSelector(
-    (state) => state.coupon
-  );
+  const { couponCode, discount, isCouponApplied, error, deviceId } =
+    useSelector((state) => state.coupon);
 
   useEffect(() => {
     if (!selectedTheater & !selectedslotsid) {
@@ -118,10 +116,12 @@ const CheckoutOnboarding = () => {
           { component: <Confirmation />, name: "Confirmation" },
         ]
       : [
-          { component: <BookingDetails  theater={theater} />, name: "Booking Details" },
+          {
+            component: <BookingDetails theater={theater} />,
+            name: "Booking Details",
+          },
           { component: <AddOns />, name: "Add-Ons" },
           { component: <Confirmation />, name: "Confirmation" },
-
         ];
 
   const renderStepComponent = () => steps[currentStep]?.component;
@@ -140,12 +140,9 @@ const CheckoutOnboarding = () => {
     }
   };
 
-
   const handlePaymentSelection = (value) => {
-    setSelectedOption(value)
-  }
-
-  
+    setSelectedOption(value);
+  };
 
   const validateFields = (bookingDetails) => {
     const errors = {};
@@ -163,7 +160,11 @@ const CheckoutOnboarding = () => {
       errors.email = "Email is invalid.";
     }
 
-    if (!Occasionobject?.noInput &&  addDecorations==="yes" && currentStep===1) {
+    if (
+      !Occasionobject?.noInput &&
+      addDecorations === "yes" &&
+      currentStep === 1
+    ) {
       if (!nickname) {
         errors.nickname = "Nickname is required.";
       }
@@ -251,20 +252,21 @@ const CheckoutOnboarding = () => {
       date: formattedDate,
       TotalAmount: totalAmount,
       paymentAmount: 750,
-      couponCode:couponCode,
-      deviceId:deviceId,
-      discountAmount:discount
+      couponCode: couponCode,
+      deviceId: deviceId,
+      discountAmount: discount,
+      paymentType: selectedOption,
     };
 
     const orderdata = {
       theaterId: selectedTheater,
       slotId: selectedslotsid,
       date: formattedDate,
-      paymentAmount: 750,
+      paymentAmount: selectedOption === "full" ? totalAmount : 750,
     };
-
     try {
       const response = await CreateRazorpayorder(orderdata);
+      setOpen(!open);
       if (response?.success === true) {
         var razorpayOptions = {
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
@@ -301,7 +303,7 @@ const CheckoutOnboarding = () => {
                   action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
                 });
                 setloading(false);
-                Unsavedbooking(bookingData)
+                Unsavedbooking(bookingData);
                 router.refresh("/checkout");
               }
             } catch (error) {
@@ -324,7 +326,7 @@ const CheckoutOnboarding = () => {
                 description: "You exited the payment process.",
                 action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
               });
-              Unsavedbooking(bookingData)
+              Unsavedbooking(bookingData);
               setloading(false);
             },
           },
@@ -338,7 +340,7 @@ const CheckoutOnboarding = () => {
           description: response?.message || "An error occurred.",
           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
-        Unsavedbooking(bookingData)
+        Unsavedbooking(bookingData);
         setloading(false);
       }
     } catch (error) {
@@ -348,7 +350,7 @@ const CheckoutOnboarding = () => {
         description: "Failed to create booking. Please try again.",
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
-      Unsavedbooking(bookingData)
+      Unsavedbooking(bookingData);
       setloading(false);
     }
   };
@@ -431,8 +433,9 @@ const CheckoutOnboarding = () => {
           </Button>
           {steps[currentStep].name === "Confirmation" ? (
             <Button
-              isLoading={loading}
-              onPress={handleProceedToPayment}
+              // isLoading={loading}
+              // onPress={handleProceedToPayment}
+              onClick={() => setOpen(!open)}
               className="px-8 py-0.5 w-48 rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
             >
               Pay now
@@ -449,6 +452,8 @@ const CheckoutOnboarding = () => {
           )}
         </div>
       </div>
+      <Overlay isLoading={loading} />
+
 
       <Modal
         hideCloseButton={true}
@@ -477,11 +482,7 @@ const CheckoutOnboarding = () => {
         </ModalContent>
       </Modal>
 
-
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button variant="default">Select Payment Option</Button>
-        </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Choose Payment Option</DialogTitle>
@@ -489,24 +490,37 @@ const CheckoutOnboarding = () => {
               Select whether you want to pay in advance or pay the full amount.
             </DialogDescription>
           </DialogHeader>
-          <RadioGroup className="gap-4" onValueChange={handlePaymentSelection} value={selectedOption || undefined}>
+          <RadioGroup
+            className="gap-4"
+            onValueChange={handlePaymentSelection}
+            value={selectedOption || undefined}
+          >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="advance" id="advance" />
-              <Label htmlFor="advance">Pay Advance</Label>
+              <Label htmlFor="advance">
+                Pay Advance <span className="text-[#F30278]">(750/-)</span>
+              </Label>
             </div>
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="full" id="full" />
-              <Label htmlFor="full">Pay Full Amount</Label>
+              <Label htmlFor="full">
+                Pay Full Amount{" "}
+                <span className="text-[#F30278]">({totalAmount}/-)</span>
+              </Label>
             </div>
           </RadioGroup>
           <DialogFooter>
-            <Button onClick={handleProceed} disabled={!selectedOption}>
+            <Button
+              isLoading={loading}
+              onPress={handleProceedToPayment}
+              disabled={!selectedOption}
+              className="px-8 py-0.5 w-48 rounded-none  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+            >
               Proceed
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      
     </>
   );
 };

@@ -11,6 +11,7 @@ import { MapPin } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBranchesanalytics } from "@/lib/Redux/BranchSlice";
 import { Spinner } from "@nextui-org/react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Branchanalytics = () => {
   const dispatch = useDispatch();
@@ -43,8 +44,40 @@ const Branchanalytics = () => {
   return (
     <>
       {branchDataloading ? (
-        <div className="flex justify-center items-center h-40">
-          <Spinner color="danger" />
+       
+        <div className="space-y-4 ring-1 ring-gray-200 p-4 bg-white">
+          <div className="flex justify-between">
+            <Skeleton className="h-6 w-32" />
+            <Skeleton className="h-4 w-16" />
+          </div>
+
+          <div className="relative">
+            <div className="flex gap-4 overflow-hidden">
+              {[...Array(4)].map((_, i) => (
+                <Card key={i} className="p-4 min-w-[200px]">
+                  <Skeleton className="h-12 w-12 rounded-full" />
+                  <Skeleton className="h-4 w-24 mt-4" />
+                  <div className="grid grid-cols-2 gap-4 mt-2">
+                    <div>
+                      <Skeleton className="h-3 w-12" />
+                      <Skeleton className="h-4 w-8 mt-1" />
+                    </div>
+                    <div>
+                      <Skeleton className="h-3 w-12" />
+                      <Skeleton className="h-4 w-8 mt-1" />
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+            <Skeleton className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full" />
+            <Skeleton className="absolute right-0 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full" />
+          </div>
+          <div className="flex justify-center gap-1">
+            {[...Array(3)].map((_, i) => (
+              <Skeleton key={i} className="h-2 w-2 rounded-full" />
+            ))}
+          </div>
         </div>
       ) : (
         <>

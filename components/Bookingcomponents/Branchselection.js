@@ -42,7 +42,7 @@ export default function Branchselection() {
 
 
   const filteredBranches = selectedbranch
-  ? branches.filter((branch) => branch._id === selectedbranch)
+  ? branches?.filter((branch) => branch?._id === selectedbranch)
   : branches;
 
 
