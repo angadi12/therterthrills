@@ -270,7 +270,7 @@ const CheckoutOnboarding = () => {
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
           amount: response.order?.amount,
           currency: "INR",
-          name: "THE THEATER THRILLS",
+          name: "THE THEATRE THRILLS",
           description: "Test Transaction",
           image:
             "https://firebasestorage.googleapis.com/v0/b/awt-website-769f8.appspot.com/o/Logo.png?alt=media&token=d8826565-b850-4d05-8bfa-5be8061f70f6",

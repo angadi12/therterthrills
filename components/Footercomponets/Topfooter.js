@@ -25,14 +25,14 @@ const Topfooter = () => {
             <div className="bg-white flex justify-center items-center rounded-full h-12 w-12">
               <FaPhoneAlt className="h-5 w-5 text-[#F30278]" />
             </div>{" "}
-            <span className="text-sm text-white">+91 8363802949</span>
+            <span className="text-sm text-white">+91 9398617123</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="bg-white flex justify-center items-center rounded-full h-12 w-12">
               <FaLocationDot className="h-5 w-5 text-[#F30278]" />
             </div>{" "}
             <span className="text-sm text-white">
-              3rd Floor, Sai Sadan Enclave Near Jyothi Theatre,<br></br>{" "}
+              3rd Floor, Sai Sadan , Enclave Near Jyothi Theatre,<br></br>{" "}
               Lingampally, Hyderabad Telangana - 500032
             </span>
           </div>

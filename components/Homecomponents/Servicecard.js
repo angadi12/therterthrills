@@ -47,22 +47,22 @@ const services = [
       "Choose packages for OTT, movie nights, or events",
     ],
   },
-  {
-    title: "Customized Event Decorations",
-    description:
-      "Create the perfect atmosphere with custom decorations tailored to your event theme.",
-    image: Circle2,
-    description2:
-      "Create an enchanting atmosphere with custom decorations designed specifically for your event's theme. Whether it's a birthday celebration, movie screening, or corporate event, our expert team ensures every detail is thoughtfully arranged to match your vision. From vibrant colors and themed props to elegant lighting and seating arrangements, each element is carefully curated to enhance the overall ambiance.",
-    benefits: [
-      "Personalized to match your theme and preferences",
-      "Professional and quality decorations for any occasion",
-      "Sets the mood and elevates the overall experience",
-      "Hassle-free setup and cleanup handled by our team",
-    ],
-    imageSrc: Customdeco,
-    imageAlt: "Customized event decoration",
-  },
+  // {
+  //   title: "Customized Event Decorations",
+  //   description:
+  //     "Create the perfect atmosphere with custom decorations tailored to your event theme.",
+  //   image: Circle2,
+  //   description2:
+  //     "Create an enchanting atmosphere with custom decorations designed specifically for your event's theme. Whether it's a birthday celebration, movie screening, or corporate event, our expert team ensures every detail is thoughtfully arranged to match your vision. From vibrant colors and themed props to elegant lighting and seating arrangements, each element is carefully curated to enhance the overall ambiance.",
+  //   benefits: [
+  //     "Personalized to match your theme and preferences",
+  //     "Professional and quality decorations for any occasion",
+  //     "Sets the mood and elevates the overall experience",
+  //     "Hassle-free setup and cleanup handled by our team",
+  //   ],
+  //   imageSrc: Customdeco,
+  //   imageAlt: "Customized event decoration",
+  // },
   {
     title: "Tasty Snacks & Refreshments",
     description:

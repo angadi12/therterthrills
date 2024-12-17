@@ -55,7 +55,7 @@ export default function EventServices() {
           imageSrc={Privatescreening}
           imageAlt="Private movie screening room"
         />
-        <ServiceSection
+        {/* <ServiceSection
           title="Customized Event Decorations"
           description="Create an enchanting atmosphere with custom decorations designed specifically for your event's theme. Whether it's a birthday celebration, movie screening, or corporate event, our expert team ensures every detail is thoughtfully arranged to match your vision. From vibrant colors and themed props to elegant lighting and seating arrangements, each element is carefully curated to enhance the overall ambiance."
           benefits={[
@@ -67,7 +67,7 @@ export default function EventServices() {
           imageSrc={Customdeco}
           imageAlt="Customized event decoration"
           reverse
-        />
+        /> */}
         <ServiceSection
           title="Tasty Snacks & Refreshments"
           description="Indulge in a wide assortment of delicious snacks and beverages carefully curated to enhance your movie experience. Whether you're craving savory treats like popcorn and nachos or have a sweet tooth for chocolates and candies, we offer a variety of options to suit every taste. Complement your snacks with refreshing beverages, from soft drinks to specialty mocktails."

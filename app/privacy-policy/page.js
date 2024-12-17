@@ -15,7 +15,7 @@ export default function Component() {
         </p>
         <p className="text-sm text-gray-600">
          {` For any questions about our Privacy Policy, please reach us at +91
-          8368292032 (WhatsApp only). This policy covers only information
+          9398617123 (WhatsApp only). This policy covers only information
           gathered through our website, not data collected offline or via other
           channels.`}
         </p>
@@ -119,7 +119,7 @@ export default function Component() {
           <h2 className="text-lg font-semibold mb-2">Contact Us</h2>
           <p className="text-sm text-gray-600">
           {`  For questions or feedback, please reach us on WhatsApp at +91
-            8368292032.`}
+            9398617123.`}
           </p>
         </section>
       </CardContent>

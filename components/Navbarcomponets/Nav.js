@@ -101,7 +101,7 @@ export default function Navbar() {
             </div>
             <div className="flex items-center">
               <FaPhoneAlt className="w-4 h-4 mr-2" />
-              <span>+91 8363802949</span>
+              <span>+91 9398617123</span>
             </div>
             <div className="flex items-center">
               <FaLocationDot className="w-4 h-4 mr-2" />

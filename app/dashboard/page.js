@@ -19,15 +19,14 @@ import DashboardSkeleton from "@/components/Dashboardcomponent/Dashboardskeleton
 export default function BookingDashboard() {
   const dispatch = useDispatch();
   const { selectedBranchId } = useSelector((state) => state.branches);
-  const { branchSummaryData, branchSummaryloading, branchSummaryerror } = useSelector((state) => state.branches);
-  const {status} = useSelector((state) => state.branches);
+  const { branchSummaryData, branchSummaryloading, branchSummaryerror } =
+    useSelector((state) => state.branches);
+  const { status } = useSelector((state) => state.branches);
   const [isLoading, setIsLoading] = useState(true);
-
 
   useEffect(() => {
     dispatch(fetchBranches()).then(() => setIsLoading(false));
   }, [dispatch]);
-
 
   useEffect(() => {
     if (selectedBranchId) {
@@ -35,18 +34,11 @@ export default function BookingDashboard() {
     }
   }, [selectedBranchId, dispatch]);
 
-
-
-
-
-if(status==="loading"){
-  return <DashboardSkeleton/>
-}
-  
+  if (status === "loading") {
+    return <DashboardSkeleton />;
+  }
 
   return (
-   
-
     <ScrollArea className="p-4 bg-gray-100 ">
       <div className="w-full mx-auto space-y-6">
         <div className="flex justify-between items-center">
@@ -65,7 +57,13 @@ if(status==="loading"){
               </div>
               <div>
                 <p className="text-sm font-medium">Active Bookings</p>
-                <p className="text-3xl font-bold">{branchSummaryData[0]?.activeBookings ||0}</p>
+                {branchSummaryerror ? (
+                  <p className="text-sm">failed to fetch</p>
+                ) : (
+                  <p className="text-3xl font-bold">
+                    {branchSummaryData[0]?.activeBookings || 0}
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -80,7 +78,13 @@ if(status==="loading"){
               </div>
               <div>
                 <p className="text-sm font-medium">Upcoming Bookings</p>
-                <p className="text-3xl font-bold">{branchSummaryData[0]?.upcomingBookings ||0}</p>
+                {branchSummaryerror ? (
+                  <p className="text-sm">failed to fetch</p>
+                ) : (
+                  <p className="text-3xl font-bold">
+                    {branchSummaryData[0]?.upcomingBookings || 0}
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -95,7 +99,13 @@ if(status==="loading"){
               </div>
               <div>
                 <p className="text-sm font-medium">Completed Bookings</p>
-                <p className="text-3xl font-bold">{branchSummaryData[0]?.completedBookings ||0}</p>
+                {branchSummaryerror ? (
+                  <p className="text-sm">failed to fetch</p>
+                ) : (
+                  <p className="text-3xl font-bold">
+                    {branchSummaryData[0]?.completedBookings || 0}
+                  </p>
+                )}{" "}
               </div>
             </CardContent>
           </Card>
@@ -113,7 +123,5 @@ if(status==="loading"){
         </div>
       </div>
     </ScrollArea>
-  
-  
   );
 }

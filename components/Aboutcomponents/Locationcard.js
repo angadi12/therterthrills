@@ -16,7 +16,7 @@ export default function BranchInfo() {
 
           <h2 className="text-xl font-semibold mb-2">Lingampally</h2>
           <p className="text-sm text-gray-600 mb-4">
-            3rd Floor, Sai Sadan Enclave Near Jyothi Theatre,
+            3rd Floor, Sai Sadan , Enclave Near Jyothi Theatre,
             <br />
             Lingampally, Hyderabad Telangana - 502032
           </p>

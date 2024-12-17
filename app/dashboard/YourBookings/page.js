@@ -112,7 +112,6 @@ export default function ActiveEvents() {
           status: selectedTab,
         })
       );
-      dispatch(fetchUnsavedBookingByTheaterId(Selectedtheaterbyid));
     }
   }, [Selectedtheaterbyid, dispatch, selectedTab]);
 
@@ -121,9 +120,6 @@ export default function ActiveEvents() {
       dispatch(fetchtheaterbybranchid(selectedBranchId));
     }
   }, [selectedBranchId, dispatch]);
-
-  console.log(Theaterbooking.data);
-  console.log(Theatererror);
 
   // useEffect(()=>{
   // if(Theatererror==="No bookings found"){
@@ -205,6 +201,14 @@ export default function ActiveEvents() {
       SetUnsavedid("");
     }
   }, [UnsavedTheaterbooking, Selectedtheaterbyid]);
+
+  useEffect(() => {
+  
+      dispatch(fetchUnsavedBookingByTheaterId(Selectedtheaterbyid));
+   
+  }, [Selectedtheaterbyid, dispatch]);
+
+  console.log("unsaved", UnsavedTheaterbooking);
 
   useEffect(() => {
     if (branchtheatre?.length > 0) {
@@ -592,7 +596,10 @@ export default function ActiveEvents() {
               <Badge
                 color="danger"
                 content={UnsavedTheaterbooking?.length}
-                isInvisible={UnsavedTheaterbooking?.length === 0}
+                isInvisible={
+                 UnsavedTheatererror==="Nobookings" ||
+                 UnsavedTheaterbooking?.length===0
+                }
                 size="md"
               >
                 <TabsTrigger className="w-full" value="cancelled">
@@ -1052,7 +1059,7 @@ export default function ActiveEvents() {
                     </div>
                   ) : (
                     <>
-                      {UnsavedTheatererror === "No bookings found" ? (
+                      {UnsavedTheatererror === "Nobookings" ? (
                         <div className="flex justify-center items-center w-full h-[60vh]">
                           <p>No Bookings available</p>
                         </div>

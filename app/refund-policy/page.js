@@ -19,7 +19,7 @@ export default function Component() {
             arrivals, are not eligible for refunds.`}
           </li>
           <li>
-           {` To request a cancellation, contact us via`} <strong> WhatsApp at +91 8363802949 </strong>
+           {` To request a cancellation, contact us via`} <strong> WhatsApp at +91 9398617123 </strong>
             {`Refunds are processed within 7 business days of the request.`}
           </li>
           <li>
