@@ -15,7 +15,7 @@ export default function TheatreBlogPost() {
   if (!blog) {
     return (
       <div className="w-11/12 mx-auto px-4 py-16 text-center">
-        <h1 className="text-3xl font-bold mb-4">Blog Not Found</h1>
+        <h1 className="md:text-3xl text-lg font-bold mb-4">Blog Not Found</h1>
         <span
           onClick={() => router.back()}
           className="text-[#F30278] hover:[#F30278]/70 cursor-pointer"
@@ -35,9 +35,9 @@ export default function TheatreBlogPost() {
         Go Back
       </span>
 
-      <h1 className="text-3xl md:text-4xl font-bold mb-6">{blog.title}</h1>
+      <h1 className="text-xl md:text-4xl font-bold mb-6">{blog.title}</h1>
 
-      <div className="relative h-[300px] md:h-[400px] w-full mb-6 overflow-hidden rounded-lg shadow-lg">
+      <div className="relative h-[200px] md:h-[400px] w-full mb-6 overflow-hidden rounded-lg shadow-lg">
         <Image
           src={blog.image}
           alt={blog.title}
@@ -51,8 +51,8 @@ export default function TheatreBlogPost() {
 
       {blog.sections.map((section, index) => (
         <section key={index} className="mb-8">
-          <h2 className="text-2xl font-bold mb-4">{section.subtitle}</h2>
-          <p className="text-gray-700 leading-relaxed">{section.details}</p>
+          <h2 className="md:text-2xl text-lg font-bold mb-4">{section.subtitle}</h2>
+          <p className="text-gray-700  leading-relaxed">{section.details}</p>
         </section>
       ))}
 
