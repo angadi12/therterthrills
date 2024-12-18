@@ -113,12 +113,18 @@ export default function Navbar() {
             <p>@thetheatrethrills</p>
           </div>
           <div className="flex gap-4 items-center space-x-2 relative z-10">
+          <Link href={"https://www.instagram.com/thetheatrethrills/?igsh=aTB2a25hYzQxNWpp"}>
             <Image src={Insta} alt="insta" className="w-6 h-6 object-contain" />
+
+          </Link>
+           <Link href={"https://www.facebook.com/people/The-Theatre-Thrills/61570456632986/?mibextid=ZbWKwL"}>
+
             <Image
               src={Facebook}
               alt="Facebook"
               className="w-6 h-6 object-contain"
             />
+           </Link>
             <Image
               src={Youtube}
               alt="Youtube"

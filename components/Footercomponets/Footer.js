@@ -16,6 +16,7 @@ import {
   MonitorPlay,
   Clapperboard,
 } from "lucide-react";
+import Link from "next/link";
 
 export default function Footer() {
   const router = useRouter();
@@ -179,16 +180,28 @@ export default function Footer() {
         </div>
         <div className="bg-[#F30278] py-2 w-full text-white flex justify-between px-6 items-center  text-sm text-center">
           <div className="flex items-center gap-2">
-            <Image
-              src={Insta}
-              alt="Instagram"
-              className="h-6 w-6 object-contain"
-            />
-            <Image
-              src={Facebook}
-              alt="Instagram"
-              className="h-6 w-6 object-contain"
-            />
+            <Link
+              href={
+                "https://www.instagram.com/thetheatrethrills/?igsh=aTB2a25hYzQxNWpp"
+              }
+            >
+              <Image
+                src={Insta}
+                alt="Instagram"
+                className="h-6 w-6 object-contain"
+              />
+            </Link>
+            <Link
+              href={
+                "https://www.facebook.com/people/The-Theatre-Thrills/61570456632986/?mibextid=ZbWKwL"
+              }
+            >
+              <Image
+                src={Facebook}
+                alt="Facebook"
+                className="w-6 h-6 object-contain"
+              />
+            </Link>
             <Image
               src={Youtube}
               alt="Instagram"
@@ -214,7 +227,8 @@ export default function Footer() {
           color="primary"
           variant="underlined"
           classNames={{
-            tabList:"gap-6 w-full relative   rounded-none p-2  border-b border-divider",
+            tabList:
+              "gap-6 w-full relative   rounded-none p-2  border-b border-divider",
             cursor: "w-full bg-[#F30278] ",
             tab: "w-full px-0 h-12 flex flex-col justify-center items-center",
             tabContent: "group-data-[selected=true]:text-[#004AAD] ",
@@ -249,7 +263,10 @@ export default function Footer() {
           <Tab
             key="Addons"
             title={
-              <div  onClick={() => router.push("/Add-Ons")} className="flex flex-col justify-center items-center gap-1">
+              <div
+                onClick={() => router.push("/Add-Ons")}
+                className="flex flex-col justify-center items-center gap-1"
+              >
                 <Popcorn className="h-6 w-6" />
                 <span>Addons</span>
               </div>
@@ -258,7 +275,10 @@ export default function Footer() {
           <Tab
             key="Bookings"
             title={
-              <div onClick={() => router.push("/bookings")} className="flex flex-col justify-center items-center gap-1">
+              <div
+                onClick={() => router.push("/bookings")}
+                className="flex flex-col justify-center items-center gap-1"
+              >
                 <MonitorPlay className="h-6 w-6" />
                 <span>My Bookigs</span>
               </div>

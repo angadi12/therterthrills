@@ -39,12 +39,11 @@ const Branchanalytics = () => {
     });
   }, [api]);
 
- console.log(branchDataerror)
+  console.log(branchDataerror);
 
   return (
     <>
       {branchDataloading ? (
-       
         <div className="space-y-4 ring-1 ring-gray-200 p-4 bg-white">
           <div className="flex justify-between">
             <Skeleton className="h-6 w-32" />
@@ -98,29 +97,30 @@ const Branchanalytics = () => {
                   }}
                 >
                   <CarouselContent className="-ml-2 md:-ml-4">
-                    {branchData?.length>0 && branchData?.map((branch, index) => (
-                      <CarouselItem
-                        key={index}
-                        className="pl-2 md:pl-4 md:basis-1/3 lg:basis-1/3"
-                      >
-                        <div className="p-4 border rounded-lg">
-                          <div className="w-12 h-12 bg-[#004AAD] rounded-full flex items-center justify-center mb-4">
-                            <MapPin className="h-6 w-6 text-white" />
+                    {branchData?.length > 0 &&
+                      branchData?.map((branch, index) => (
+                        <CarouselItem
+                          key={index}
+                          className="pl-2 md:pl-4 md:basis-1/3 lg:basis-1/3"
+                        >
+                          <div className="p-4 border rounded-lg">
+                            <div className="w-12 h-12 bg-[#004AAD] rounded-full flex items-center justify-center mb-4">
+                              <MapPin className="h-6 w-6 text-white" />
+                            </div>
+                            <h3 className="font-medium mb-2">
+                              {branch?.branchDetails?.Branchname}
+                            </h3>
+                            <div className="flex justify-between text-tiny">
+                              <span>Theater</span>
+                              <span>Bookings</span>
+                            </div>
+                            <div className="flex justify-between font-bold">
+                              <span>{branch?.totalTheaters}</span>
+                              <span>{branch?.totalBookings}</span>
+                            </div>
                           </div>
-                          <h3 className="font-medium mb-2">
-                            {branch?.branchDetails?.Branchname}
-                          </h3>
-                          <div className="flex justify-between text-tiny">
-                            <span>Theater</span>
-                            <span>Bookings</span>
-                          </div>
-                          <div className="flex justify-between font-bold">
-                            <span>{branch?.totalTheaters}</span>
-                            <span>{branch?.totalBookings}</span>
-                          </div>
-                        </div>
-                      </CarouselItem>
-                    ))}
+                        </CarouselItem>
+                      ))}
                   </CarouselContent>
                   <div className="absolute transform -translate-x-1/2 -bottom-20 -translate-y-1/2 left-1/2 flex justify-between items-center ">
                     <CarouselPrevious className="" />

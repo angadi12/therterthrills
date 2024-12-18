@@ -10,7 +10,9 @@ import {
   ChevronsDown,
 } from "lucide-react";
 import { Button } from "@nextui-org/react";
-
+import Image from "next/image";
+import Link from "next/link";
+import {Facebook,Instagram,Youtube } from "lucide-react"
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -25,7 +27,7 @@ export default function ChatWidget() {
             className="absolute bottom-full mb-4 right-0"
           >
             <div className="bg-white rounded-2xl shadow-lg md:w-[300px] w-full p-6 relative">
-              <div className="absolute -bottom-2 md:right-6 right-3 w-4 h-4 bg-white transform rotate-45" />
+              <div className="absolute md:-bottom-2 -bottom-1 md:right-6 right-3 w-4 h-4 bg-white transform rotate-45" />
 
               <button
                 onClick={() => setIsOpen(false)}
@@ -60,10 +62,22 @@ export default function ChatWidget() {
                 <ChevronDown className="w-5 h-5 rotate-[-90deg]" />
               </Button>
 
-              <div className="mt-4 text-center">
-                <p className="text-xs text-gray-400 flex items-center justify-center gap-1">
-                  {/* <span>⚡</span> Powered by AWT */}
-                </p>
+              <div className="mt-4 text-center flex items-center justify-center  gap-2">
+                <Link
+                  href={
+                    "https://www.instagram.com/thetheatrethrills/?igsh=aTB2a25hYzQxNWpp"
+                  }
+                >
+                 <Instagram className="text-pink-500 w-4 h-4"/>
+                </Link>
+                <Link
+                  href={
+                    "https://www.facebook.com/people/The-Theatre-Thrills/61570456632986/?mibextid=ZbWKwL"
+                  }
+                >
+                 <Facebook className="text-blue-500 w-4 h-4" />
+                </Link>
+                <Youtube  className="text-red-500 w-4 h-4"/>
               </div>
             </div>
           </motion.div>

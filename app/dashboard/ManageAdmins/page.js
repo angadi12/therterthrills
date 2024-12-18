@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Filter, Mail, Phone, Plus } from "lucide-react";
+import { Filter, Mail, Phone, Plus ,Trash} from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import {
   setFilterQuery as setAdminFilterQuery,
@@ -24,15 +24,20 @@ import {
 } from "@nextui-org/react";
 import Updateadmin from "@/components/Dashboardcomponent/Updateadmin";
 import Image from "next/image";
-
-
+import { Deleteadminapi } from "@/lib/API/Admin";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 export default function ManageAdmins() {
   const dispatch = useDispatch();
+  const { toast } = useToast();
   const { selectedBranchId, filterQuery, openadmin, openupdateadmin } =
     useSelector((state) => state.branches);
   const { admins, adminsStatus, error } = useSelector((state) => state.admin);
   const [filteredAdmins, setFilteredAdmins] = useState(admins);
+  const [delteloading, setDeleteloading] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
+  const selectedAdminid = useSelector((state) => state?.admin?.selectedAdminid ?? null);
 
   useEffect(() => {
     if (selectedBranchId) {
@@ -68,6 +73,29 @@ export default function ManageAdmins() {
   };
 
 
+ const Deletehandle = async (selectedAdminid) => {
+    setDeleteloading(true);
+    try {
+      const response = await Deleteadminapi(selectedAdminid);
+      if (response.status === "success") {
+        toast({
+          title: "Deleted!",
+          description: "Admin has been deleted",
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+        setDeleteloading(false);
+        setIsDelete(!isDelete);
+        dispatch(fetchAdminsByBranchId(selectedBranchId));
+      }
+    } catch (error) {
+      toast({
+        title: "Failed to delete Admin",
+        description: error,
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });
+      setDeleteloading(false);
+    }
+  };
 
 
 
@@ -133,7 +161,7 @@ export default function ManageAdmins() {
                           </div>
                         </div>
                         <Badge className="bg-[#F30278]">
-                          {admin?.branch?.location}
+                          {admin?.branch?.Branchname}
                         </Badge>
                       </div>
                       <div className="space-y-2">
@@ -147,7 +175,7 @@ export default function ManageAdmins() {
                         </div>
                       </div>
                     </CardContent>
-                    <CardFooter className="bg-gray-50 p-6">
+                    <CardFooter className="bg-gray-50 p-6 flex items-center gap-2">
                       <Button
                         onPress={() =>
                           {dispatch(Setopenupdateadmin(!openupdateadmin)),dispatch(Setselectedadminid(admin?._id))}
@@ -156,7 +184,20 @@ export default function ManageAdmins() {
                       >
                         Modify
                       </Button>
+                      <Button
+                        onPress={() => {
+                          dispatch(Setselectedadminid(admin?._id)),
+                            setIsDelete(!isDelete);
+                        }}
+                        isIconOnly
+                        variant="bordered"
+                        className="px-2  bg-white"
+                        radius="sm"
+                      >
+                        <Trash className="text-[#F30278]" />
+                      </Button>
                     </CardFooter>
+                    
                   </Card>
                 )
             )}
@@ -290,6 +331,45 @@ export default function ManageAdmins() {
           )}
         </ModalContent>
       </Modal> */}
+
+      <Modal
+        isDismissable={false}
+        isKeyboardDismissDisabled={true}
+        backdrop="opaque"
+        isOpen={isDelete}
+        onOpenChange={setIsDelete}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col text-center">
+                Confirm Delete
+              </ModalHeader>
+              <ModalBody>
+                <p>Are you sure you want to Delete?</p>
+              </ModalBody>
+              <ModalFooter className="flex justify-center items-center text-center">
+                <Button
+                  isLoading={delteloading}
+                  onPress={() => {
+                    Deletehandle(selectedAdminid);
+                  }}
+                  className="px-8 py-0.5 rounded-sm w-48 bg-[#F30278] text-white"
+                >
+                  Yes
+                </Button>
+                <Button
+                  size="md"
+                  onPress={() => setIsDelete(false)}
+                  className="px-8 py-0.5 rounded-sm w-48 bg-[#004AAD] text-white"
+                >
+                  No
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </>
   );
 }

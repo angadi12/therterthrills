@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -21,41 +21,108 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Pencil, Trash2 } from "lucide-react";
-
-const initialCoupons = {
-  offer: [
-    { id: "1", code: "OFFER10", discount: 10, expiryDate: "2023-12-31" },
-    { id: "2", code: "OFFER20", discount: 20, expiryDate: "2023-12-31" },
-  ],
-  theater: [
-    { id: "3", code: "THEATER15", discount: 15, expiryDate: "2023-12-31" },
-    { id: "4", code: "THEATER25", discount: 25, expiryDate: "2023-12-31" },
-  ],
-};
+import { fetchAllcouponsByoffer } from "@/lib/Redux/couponSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { DeleteCouponapi, UpadteCouponapi } from "@/lib/API/Coupon";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 export function CouponManagementDialog() {
-  const [coupons, setCoupons] = useState(initialCoupons);
+  const [coupons, setCoupons] = useState({ offer: [], coupon: [] });
   const [editingCoupon, setEditingCoupon] = useState(null);
+  const dispatch = useDispatch();
+  const { Allcouponsoffer, Allcouponloading } = useSelector(
+    (state) => state.coupon
+  );
+  const { toast } = useToast();
 
-  const handleDelete = (type, id) => {
-    setCoupons((prev) => ({
-      ...prev,
-      [type]: prev[type].filter((coupon) => coupon.id !== id),
-    }));
+  useEffect(() => {
+    dispatch(fetchAllcouponsByoffer());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (Allcouponsoffer) {
+      const categorizedCoupons = Allcouponsoffer.reduce(
+        (acc, coupon) => {
+          acc[coupon?.type]?.push(coupon) || (acc[coupon?.type] = [coupon]);
+          return acc;
+        },
+        { offer: [], coupon: [] }
+      );
+      setCoupons(categorizedCoupons);
+    }
+  }, [Allcouponsoffer]);
+
+  const handleDelete = async (type, id) => {
+    try {
+      // Call the API to delete the coupon
+      const response = await await DeleteCouponapi(id);
+
+      if (response.status === "success") {
+        setCoupons((prev) => ({
+          ...prev,
+          [type]: prev[type].filter((coupon) => coupon?._id !== id),
+        }));
+        toast({
+          title: `deleted!.`,
+          description: `Coupon with id ${id} deleted successfully.`,
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+        dispatch(fetchAllcouponsByoffer());
+      } else {
+        toast({
+          title: `Failed to delete coupon.`,
+          description: "Failed to delete coupon:",
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "failed to delete coupon:",
+        description: error,
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });
+      // Optionally show a toast notification or alert
+    }
   };
 
   const handleEdit = (type, coupon) => {
-    setEditingCoupon(coupon);
+    setEditingCoupon({ ...coupon, type });
   };
 
-  const handleUpdate = (type) => {
-    if (editingCoupon) {
-      setCoupons((prev) => ({
-        ...prev,
-        [type]: prev[type].map((c) =>
-          c.id === editingCoupon.id ? editingCoupon : c
-        ),
-      }));
+  const handleUpdate = async (type) => {
+    if (!editingCoupon) return;
+
+    try {
+      const response = await UpadteCouponapi(editingCoupon, editingCoupon?._id);
+
+      if (response.status === "success") {
+        setCoupons((prev) => ({
+          ...prev,
+          [type]: prev[type].map((c) =>
+            c?._id === editingCoupon?._id ? editingCoupon : c
+          ),
+        }));
+        toast({
+          title: `updated!.`,
+          description: "Coupon updated successfully!",
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+        dispatch(fetchAllcouponsByoffer());
+      } else {
+        toast({
+          title: `Failed to update coupon.`,
+          description: "Failed to update coupon:",
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: `Error while updating coupon.`,
+        description: "Error while updating coupon.",
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });
+    } finally {
       setEditingCoupon(null);
     }
   };
@@ -72,10 +139,14 @@ export function CouponManagementDialog() {
       </TableHeader>
       <TableBody>
         {coupons[type].map((coupon) => (
-          <TableRow key={coupon.id}>
-            <TableCell>{coupon.code}</TableCell>
-            <TableCell>{coupon.discount}%</TableCell>
-            <TableCell>{coupon.expiryDate}</TableCell>
+          <TableRow key={coupon?._id}>
+            <TableCell>{coupon?.code}</TableCell>
+            <TableCell>
+              {coupon?.discount?.amount} {coupon?.discount?.type}
+            </TableCell>
+            <TableCell>
+              {new Date(coupon.validUntil).toLocaleDateString()}
+            </TableCell>
             <TableCell>
               <Button
                 variant="light"
@@ -87,7 +158,7 @@ export function CouponManagementDialog() {
               <Button
                 variant="light"
                 isIconOnly
-                onClick={() => handleDelete(type, coupon.id)}
+                onClick={() => handleDelete(type, coupon?._id)}
               >
                 <Trash2 className="h-4 w-4 text-[#004AAD]" />
               </Button>
@@ -101,7 +172,10 @@ export function CouponManagementDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-[#F30278] hover:bg-pink-600 text-white" variant="outline">
+        <Button
+          className="bg-[#F30278] hover:bg-pink-600 text-white"
+          variant="outline"
+        >
           Manage Coupons
         </Button>
       </DialogTrigger>
@@ -112,11 +186,11 @@ export function CouponManagementDialog() {
         <Tabs defaultValue="offer" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="offer">Offer Coupons</TabsTrigger>
-            <TabsTrigger value="theater">Theater Coupons</TabsTrigger>
+            <TabsTrigger value="coupon">Theater Coupons</TabsTrigger>
           </TabsList>
           <TabsContent value="offer">{renderCouponTable("offer")}</TabsContent>
-          <TabsContent value="theater">
-            {renderCouponTable("theater")}
+          <TabsContent value="coupon">
+            {renderCouponTable("coupon")}
           </TabsContent>
         </Tabs>
         {editingCoupon && (
@@ -127,7 +201,7 @@ export function CouponManagementDialog() {
               </Label>
               <Input
                 id="code"
-                value={editingCoupon.code}
+                value={editingCoupon?.code}
                 onChange={(e) =>
                   setEditingCoupon({ ...editingCoupon, code: e.target.value })
                 }
@@ -141,11 +215,14 @@ export function CouponManagementDialog() {
               <Input
                 id="discount"
                 type="number"
-                value={editingCoupon.discount}
+                value={editingCoupon?.discount?.amount}
                 onChange={(e) =>
                   setEditingCoupon({
                     ...editingCoupon,
-                    discount: Number(e.target.value),
+                    discount: {
+                      ...editingCoupon?.discount,
+                      amount: Number(e.target.value),
+                    },
                   })
                 }
                 className="col-span-3"
@@ -158,25 +235,19 @@ export function CouponManagementDialog() {
               <Input
                 id="expiryDate"
                 type="date"
-                value={editingCoupon.expiryDate}
+                value={editingCoupon?.validUntil.split("T")[0]}
                 onChange={(e) =>
                   setEditingCoupon({
                     ...editingCoupon,
-                    expiryDate: e.target.value,
+                    validUntil: new Date(e.target.value).toISOString(),
                   })
                 }
                 className="col-span-3"
               />
             </div>
             <Button
-              onClick={() =>
-                handleUpdate(
-                  editingCoupon.id.startsWith("1") ||
-                    editingCoupon.id.startsWith("2")
-                    ? "offer"
-                    : "theater"
-                )
-              }
+              onClick={() => handleUpdate(editingCoupon?.type)}
+              className=" rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
             >
               Update Coupon
             </Button>

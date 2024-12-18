@@ -58,6 +58,7 @@ const Createadmin = () => {
     if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formData.email))
       return "Invalid email address";
     if (!formData.branch) return "Branch is required";
+    if (!formData.authType) return "Auth Type is required";
     if (!formData.phoneNumber) {
       return "Phone Number is required";
     } else if (!/^\d{10}$/.test(formData.phoneNumber)) {
