@@ -276,6 +276,10 @@ const CheckoutOnboarding = () => {
           description: `Booking for ${
             selectedOccasion || "an event"
           } at THE THEATRE THRILLS`,
+          notes: {
+            paymentOption: selectedOption,
+            // amountSummary: `${selectedOption === "advance" ? `Advance: ₹${paymentAmount}` : `Full Payment: ₹${paymentAmount}`}`,
+          },
           image:
             "https://firebasestorage.googleapis.com/v0/b/awt-website-769f8.appspot.com/o/Logo.png?alt=media&token=d8826565-b850-4d05-8bfa-5be8061f70f6",
           order_id: response.order?.id,
@@ -484,7 +488,7 @@ const CheckoutOnboarding = () => {
       </Modal>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] w-11/12 mx-auto">
           <DialogHeader>
             <DialogTitle>Choose Payment Option</DialogTitle>
             <DialogDescription>
