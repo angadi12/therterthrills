@@ -39,9 +39,13 @@ export default function BookingHeader() {
       ? format(new Date(date), "yyyy-MM-dd")
       : null;
 
+  // useEffect(() => {
+  //   dispatch(fetchTheaterLocations(proccedwithbranchid));
+  // }, [selectedLocation,proccedwithbranchid]);
+
   useEffect(() => {
     dispatch(fetchTheaterLocations(proccedwithbranchid));
-  }, [selectedLocation]);
+  }, [dispatch,proccedwithbranchid]);
 
   const payload = { location: selectedLocation, date: formattedDate };
 
@@ -58,11 +62,12 @@ export default function BookingHeader() {
     setPopoverOpen(false); // Close the popover after selecting a date
   };
 
-useEffect(()=>{
- if(locations?.length>0){
-  dispatch(setSelectedLocation(locations[0]))
- }
-},[dispatch,locations])
+  useEffect(() => {
+    // Set the first location as the default only after locations are fetched
+    if (locations?.length > 0 && !selectedLocation) {
+      dispatch(setSelectedLocation(locations[0]));
+    }
+  }, [dispatch, locations, selectedLocation]);
 
   return (
     <div className="w-11/12 mx-auto md:py-12 py-6">
