@@ -8,7 +8,7 @@ import Logo from "@/public/asset/Logo.png";
 
 const Topfooter = () => {
   return (
-    <div className="w-full p-0 bg-[#F30278] relative h-24 md:flex hidden ">
+    <div className="w-full p-0 bg-[#F30278] relative h-24 lg:flex hidden ">
       <div className=" mx-auto  flex flex-col md:flex-row items-center justify-between w-full">
         <div className="p-0 absolute left-0 top-0">
           <Image src={Back} alt="The Theatre Thrills" className="h-24" />

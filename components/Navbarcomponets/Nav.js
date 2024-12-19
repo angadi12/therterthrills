@@ -121,7 +121,7 @@ export default function Navbar() {
         transition={{ duration: 0.5 }}
         className="w-full bg-white  sticky top-0 z-30"
       >
-        <div className="bg-[#F30278] hidden  w-[85%] ml-auto rounded-l-full text-white py-2 px-4 md:flex justify-evenly items-center text-sm relative overflow-hidden">
+        <div className="bg-[#F30278] hidden md:hidden lg:flex  w-[85%] ml-auto rounded-l-full text-white py-2 px-4 justify-evenly items-center text-sm relative overflow-hidden">
           <div className="flex items-center space-x-8 ml-6 relative z-10">
             <div className="flex items-center">
               <IoMail className="w-4 h-4 mr-2" />
@@ -161,15 +161,15 @@ export default function Navbar() {
           </div>
           <Usercomponet/>
         </div>
-        <nav className="bg-white h-12 md:h-auto border-b  py-4 md:px-4 px-2 flex justify-between items-center ">
+        <nav className="bg-white h-12 md:h-16 lg:h-auto border-b  py-4 md:px-4 px-2 flex justify-between items-center ">
           <Link href="/" className="flex items-center space-x-2 ">
             <Image
               src={Logo}
               alt="Theatre Thrills Logo"
-              className="md:h-24 md:w-24 top-0 md:left-12 h-10 w-10 md:absolute static object-contain"
+              className="lg:h-24 lg:w-24 top-0 md:left-12 md:h-14 md:w-14 h-10 w-10 md:absolute static object-contain"
             />
           </Link>
-          <div className="md:flex  hidden gap-1 items-center space-x-8">
+          <div className="lg:flex md:hidden  hidden gap-1 items-center space-x-8">
             <Link
               href="/"
               className={activeitem === "home" ? active : unactive}

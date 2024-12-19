@@ -51,7 +51,7 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="bggradient text-white  pt-4 hidden md:block">
+      <footer className="bggradient text-white  pt-4 hidden lg:block">
         <div className="w-11/12 mx-auto px-4 py-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-14">
             <div className="mb-4">
@@ -220,7 +220,7 @@ export default function Footer() {
         </div>
       </footer>
 
-      <div className="fixed z-50 md:hidden bottom-0 left-0 w-full right-0 flex justify-center items-center bg-white border-t border-gray-200">
+      <div className="fixed z-50 lg:hidden bottom-0 left-0 w-full right-0 flex justify-center items-center bg-white border-t border-gray-200">
         <Tabs
           className="w-full"
           aria-label="Bottom Navigation"
