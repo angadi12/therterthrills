@@ -8,6 +8,7 @@ import Blog1 from "@/public/asset/Blog1.png";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { blogs } from "./Blogsdata";
+import Link from "next/link";
 // Blog Data with Content
 
 export default function BlogGrid() {
@@ -35,12 +36,12 @@ export default function BlogGrid() {
               <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
               <p className="text-gray-600 text-sm text-justify">
               {post.description.slice(0,100)}
-              <a
+              <Link
                   href={post.link}
                   className="text-[#F30278] font-semibold hover:underline ml-1"
                 >
                   Read More
-                </a>
+                </Link>
               </p>
             </CardContent>
           </Card>
