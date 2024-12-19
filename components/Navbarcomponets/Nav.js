@@ -50,40 +50,68 @@ export default function Navbar() {
     return () => unsubscribe();
   }, [scrollY, prevScrollY]);
 
+  // useEffect(() => {
+  //   switch (pathname) {
+  //     case "/":
+  //       setactiveitem("home");
+  //       break;
+  //     case "/bookings":
+  //       setactiveitem("bookings");
+  //       break;
+  //     case "/Add-Ons":
+  //       setactiveitem("Add-Ons");
+  //       break;
+  //     case "/blogs":
+  //       setactiveitem("blogs");
+  //       break;
+  //     case pathname.startsWith("/blog"):
+  //       setactiveitem("blogs");
+  //       break;
+  //     case "/contact":
+  //       setactiveitem("contact");
+  //       break;
+  //     case "/refund-policy":
+  //       setactiveitem("refund-policy");
+  //       break;
+  //     case "/about":
+  //       setactiveitem("about");
+  //       break;
+  //     case "/gallery":
+  //       setactiveitem("gallery");
+  //       break;
+  //     case "/services":
+  //       setactiveitem("services");
+  //       break;
+  //     default:
+  //       setactiveitem("");
+  //   }
+  // }, [pathname]);
+
+
   useEffect(() => {
-    switch (pathname) {
-      case "/":
-        setactiveitem("home");
-        break;
-      case "/bookings":
-        setactiveitem("bookings");
-        break;
-      case "/Add-Ons":
-        setactiveitem("Add-Ons");
-        break;
-      case "/blogs":
-        setactiveitem("blogs");
-        break;
-      case "/contact":
-        setactiveitem("contact");
-        break;
-      case "/refund-policy":
-        setactiveitem("refund-policy");
-        break;
-      case "/about":
-        setactiveitem("about");
-        break;
-      case "/gallery":
-        setactiveitem("gallery");
-        break;
-      case "/services":
-        setactiveitem("services");
-        break;
-      default:
-        setactiveitem("");
+    if (pathname === "/") {
+      setactiveitem("home");
+    } else if (pathname === "/bookings") {
+      setactiveitem("bookings");
+    } else if (pathname === "/Add-Ons") {
+      setactiveitem("Add-Ons");
+    } else if (pathname === "/blogs" || pathname.startsWith("/blog")) {
+      setactiveitem("blogs");
+    } else if (pathname === "/contact") {
+      setactiveitem("contact");
+    } else if (pathname === "/refund-policy") {
+      setactiveitem("refund-policy");
+    } else if (pathname === "/about") {
+      setactiveitem("about");
+    } else if (pathname === "/gallery") {
+      setactiveitem("gallery");
+    } else if (pathname === "/services") {
+      setactiveitem("services");
+    } else {
+      setactiveitem("");
     }
   }, [pathname]);
-
+  
 
   return (
     <>
