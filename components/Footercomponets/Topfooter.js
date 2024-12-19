@@ -19,7 +19,7 @@ const Topfooter = () => {
             <div className="bg-white flex justify-center items-center rounded-full h-12 w-12">
               <IoMail className="h-5 w-5 text-[#F30278]" />
             </div>
-            <span className="text-sm text-white">info@thetheatrethrills.in</span>
+            <span className="text-sm text-white">info@thetheatrethrills.com</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="bg-white flex justify-center items-center rounded-full h-12 w-12">

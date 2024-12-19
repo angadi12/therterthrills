@@ -97,7 +97,7 @@ export default function Navbar() {
           <div className="flex items-center space-x-8 ml-6 relative z-10">
             <div className="flex items-center">
               <IoMail className="w-4 h-4 mr-2" />
-              <span>info@theatrethrills.in</span>
+              <span>info@theatrethrills.com</span>
             </div>
             <div className="flex items-center">
               <FaPhoneAlt className="w-4 h-4 mr-2" />

@@ -33,6 +33,7 @@ import Loveproposal from "@/public/asset/Loveproposal.png";
 import Congratulations from "@/public/asset/Congratulations.png";
 import Image from "next/image";
 import { Getbookingbytheaterid } from "@/lib/API/Booking";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Newbooking = () => {
   const router = useRouter();
@@ -127,7 +128,8 @@ const Newbooking = () => {
 
 
   return (
-    <Card className="rounded-none shadow-none">
+    <Card className="rounded-none shadow-none overflow-hidden">
+      <ScrollArea className="h-full">
       <CardContent className="p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">
@@ -239,6 +241,8 @@ const Newbooking = () => {
         </Button>
       </div>)}
       </CardContent>
+
+      </ScrollArea>
     </Card>
   );
 };
