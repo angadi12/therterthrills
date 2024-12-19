@@ -41,7 +41,6 @@ export function NextuiProviderWrapper({ children }) {
 
       try {
         const result = await Checktokenexpired();
-        console.log("resultuiuiui",result)
         if (result?.user) {
           dispatch(setUser(result?.user));
           dispatch(setIsAuthenticated());

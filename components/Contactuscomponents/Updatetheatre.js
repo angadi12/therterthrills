@@ -48,7 +48,6 @@ const UpdateTheaterForm = () => {
   const { Updatetheaterid, openupdatetheatre } = useSelector(
     (state) => state.theater
   );
-  console.log(Updatetheaterid);
   const fileInputRef = useRef(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -90,7 +89,6 @@ const UpdateTheaterForm = () => {
       setLoadingData(true);
       try {
         const result = await Gettheaterbyid(Updatetheaterid);
-        console.log(result);
         if (result) {
           setFormData({
             name: result?.name || "",

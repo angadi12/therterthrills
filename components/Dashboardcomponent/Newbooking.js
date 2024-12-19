@@ -15,7 +15,7 @@ import {
   fetchUnsavedBookingByTheaterId,
   Setselectedtheaterid,
 } from "@/lib/Redux/bookingSlice";
-import { fetchtheaterbybranchid } from "@/lib/Redux/theaterSlice";
+import { fetchtheaterbybranchid, setActivetheatreid } from "@/lib/Redux/theaterSlice";
 import { useRouter } from "next/navigation";
 
 import Birthdayicon from "@/public/asset/Birthdayicon.png";
@@ -32,28 +32,29 @@ import Momtobe from "@/public/asset/Momtobe.png";
 import Loveproposal from "@/public/asset/Loveproposal.png";
 import Congratulations from "@/public/asset/Congratulations.png";
 import Image from "next/image";
+import { Getbookingbytheaterid } from "@/lib/API/Booking";
 
 const Newbooking = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { Theaterbooking, Selectedtheaterbyid, Theaterloading, Theatererror } =
     useSelector((state) => state.booking);
-  const { branchtheatre, branchtheatreloading, branchtheatreerror } =
+  const { branchtheatre, branchtheatreloading, branchtheatreerror,Activetheatreid } =
     useSelector((state) => state.theater);
   const { selectedBranchId } = useSelector((state) => state.branches);
   const [activeEvents, setActiveEvents] = useState([]);
 
   useEffect(() => {
-    if (Selectedtheaterbyid) {
-      dispatch(fetchBookingByTheaterId({ TheaterId: Selectedtheaterbyid, status: "Active" }));
+    if (Activetheatreid) {
+      dispatch(fetchBookingByTheaterId({ TheaterId: Activetheatreid, status: "Active" }));
     }
-  }, [Selectedtheaterbyid, dispatch]);
+  }, [Activetheatreid, dispatch]);
 
   useEffect(() => {
-    if (Selectedtheaterbyid) {
-      dispatch(fetchBookingByTheaterId({ TheaterId: Selectedtheaterbyid, status: "Active" }));
+    if (Activetheatreid) {
+      dispatch(fetchBookingByTheaterId({ TheaterId: Activetheatreid, status: "Active" }));
     }
-  }, [dispatch]);
+  }, [Activetheatreid]);
 
 
 
@@ -102,7 +103,7 @@ const Newbooking = () => {
 
   useEffect(() => {
     if (branchtheatre?.length > 0) {
-      dispatch(Setselectedtheaterid(branchtheatre[0]._id));
+      dispatch(setActivetheatreid(branchtheatre[0]._id));
     }
   }, [branchtheatre, dispatch,selectedBranchId]);
 
@@ -134,8 +135,8 @@ const Newbooking = () => {
             <span className="text-pink-500">({Theaterbooking?.counts?.active})</span>
           </h2>
           <Select
-              onValueChange={(value) => dispatch(Setselectedtheaterid(value))}
-              value={Selectedtheaterbyid}
+              onValueChange={(value) => dispatch(setActivetheatreid(value))}
+              value={Activetheatreid}
             >
               <SelectTrigger
                 id="location-select"
@@ -147,7 +148,7 @@ const Newbooking = () => {
                   ) : (
                     <div className="flex items-center gap-2">
                       {branchtheatre?.find(
-                        (theater) => theater?._id === Selectedtheaterbyid
+                        (theater) => theater?._id === Activetheatreid
                       )?.name || "Select Theater"}
                     </div>
                   )}

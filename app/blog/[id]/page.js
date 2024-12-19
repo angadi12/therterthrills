@@ -27,7 +27,7 @@ export default function TheatreBlogPost() {
   }
 
   return (
-    <article className="w-11/12 mx-auto px-4 py-16">
+    <article className="w-11/12 mx-auto px-4 md:py-16 py-12">
       <span
         onClick={() => router.back()}
         className="text-[#F30278] hover:[#F30278]/70 mb-4 inline-block cursor-pointer"

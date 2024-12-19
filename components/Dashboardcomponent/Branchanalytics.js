@@ -39,7 +39,6 @@ const Branchanalytics = () => {
     });
   }, [api]);
 
-  console.log(branchDataerror);
 
   return (
     <>

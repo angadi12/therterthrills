@@ -85,7 +85,6 @@ export default function ActiveEvents() {
   const [isDelete, setIsDelete] = useState(false);
   const [delteloading, setDeleteloading] = useState(false);
   const [selectedTab, setSelectedTab] = useState("Active");
-  console.log(selectedTab);
   const dispatch = useDispatch();
   const {
     Theaterbooking,
@@ -208,7 +207,6 @@ export default function ActiveEvents() {
    
   }, [Selectedtheaterbyid, dispatch]);
 
-  console.log("unsaved", UnsavedTheaterbooking);
 
   useEffect(() => {
     if (branchtheatre?.length > 0) {

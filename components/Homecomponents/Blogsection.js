@@ -8,6 +8,7 @@ import Blog1 from "@/public/asset/Blog1.png";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { blogs } from "../Blogscomponents/Blogsdata";
+import Link from "next/link";
 
 
 export default function BlogGrid() {
@@ -17,7 +18,7 @@ export default function BlogGrid() {
     <div className="w-11/12 mx-auto py-12">
       <h1 className="text-4xl font-bold text-center mb-8">
         Our{" "}
-        <span className="bg-clip-text py-8 inline-block text-transparent bg-gradient-to-r from-[#004AAD] via-[#F30278] to-[#E2B600]">
+        <span className="bg-clip-text md:py-8 inline-block text-transparent bg-gradient-to-r from-[#004AAD] via-[#F30278] to-[#E2B600]">
           Daily Blogs!
         </span>
       </h1>
@@ -35,12 +36,12 @@ export default function BlogGrid() {
               <h2 className="text-xl font-semibold w-full mb-2">{post.title}</h2>
               <p className="text-gray-600 text-sm text-justify">
                 {post.description.slice(0,100)}
-                <a
+                <Link
                   href={post.link}
                   className="text-[#F30278] font-semibold hover:underline ml-1"
                 >
                   Read More
-                </a>
+                </Link>
               </p>
             </CardContent>
           </Card>

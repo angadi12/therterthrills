@@ -145,7 +145,7 @@ const Performancecard = () => {
           </div>
         ) : (
           <>
-         {loading?<div className="flex justify-center items-center h-40">
+         {loading?<div className="flex justify-center items-center h-64">
 
          <Spinner color="danger"/>
          </div>

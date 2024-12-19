@@ -41,7 +41,7 @@ export default function Branchcard({ branch }) {
               <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
             </div>
           </div>
-          <div className="flex  justify-center rounded-sm gap-2 items-center w-60 text-[#F30278] bg-[#F30278]/10 ring-1 ring-[#F30278] p-2 font-semibold text-xs">
+          <div className="flex  justify-center rounded-sm gap-2 items-center md:w-60 text-[#F30278] bg-[#F30278]/10 ring-1 ring-[#F30278] p-2 font-semibold text-xs">
             <Utensils className="w-4 h-4" />
             <span>Food & Snacks Available</span>
           </div>
