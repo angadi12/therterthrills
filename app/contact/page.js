@@ -68,7 +68,7 @@ const page = () => {
               />
             </div>
             <div>
-              <div className="text-sm text-[#F30278]">info@thetheatrethrills.in</div>
+              <div className="text-sm text-[#F30278]">info@thetheatrethrills.com</div>
             </div>
           </div>
           
