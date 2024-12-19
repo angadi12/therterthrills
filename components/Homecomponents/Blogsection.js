@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation";
 import { blogs } from "../Blogscomponents/Blogsdata";
 import Link from "next/link";
 
-
 export default function BlogGrid() {
   const router = useRouter();
 
@@ -23,7 +22,7 @@ export default function BlogGrid() {
         </span>
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {blogs?.slice(0,3)?.map((post, index) => (
+        {blogs?.slice(0, 3)?.map((post, index) => (
           <Card key={index} className="overflow-hidden shadow-none border-none">
             <CardHeader className="p-0">
               <Image
@@ -33,15 +32,17 @@ export default function BlogGrid() {
               />
             </CardHeader>
             <CardContent className="py-4 px-0 w-full">
-              <h2 className="text-xl font-semibold w-full mb-2">{post.title}</h2>
+              <h2 className="text-xl font-semibold w-full mb-2">
+                {post.title}
+              </h2>
               <p className="text-gray-600 text-sm text-justify">
-                {post.description.slice(0,100)}
-                <Link
-                  href={post.link}
-                  className="text-[#F30278] font-semibold hover:underline ml-1"
+                {post.description.slice(0, 100)}
+                <span
+                  onClick={() => router.push(post.link)}
+                  className="text-[#F30278] font-semibold cursor-pointer hover:underline ml-1"
                 >
                   Read More
-                </Link>
+                </span>
               </p>
             </CardContent>
           </Card>

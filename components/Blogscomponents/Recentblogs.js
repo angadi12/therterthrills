@@ -36,12 +36,12 @@ export default function BlogGrid() {
               <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
               <p className="text-gray-600 text-sm text-justify">
               {post.description.slice(0,100)}
-              <Link
-                  href={post.link}
-                  className="text-[#F30278] font-semibold hover:underline ml-1"
+              <span
+                  onClick={()=>router.push(post.link)}
+                  className="text-[#F30278] font-semibold hover:underline cursor-pointer ml-1"
                 >
                   Read More
-                </Link>
+                </span>
               </p>
             </CardContent>
           </Card>
