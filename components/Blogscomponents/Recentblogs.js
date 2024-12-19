@@ -16,7 +16,7 @@ export default function BlogGrid() {
 
   return (
     <div className="w-11/12 mx-auto py-12">
-      <h1 className="text-4xl font-bold  mb-8">
+      <h1 className="text-4xl font-bold hidden md:block mb-8">
         Our{" "}
         <span className="bg-clip-text py-8 inline-block text-transparent bg-gradient-to-r from-[#004AAD] via-[#F30278] to-[#E2B600]">
          All Blogs!
