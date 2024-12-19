@@ -202,11 +202,8 @@ export default function ActiveEvents() {
   }, [UnsavedTheaterbooking, Selectedtheaterbyid]);
 
   useEffect(() => {
-  
-      dispatch(fetchUnsavedBookingByTheaterId(Selectedtheaterbyid));
-   
+    dispatch(fetchUnsavedBookingByTheaterId(Selectedtheaterbyid));
   }, [Selectedtheaterbyid, dispatch]);
-
 
   useEffect(() => {
     if (branchtheatre?.length > 0) {
@@ -266,12 +263,18 @@ export default function ActiveEvents() {
                     Total: ₹{singlebooking?.TotalAmount}/-
                   </p>
                   <Chip className={"bg-green-500 text-white"}>
-                    {/* ₹{singlebooking?.paymentAmount} Paid */}
-                    ₹{singlebooking?.paymentType==="full"?singlebooking?.TotalAmount:singlebooking?.paymentAmount}/- paid
-
+                    {/* ₹{singlebooking?.paymentAmount} Paid */}₹
+                    {singlebooking?.paymentType === "full"
+                      ? singlebooking?.TotalAmount
+                      : singlebooking?.paymentAmount}
+                    /- paid
                   </Chip>
                   <Chip className={"bg-red-500 text-white"}>
-                  ₹{singlebooking?.paymentType==="advance"?singlebooking?.TotalAmount - singlebooking?.paymentAmount:0}
+                    ₹
+                    {singlebooking?.paymentType === "advance"
+                      ? singlebooking?.TotalAmount -
+                        singlebooking?.paymentAmount
+                      : 0}
                     &nbsp;to pay
                   </Chip>
                   {singlebooking?.coupon && (
@@ -391,8 +394,11 @@ export default function ActiveEvents() {
                   <p>
                     Amount Paid:{" "}
                     <span className="text-[#F30278]">
-                    ₹{singlebooking?.paymentType==="full"?singlebooking?.TotalAmount:singlebooking?.paymentAmount}/-
-
+                      ₹
+                      {singlebooking?.paymentType === "full"
+                        ? singlebooking?.TotalAmount
+                        : singlebooking?.paymentAmount}
+                      /-
                     </span>
                   </p>
                   <p>
@@ -468,7 +474,7 @@ export default function ActiveEvents() {
         <BookingDetailsDialog />
         <div className="flex justify-between  items-center py-4  sticky top-0 bg-white z-50 p-4">
           <div className="flex items-center space-x-4 w-full">
-            <h1 className="text-2xl font-bold">
+            <h1 className="text-2xl font-bold flex items-center gap-4">
               {selectedTab === "Active" && "Active Events"}
               {selectedTab === "upcoming" && "Upcoming Events"}
               {selectedTab === "completed" && "Completed Events"}
@@ -479,29 +485,47 @@ export default function ActiveEvents() {
               ) : (
                 <>
                   {selectedTab === "Active" && (
-                    <span className="text-pink-500">
-                      ({Theaterbooking?.counts?.active})
-                    </span>
+                    <Badge
+                      color="danger"
+                      content={Theaterbooking?.counts?.active}
+                      isInvisible={!Theaterbooking?.counts?.active}
+                      size="md"
+                    ></Badge>
                   )}
                   {selectedTab === "upcoming" && (
-                    <span className="text-pink-500">
-                      ({Theaterbooking?.counts?.upcoming})
-                    </span>
+                    <Badge
+                      color="danger"
+                      content={Theaterbooking?.counts?.upcoming}
+                      isInvisible={!Theaterbooking?.counts?.upcoming}
+                      size="md"
+                    ></Badge>
                   )}
                   {selectedTab === "completed" && (
-                    <span className="text-pink-500">
-                      ({Theaterbooking?.counts?.completed})
-                    </span>
+                    <Badge
+                      color="danger"
+                      content={Theaterbooking?.counts?.completed}
+                      isInvisible={!Theaterbooking?.counts?.completed}
+                      size="md"
+                    ></Badge>
                   )}
                   {selectedTab === "AllBooking" && (
-                    <span className="text-pink-500">
-                      ({Theaterbooking?.counts?.all})
-                    </span>
+                    <Badge
+                      color="danger"
+                      content={Theaterbooking?.counts?.all}
+                      isInvisible={!Theaterbooking?.counts?.all}
+                      size="md"
+                    ></Badge>
                   )}
                   {selectedTab === "cancelled" && (
-                    <span className="text-pink-500">
-                      ({UnsavedTheaterbooking?.length})
-                    </span>
+                    <Badge
+                      color="danger"
+                      content={UnsavedTheaterbooking?.length}
+                      isInvisible={
+                        UnsavedTheatererror === "Nobookings" ||
+                        UnsavedTheaterbooking?.length === 0
+                      }
+                      size="md"
+                    ></Badge>
                   )}
                 </>
               )}
@@ -598,8 +622,8 @@ export default function ActiveEvents() {
                 color="danger"
                 content={UnsavedTheaterbooking?.length}
                 isInvisible={
-                 UnsavedTheatererror==="Nobookings" ||
-                 UnsavedTheaterbooking?.length===0
+                  UnsavedTheatererror === "Nobookings" ||
+                  UnsavedTheaterbooking?.length === 0
                 }
                 size="md"
               >

@@ -10,7 +10,10 @@ import {
 } from "@/components/ui/select";
 import { Button, Spinner } from "@nextui-org/react";
 import { useSelector, useDispatch } from "react-redux";
-import { setupcomingtheatreid, fetchtheaterbybranchid } from "@/lib/Redux/theaterSlice";
+import {
+  setupcomingtheatreid,
+  fetchtheaterbybranchid,
+} from "@/lib/Redux/theaterSlice";
 import { Getbookingbytheaterid, Sendbookingremainder } from "@/lib/API/Booking";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
@@ -28,13 +31,19 @@ import Gromtobe from "@/public/asset/Gromtobe.png";
 import Momtobe from "@/public/asset/Momtobe.png";
 import Loveproposal from "@/public/asset/Loveproposal.png";
 import Congratulations from "@/public/asset/Congratulations.png";
+import { useRouter } from "next/navigation";
 
 const Upcomingevents = () => {
+  const router = useRouter();
+
   const { toast } = useToast();
   const dispatch = useDispatch();
-  const { branchtheatre, branchtheatreloading, branchtheatreerror, upcomingtheatreid } = useSelector(
-    (state) => state.theater
-  );
+  const {
+    branchtheatre,
+    branchtheatreloading,
+    branchtheatreerror,
+    upcomingtheatreid,
+  } = useSelector((state) => state.theater);
   const { selectedBranchId } = useSelector((state) => state.branches);
 
   const [upcomingEvents, setUpcomingEvents] = useState([]);
@@ -52,7 +61,10 @@ const Upcomingevents = () => {
       if (upcomingtheatreid) {
         setLoading(true);
         try {
-          const response = await Getbookingbytheaterid(upcomingtheatreid, "upcoming");
+          const response = await Getbookingbytheaterid(
+            upcomingtheatreid,
+            "upcoming"
+          );
           if (response?.data) {
             setUpcomingEvents(response.data);
           } else {
@@ -121,13 +133,17 @@ const Upcomingevents = () => {
             onValueChange={(value) => dispatch(setupcomingtheatreid(value))}
             value={upcomingtheatreid}
           >
-            <SelectTrigger id="location-select" className="w-60 h-10 flex items-center gap-2">
+            <SelectTrigger
+              id="location-select"
+              className="w-60 h-10 flex items-center gap-2"
+            >
               <SelectValue placeholder="Select Theater">
                 {branchtheatreloading ? (
                   <Spinner color="danger" size="sm" />
                 ) : (
-                  branchtheatre?.find((theater) => theater?._id === upcomingtheatreid)?.name ||
-                  "Select Theater"
+                  branchtheatre?.find(
+                    (theater) => theater?._id === upcomingtheatreid
+                  )?.name || "Select Theater"
                 )}
               </SelectValue>
             </SelectTrigger>
@@ -141,7 +157,9 @@ const Upcomingevents = () => {
                   </SelectItem>
                 ))
               ) : (
-                <div className="p-1 text-center text-sm ">No theaters available</div>
+                <div className="p-1 text-center text-sm ">
+                  No theaters available
+                </div>
               )}
             </SelectContent>
           </Select>
@@ -180,7 +198,8 @@ const Upcomingevents = () => {
                   </div>
                   <div className="text-sm text-gray-500 flex items-center">
                     <Clock className="w-4 h-4 mr-1" />
-                    {event?.slotDetails?.startTime} - {event?.slotDetails?.endTime}
+                    {event?.slotDetails?.startTime} -{" "}
+                    {event?.slotDetails?.endTime}
                   </div>
                 </div>
               </div>
@@ -189,12 +208,20 @@ const Upcomingevents = () => {
                 onPress={() => handleSendReminder(event?._id)}
                 variant="outline"
                 size="sm"
-                className=" rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "              >
+                className=" rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+              >
                 Send Reminder
               </Button>
             </div>
           ))
         )}
+        <Button
+          onPress={() => router.push("/dashboard/YourBookings")}
+          variant="light"
+          className="w-full bg-white mt-4 underline text-[#004AAD] hover:text-blue-700"
+        >
+          View All
+        </Button>
       </CardContent>
     </Card>
   );

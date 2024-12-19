@@ -132,7 +132,7 @@ const Newbooking = () => {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">
             New Bookings{" "}
-            <span className="text-pink-500">({Theaterbooking?.counts?.active})</span>
+           {/* {<span className="text-pink-500">{Theaterbooking?.counts?.active}</span>} */}
           </h2>
           <Select
               onValueChange={(value) => dispatch(setActivetheatreid(value))}

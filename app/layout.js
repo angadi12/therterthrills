@@ -58,11 +58,6 @@ export const metadata = {
       'max-snippet': -1,
     },
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-  },
   verification: {
     google: 'your-google-site-verification-code',
     yandex: 'your-yandex-verification-code',
@@ -79,6 +74,12 @@ export default function RootLayout({ children }) {
   return (
     <Providers>
       <html lang="en">
+      <head>
+      <meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+/>
+      </head>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
         <body className={inter.className}>
           <NextuiProviderWrapper>
