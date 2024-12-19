@@ -95,7 +95,7 @@ export default function Contactform() {
     }
     if (formData.addOns.length === 0) {
       toast({
-        title: "Error",
+        title: "All fields are required!",
         description: "Please select at least one add-on.",
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
