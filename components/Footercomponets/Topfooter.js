@@ -36,7 +36,7 @@ const Topfooter = () => {
               <FaLocationDot className="h-5 w-5 text-[#F30278]" />
             </div>{" "}
             <span className="text-sm text-white">
-              3rd Floor, Sai Sadan , Enclave Near Jyothi Theatre,<br></br>{" "}
+              3rd Floor, Sai Sadan Enclave, Near Jyothi Theatre,<br></br>{" "}
               Lingampally, Hyderabad Telangana - 500032
             </span>
           </div>

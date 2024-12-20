@@ -94,7 +94,7 @@ const page = () => {
               />
             </div>
             <div>
-              <div className="text-sm  text-[#F30278] text-pretty">{`3rd Floor, Sai Sadan , Enclave Near Jyothi Theatre, Lingampally, Hyderabad Telangana - 502032`}</div>
+              <div className="text-sm  text-[#F30278] text-pretty">{`3rd Floor, Sai Sadan Enclave , Near Jyothi Theatre, Lingampally, Hyderabad Telangana - 502032`}</div>
             </div>
           </div>
         </div>

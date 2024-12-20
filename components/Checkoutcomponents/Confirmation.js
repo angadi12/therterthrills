@@ -80,19 +80,21 @@ const Confirmation = () => {
         <div className="grid md:grid-cols-4 grid-cols-1 gap-4 w-full text-[#004AAD]">
           <div>
             <h3 className="font-semibold">Decorations</h3>
-            {Object.entries(addOns.decorations).map(([name, count]) => (
+            {Object.values(addOns?.decorations).length > 0 ? Object.entries(addOns?.decorations).map(([name, count]) => (
               <p key={name} className="text-sm">
                 {name} x {count}
               </p>
-            ))}
+            )):<p className="text-sm">
+            No addOns
+            </p>}
           </div>
           <div>
             <h3 className="font-semibold">Roses</h3>
-            {Object.entries(addOns.roses).map(([name, count]) => (
+            {Object.values(addOns?.roses).length > 0 ? Object.entries(addOns?.roses).map(([name, count]) => (
               <p className="text-sm" key={name}>
                 {name} x {count}
               </p>
-            ))}
+            )):<p className="text-sm">No Roses</p>}
           </div>
           <div>
             <h3 className="font-semibold">Photography</h3>
