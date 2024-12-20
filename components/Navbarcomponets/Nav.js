@@ -125,11 +125,15 @@ export default function Navbar() {
           <div className="flex items-center space-x-8 ml-6 relative z-10">
             <div className="flex items-center">
               <IoMail className="w-4 h-4 mr-2" />
-              <span>info@theatrethrills.com</span>
+              <span>info@thetheatrethrills.com</span>
             </div>
             <div className="flex items-center">
               <FaPhoneAlt className="w-4 h-4 mr-2" />
+              <div className="flex flex-col justify-start items-start text-xs">
               <span>+91 9398617123</span>
+              <span>+91 8885888949</span>
+
+              </div>
             </div>
             <div className="flex items-center">
               <FaLocationDot className="w-4 h-4 mr-2" />

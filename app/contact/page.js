@@ -42,6 +42,7 @@ const page = () => {
             </div>
             <div>
               <div className="text-sm text-[#F30278]">+91 9398617123</div>
+              <div className="text-sm text-[#F30278]">+91 8885888949</div>
             </div>
           </div>
           
@@ -80,7 +81,8 @@ const page = () => {
               />
             </div>
             <div>
-              <div className="text-sm text-[#F30278]">+91 8363802949</div>
+              <div className="text-sm text-[#F30278]">+91 9398617123</div>
+              <div className="text-sm text-[#F30278]">+91 8885888949</div>
             </div>
           </div>
           

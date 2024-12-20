@@ -9,7 +9,7 @@ export default function Component() {
       </CardHeader>
       <CardContent className="space-y-4">
         <ul className="space-y-4 list-disc text-sm md:text-lg md:pl-6">
-          <li>{`We require a ₹700 advance to confirm your booking.`}</li>
+          <li>{`We require a ₹750 advance to confirm your booking.`}</li>
           <li>
            {` If you cancel at least 72 hours before your scheduled time, ₹500 of
             the advance will be refunded.`}
@@ -19,7 +19,7 @@ export default function Component() {
             arrivals, are not eligible for refunds.`}
           </li>
           <li>
-           {` To request a cancellation, contact us via`} <strong> WhatsApp at +91 9398617123 </strong>
+           {` To request a cancellation, contact us via`} <strong> WhatsApp at +91 9398617123 / +91 8885888949 &nbsp;</strong>
             {`Refunds are processed within 7 business days of the request.`}
           </li>
           <li>

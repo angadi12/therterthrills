@@ -63,7 +63,7 @@ export const metadata = {
     yandex: 'your-yandex-verification-code',
     yahoo: 'your-yahoo-verification-code',
     other: {
-      me: ['https://www.thetheatrethrills.com', 'mailto:info@theatrethrills.com'],
+      me: ['https://www.thetheatrethrills.com', 'mailto:info@thetheatrethrills.com'],
     },
   },
 };

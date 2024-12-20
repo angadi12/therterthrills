@@ -25,7 +25,11 @@ const Topfooter = () => {
             <div className="bg-white flex justify-center items-center rounded-full h-12 w-12">
               <FaPhoneAlt className="h-5 w-5 text-[#F30278]" />
             </div>{" "}
+            <div className="flex flex-col justify-start items-start">
             <span className="text-sm text-white">+91 9398617123</span>
+            <span className="text-sm text-white">+91 8885888949</span>
+
+            </div>
           </div>
           <div className="flex items-center space-x-2">
             <div className="bg-white flex justify-center items-center rounded-full h-12 w-12">
