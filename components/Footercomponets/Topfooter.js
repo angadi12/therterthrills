@@ -26,8 +26,8 @@ const Topfooter = () => {
               <FaPhoneAlt className="h-5 w-5 text-[#F30278]" />
             </div>{" "}
             <div className="flex flex-col justify-start items-start">
-            <span className="text-sm text-white">+91 9398617123</span>
-            <span className="text-sm text-white">+91 8885888949</span>
+            <span className="text-sm text-white">+91 939 8617 123</span>
+            <span className="text-sm text-white">+91 888 5888 949</span>
 
             </div>
           </div>

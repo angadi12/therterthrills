@@ -130,8 +130,8 @@ export default function Navbar() {
             <div className="flex items-center">
               <FaPhoneAlt className="w-4 h-4 mr-2" />
               <div className="flex flex-col justify-start items-start text-xs">
-              <span>+91 9398617123</span>
-              <span>+91 8885888949</span>
+              <span>+91 939 8617 123</span>
+              <span>+91 888 5888 949</span>
 
               </div>
             </div>
