@@ -13,6 +13,7 @@ import Navbar from "@/components/Navbarcomponets/Nav";
 import Topfooter from "@/components/Footercomponets/Topfooter";
 import Footer from "@/components/Footercomponets/Footer";
 import useDeviceIdHook from '@/hooks/useDeviceId';
+import ChatWidget from "@/components/Homecomponents/Chatwidget";
 
 const Loading = dynamic(() => import("../components/Homecomponents/loading"), {
   ssr: false, // Disable server-side rendering
@@ -76,6 +77,7 @@ export function NextuiProviderWrapper({ children }) {
         pathname === "/Profile/accountinfo" ||
         pathname === "/Login" ? null : (
           <Navbar/>
+          
         )}
         {children}
         {pathname === "/dashboard" ||
@@ -84,6 +86,8 @@ export function NextuiProviderWrapper({ children }) {
         pathname === "/Profile/accountinfo" ||
         pathname === "/Login" ? null : (
           <>
+          <ChatWidget/>
+
             <Topfooter />
 
             <Footer />

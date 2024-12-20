@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <main className="pb-10 md:pb-0">
       <Hero />
-      <ChatWidget/>
+      {/* <ChatWidget/> */}
       <FeaturesSection />
       <ExperienceSection />
       <CustomServices/>
