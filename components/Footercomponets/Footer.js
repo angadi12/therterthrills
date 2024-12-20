@@ -202,11 +202,14 @@ export default function Footer() {
                 className="w-6 h-6 object-contain"
               />
             </Link>
+            <Link href={"https://www.youtube.com/@TheTheatreThrills"}>
             <Image
               src={Youtube}
-              alt="Instagram"
-              className="h-6 w-6 object-contain"
+              alt="Youtube"
+              className="w-6 h-6 object-contain"
             />
+
+           </Link>
           </div>
           <p>
             &copy;Copyrights {new Date().getFullYear()} .The Theatre Thrills .

@@ -153,11 +153,14 @@ export default function Navbar() {
               className="w-6 h-6 object-contain"
             />
            </Link>
+           <Link href={"https://www.youtube.com/@TheTheatreThrills"}>
             <Image
               src={Youtube}
               alt="Youtube"
               className="w-6 h-6 object-contain"
             />
+
+           </Link>
           </div>
           <Usercomponet/>
         </div>

@@ -12,7 +12,7 @@ import {
 import { Button } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
-import {Facebook,Instagram,Youtube } from "lucide-react"
+import { Facebook, Instagram, Youtube } from "lucide-react";
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -68,16 +68,18 @@ export default function ChatWidget() {
                     "https://www.instagram.com/thetheatrethrills/?igsh=aTB2a25hYzQxNWpp"
                   }
                 >
-                 <Instagram className="text-pink-500 w-4 h-4"/>
+                  <Instagram className="text-pink-500 w-4 h-4" />
                 </Link>
                 <Link
                   href={
                     "https://www.facebook.com/people/The-Theatre-Thrills/61570456632986/?mibextid=ZbWKwL"
                   }
                 >
-                 <Facebook className="text-blue-500 w-4 h-4" />
+                  <Facebook className="text-blue-500 w-4 h-4" />
                 </Link>
-                <Youtube  className="text-red-500 w-4 h-4"/>
+                <Link href={"https://www.youtube.com/@TheTheatreThrills"}>
+                  <Youtube className="text-red-500 w-4 h-4" />
+                </Link>
               </div>
             </div>
           </motion.div>
