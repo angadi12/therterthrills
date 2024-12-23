@@ -16,7 +16,7 @@ import useDeviceIdHook from '@/hooks/useDeviceId';
 import ChatWidget from "@/components/Homecomponents/Chatwidget";
 
 const Loading = dynamic(() => import("../components/Homecomponents/loading"), {
-  ssr: false, // Disable server-side rendering
+  ssr: false, 
 });
 
 export function NextuiProviderWrapper({ children }) {

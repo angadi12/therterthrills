@@ -48,8 +48,8 @@ const Page = () => {
     // Convert a UTC date to IST and format it as 'yyyy-mm-dd'
     const convertToISTDateString = (utcDate) => {
       const date = new Date(utcDate);
-      date.setMinutes(date.getMinutes() + indianTimeOffset); // Adjust for IST offset
-      return date.toISOString().split("T")[0]; // Extract 'yyyy-mm-dd' format
+      date?.setMinutes(date?.getMinutes() + indianTimeOffset); // Adjust for IST offset
+      return date?.toISOString().split("T")[0]; // Extract 'yyyy-mm-dd' format
     };
   
     // Get today's IST date in 'yyyy-mm-dd' format

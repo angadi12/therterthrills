@@ -71,7 +71,7 @@ const CouponOfferForm = () => {
         return {
           ...prev,
           validFrom: value?.from
-            ? formatISO(value.from, { representation: "date" })
+            ? formatISO(value?.from, { representation: "date" })
             : null,
           validUntil: value?.to
             ? formatISO(value?.to, { representation: "date" })
