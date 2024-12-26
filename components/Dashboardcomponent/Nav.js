@@ -99,7 +99,7 @@ export default function Navbarr() {
     dispatch(clearUser());
     Cookies.remove("token");
     Cookies.remove("User");
-    router.refresh("/dashboard");
+    router.refresh("/");
   };
 
   return (
