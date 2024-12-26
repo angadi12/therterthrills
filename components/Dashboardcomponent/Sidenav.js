@@ -108,7 +108,7 @@ const Sidenav = () => {
         router.push("/dashboard/Messages");
         break;
       default:
-        router.push("/dashboard");
+        router.push("/");
     }
   };
 
@@ -116,7 +116,7 @@ const Sidenav = () => {
     dispatch(clearUser());
     Cookies.remove("token");
     Cookies.remove("User");
-    router.refresh("/");
+    router.push("/");
   };
 
   return (
