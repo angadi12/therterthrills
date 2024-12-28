@@ -23,7 +23,7 @@ import {
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { TrendingUp } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTheaterAnalytics } from "@/lib/Redux/dashboardSlice";
+import { fetchTheaterAnalytics ,fetchAllTheaterAnalytics} from "@/lib/Redux/dashboardSlice";
 import { fetchtheaterbybranchid } from "@/lib/Redux/theaterSlice";
 import { Setselectedtheaterid } from "@/lib/Redux/bookingSlice";
 import { Spinner } from "@nextui-org/react";
@@ -31,8 +31,12 @@ import { color } from "framer-motion";
 
 const Performancecard = () => {
   const [selectedYear, setSelectedYear] = useState("");
+  const [selectedTheater, setSelectedTheater] = useState("");
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector(
+    (state) => state.theaterAnalytics
+  );
+  const { Alldata, Allloading, Allerror } = useSelector(
     (state) => state.theaterAnalytics
   );
   const { Theaterbooking, Selectedtheaterbyid, Theaterloading, Theatererror } =
@@ -52,16 +56,19 @@ const Performancecard = () => {
   //     dispatch(Setselectedtheaterid(branchtheatre[0]._id));
   //   }
   // }, [branchtheatre, Selectedtheaterbyid, dispatch]);
-
   useEffect(() => {
     if (Selectedtheaterbyid) {
-      dispatch(fetchTheaterAnalytics({ id: Selectedtheaterbyid }));
+      if (Selectedtheaterbyid === "all") {
+        dispatch(fetchAllTheaterAnalytics({id:selectedBranchId,year:new Date().getFullYear()}));
+      } else {
+        dispatch(fetchTheaterAnalytics({ id: Selectedtheaterbyid }));
+      }
     }
-  }, [Selectedtheaterbyid, dispatch]);
+  }, [Selectedtheaterbyid, dispatch,selectedBranchId]);
 
   useEffect(() => {
     if (branchtheatre?.length > 0 ) {
-      dispatch(Setselectedtheaterid(branchtheatre[0]._id));
+      dispatch(Setselectedtheaterid("all"));
     }
   }, [dispatch,branchtheatre,selectedBranchId]);
 
@@ -72,14 +79,8 @@ const Performancecard = () => {
   //   }
   // }, [branchtheatreerror, dispatch]);
 
-  const chartData = [
-    { month: "January", "Total Bookings": 186, "Total Revenue": 4000 },
-    { month: "February", "Total Bookings": 305, "Total Revenue": 4200 },
-    { month: "March", "Total Bookings": 237, "Total Revenue": 2120 },
-    { month: "April", "Total Bookings": 73, "Total Revenue": 4190 },
-    { month: "May", "Total Bookings": 209, "Total Revenue": 3130 },
-    { month: "June", "Total Bookings": 214, "Total Revenue": 5140 },
-  ];
+
+
 
   const chartConfig = {
     desktop: {
@@ -112,9 +113,15 @@ const Performancecard = () => {
                     <Spinner color="danger" size="sm" />
                   ) : (
                     <div className="flex items-center gap-2">
-                      {branchtheatre?.find(
+                      {/* {branchtheatre?.find(
                         (theater) => theater?._id === Selectedtheaterbyid
-                      )?.name || "Select Theater"}
+                      )?.name || "Select Theater"} */}
+
+                      {Selectedtheaterbyid === "all"
+                        ? "All Theaters"
+                        : branchtheatre?.find(
+                            (theater) => theater?._id === Selectedtheaterbyid
+                          )?.name || "Select Theater"}
                     </div>
                   )}
                 </SelectValue>
@@ -123,11 +130,15 @@ const Performancecard = () => {
                 {branchtheatreloading ? (
                   <Spinner color="danger" size="sm" />
                 ) : branchtheatre?.length > 0 ? (
-                  branchtheatre.map((theater) => (
+                  <>
+                  <SelectItem value="all">All Theaters</SelectItem>
+                 { branchtheatre.map((theater) => (
                     <SelectItem key={theater?._id} value={theater?._id}>
                       {theater?.name}
                     </SelectItem>
-                  ))
+                  ))}
+
+                  </>
                 ) : (
                   <div className="p-1 text-center text-sm ">
                     No theaters available
@@ -145,13 +156,13 @@ const Performancecard = () => {
           </div>
         ) : (
           <>
-         {loading?<div className="flex justify-center items-center h-64">
+         {loading || Allloading?<div className="flex justify-center items-center h-64">
 
          <Spinner color="danger"/>
          </div>
          :
           <ChartContainer config={chartConfig}>
-            <BarChart accessibilityLayer data={data?.analytics}>
+            <BarChart accessibilityLayer data={Selectedtheaterbyid==="all"?Alldata?.analytics:data?.analytics}>
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="month"

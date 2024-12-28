@@ -116,7 +116,7 @@ const Page = () => {
           <ModalHeader className="flex flex-col gap-1 text-center">
             Branch not selected
           </ModalHeader>
-          <ModalBody>
+          <ModalBody className="flex flex-col gap-1 text-center">
             <p className="text-sm ">Please select Branch before proceeding</p>
           </ModalBody>
           <ModalFooter className="flex justify-center items-center">

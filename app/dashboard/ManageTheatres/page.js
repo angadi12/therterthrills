@@ -147,18 +147,18 @@ export default function Managetheatre() {
                   {theater?.maxCapacity} Max Capacity
                 </Badge>
                 <Badge variant="secondary" className="px-2 py-1">
-                  <IndianRupee className="mr-2 h-4 w-4" />
-                  Decoration - {theater?.minimumDecorationAmount}/-
+                Decoration - <IndianRupee className=" h-3 w-3" />
+                 {theater?.minimumDecorationAmount}/-
                 </Badge>
                 <Badge variant="secondary" className="px-2 py-1">
-                  Capacity - {theater?.groupSize}/-
+                  Capacity - {theater?.groupSize}
                 </Badge>
                 <Badge variant="secondary" className="px-2 py-1">
-                  <IndianRupee className="mr-2 h-4 w-4" />
-                  ExtraPerPerson - {theater?.extraPerPerson}/-
+                ExtraPerPerson - <IndianRupee className=" h-3 w-3" />
+                  {theater?.extraPerPerson}/-
                 </Badge>
-                <Badge variant="secondary" className="px-2 py-1">
-                  status - {theater?.status}
+                <Badge variant="secondary" className="px-2 py-1 capitalize">
+                  Status - {theater?.status}
                 </Badge>
               </div>
               <span className="text-2xl font-bold">₹{theater?.price}/-</span>

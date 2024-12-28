@@ -244,7 +244,7 @@ export default function Navbarr() {
               <ModalHeader className="flex flex-col text-center">
                 No Branches Found
               </ModalHeader>
-              <ModalBody>
+              <ModalBody className="flex flex-col text-center">
                 <p>Please select a branch to proceed.</p>
               </ModalBody>
               <ModalFooter className="flex justify-center items-center text-center">

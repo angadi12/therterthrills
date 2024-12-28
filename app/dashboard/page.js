@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchBranches, fetchBranchsummary } from "@/lib/Redux/BranchSlice";
 import { useEffect, useState } from "react";
 import DashboardSkeleton from "@/components/Dashboardcomponent/Dashboardskeleton";
+import HourlyAnalyticsChart from "@/components/Dashboardcomponent/Hourlydata";
 
 export default function BookingDashboard() {
   const dispatch = useDispatch();
@@ -110,7 +111,10 @@ export default function BookingDashboard() {
             </CardContent>
           </Card>
         </div>
-
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-3">
+          <HourlyAnalyticsChart/>
+         </div>
+        
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           <Branchanalytics />
 

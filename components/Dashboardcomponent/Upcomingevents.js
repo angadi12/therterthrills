@@ -14,7 +14,11 @@ import {
   setupcomingtheatreid,
   fetchtheaterbybranchid,
 } from "@/lib/Redux/theaterSlice";
-import { Getbookingbytheaterid, Sendbookingremainder } from "@/lib/API/Booking";
+import {
+  Getbookingbytheaterid,
+  Sendbookingremainder,
+  GetbookingbyBranchid,
+} from "@/lib/API/Booking";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import Image from "next/image";
@@ -57,33 +61,68 @@ const Upcomingevents = () => {
     }
   }, [selectedBranchId, dispatch]);
 
+  // useEffect(() => {
+  //   const fetchBookings = async () => {
+  //     if (upcomingtheatreid) {
+  //       setLoading(true);
+  //       try {
+  //         const response = await Getbookingbytheaterid(
+  //           upcomingtheatreid,
+  //           "upcoming"
+  //         );
+  //         if (response?.data) {
+  //           setUpcomingEvents(response.data);
+  //         } else {
+  //           setUpcomingEvents([]);
+  //         }
+  //       } catch (error) {
+  //         console.error("Failed to fetch bookings:", error);
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     }
+  //   };
+  //   if (upcomingtheatreid !== "all") {
+  //     fetchBookings();
+  //   }
+  // }, [upcomingtheatreid]);
+
+
   useEffect(() => {
     const fetchBookings = async () => {
-      if (upcomingtheatreid) {
-        setLoading(true);
-        try {
-          const response = await Getbookingbytheaterid(
-            upcomingtheatreid,
-            "upcoming"
-          );
-          if (response?.data) {
-            setUpcomingEvents(response.data);
-          } else {
-            setUpcomingEvents([]);
-          }
-        } catch (error) {
-          console.error("Failed to fetch bookings:", error);
-        } finally {
-          setLoading(false);
+      setLoading(true);
+      try {
+        let response;
+        if (upcomingtheatreid === "all") {
+          response = await GetbookingbyBranchid(selectedBranchId, "upcoming");
+        } else {
+          response = await Getbookingbytheaterid(upcomingtheatreid, "upcoming");
         }
+        
+        if (response?.data) {
+          setUpcomingEvents(response.data);
+        } else {
+          setUpcomingEvents([]);
+          setLoading(false);
+
+        }
+      } catch (error) {
+        console.error("Failed to fetch bookings:", error);
+        setLoading(false);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchBookings();
-  }, [upcomingtheatreid]);
+  
+    if (upcomingtheatreid) {
+      fetchBookings();
+    }
+  }, [upcomingtheatreid, selectedBranchId]);
+  
 
   useEffect(() => {
     if (branchtheatre?.length > 0) {
-      dispatch(setupcomingtheatreid(branchtheatre[0]._id));
+      dispatch(setupcomingtheatreid("all"));
     }
   }, [branchtheatre, dispatch]);
 
@@ -142,6 +181,8 @@ const Upcomingevents = () => {
                 <SelectValue placeholder="Select Theater">
                   {branchtheatreloading ? (
                     <Spinner color="danger" size="sm" />
+                  ) : upcomingtheatreid === "all" ? (
+                    "All Theaters"
                   ) : (
                     branchtheatre?.find(
                       (theater) => theater?._id === upcomingtheatreid
@@ -153,11 +194,15 @@ const Upcomingevents = () => {
                 {branchtheatreloading ? (
                   <div className="p-2 text-center">Loading theaters...</div>
                 ) : branchtheatre?.length > 0 ? (
-                  branchtheatre.map((theater) => (
-                    <SelectItem key={theater?._id} value={theater?._id}>
-                      {theater?.name}
-                    </SelectItem>
-                  ))
+                  <>
+                    <SelectItem value="all">All Theaters</SelectItem>
+
+                    {branchtheatre.map((theater) => (
+                      <SelectItem key={theater?._id} value={theater?._id}>
+                        {theater?.name}
+                      </SelectItem>
+                    ))}
+                  </>
                 ) : (
                   <div className="p-1 text-center text-sm ">
                     No theaters available
@@ -179,7 +224,6 @@ const Upcomingevents = () => {
               <p>No Bookings available</p>
             </div>
           ) : (
-            
             upcomingEvents.map((event) => (
               <div
                 key={event._id}

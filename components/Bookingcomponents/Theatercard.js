@@ -1,5 +1,5 @@
 "use client";
-import { Star, Users, Wine ,CircleChevronRight} from "lucide-react";
+import { Star, Users, Wine, CircleChevronRight } from "lucide-react";
 import { Button, Divider } from "@nextui-org/react";
 import {
   Card,
@@ -17,19 +17,23 @@ import Cakeicon from "@/public/asset/Cakeicon.png";
 import refundicon from "@/public/asset/refundicon.png";
 import TVicon from "@/public/asset/TVicon.png";
 import Speakericon from "@/public/asset/Speakericon.png";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import {setSelectedTheater,setSelectedSlotid} from "@/lib/Redux/theaterSlice"
+import {
+  setSelectedTheater,
+  setSelectedSlotid,
+} from "@/lib/Redux/theaterSlice";
 
 export default function TheatreCard({ theatre }) {
   const router = useRouter();
   const { toast } = useToast();
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
 
   const [currentImage, setCurrentImage] = useState(0);
   const icon = [Groupicon2, Cakeicon, refundicon, TVicon, Speakericon];
-  const { selectedLocation,selectedslotsid ,selectedTheater,date} = useSelector((state) => state.theater);
+  const { selectedLocation, selectedslotsid, selectedTheater, date } =
+    useSelector((state) => state.theater);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -38,52 +42,16 @@ export default function TheatreCard({ theatre }) {
     return () => clearInterval(timer);
   }, []);
 
-  
-  // const handleProceed = () => {
-  //   let error = null;
-  
-  //   if (!selectedLocation) {
-  //     error = {
-  //       title: "Please Select a Location",
-  //       description: "Please select your location to continue booking.",
-  //     };
-  //   } else if (!selectedTheater) {
-  //     error = {
-  //       title: "Theater Not Selected",
-  //       description: "Please select a theater to continue.",
-  //     };
-  //   } else if (!selectedslotsid) {
-  //     error = {
-  //       title: "Theater Slot Not Selected",
-  //       description: "Please select a theater slot to continue.",
-  //     };
-  //   } else if (!date) {
-  //     error = {
-  //       title: "Date Not Selected",
-  //       description: "Please select a date to continue.",
-  //     };
-  //   }
-  
-  //   if (error) {
-  //     toast({
-  //       title: error.title,
-  //       description: error.description,
-  //       action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-  //     });
-  //   } else {
-  //     router.push("/checkout");
-  //   }
-  // };
-  
-  
+  console.log(theatre);
+
   const handleProceedWithValidation = () => {
     // Dispatch the selected theater
     dispatch(setSelectedTheater(theatre?.theaterId));
-  
+
     // Validate and proceed
     setTimeout(() => {
       let error = null;
-  
+
       if (!selectedLocation) {
         error = {
           title: "Please Select a Location",
@@ -105,7 +73,7 @@ export default function TheatreCard({ theatre }) {
           description: "Please select a date to continue.",
         };
       }
-  
+
       if (error) {
         toast({
           title: error.title,
@@ -117,8 +85,6 @@ export default function TheatreCard({ theatre }) {
       }
     }, 0); // Small timeout ensures Redux state is updated
   };
-  
-
 
   return (
     <>
@@ -174,8 +140,10 @@ export default function TheatreCard({ theatre }) {
             <span className="font-bold text-lg">{theatre?.price}/-</span>
           </div>
           <div className="flex items-center justify-between mb-2">
-          <h3 className="text-xl font-bold mb-2">{theatre?.name}</h3>
-          {theatre?.availableSlots.length > 0 && <p className="text-white md:text-sm text-xs px-2 bg-[#F30278] rounded-full p-1">{`${theatre?.availableSlots.length} slots available`}</p>}
+            <h3 className="text-xl font-bold mb-2">{theatre?.name}</h3>
+            {theatre?.availableSlots.length > 0 && (
+              <p className="text-white md:text-sm text-xs px-2 bg-[#F30278] rounded-full p-1">{`${theatre?.availableSlots.length} slots available`}</p>
+            )}
           </div>
           <div className="flex gap-2 mb-2">
             <span className="bg-pink-100 ring-1 ring-[#F30278] text-xs text-[#F30278] px-2 py-2 font-semibold rounded flex items-center">
@@ -197,7 +165,7 @@ export default function TheatreCard({ theatre }) {
                     key={index}
                     className="flex gap-2 justify-start items-start"
                   >
-                   <CircleChevronRight size={15} className="text-[#F30278] "/>
+                    <CircleChevronRight size={15} className="text-[#F30278] " />
                     <p className="text-[#7A7A7A] font-medium " key={index}>
                       {item}
                     </p>
@@ -207,55 +175,54 @@ export default function TheatreCard({ theatre }) {
             </div>
           )}
           <Divider />
-          {/* {theatre?.slots && theatre?.slots.length > 0 && (
-          <div className="mt-auto">
-            <h4 className="font-bold mb-2">Choose Slot</h4>
-            <div className="grid grid-cols-2 gap-2 ">
-              {(upcomingSlots ?? []).map((slot, index) => (
-                <Button
-                  key={index}
-                  variant={
-                    index === (upcomingSlots?.length ?? 0) - 1
-                      ? "default"
-                      : "outline"
-                  }
-                  className="w-full ring-1 ring-[#F30278] text-[#F30278] rounded-sm"
-                >
-                  {slot?.startTime}-{slot?.endTime}
-                </Button>
-              ))}
-            </div>
-          </div>
-        )} */}
-          {theatre?.availableSlots && theatre?.availableSlots.length > 0 ? (
+          {theatre?.slots && theatre?.slots?.length > 0 ? (
             <div className="mt-auto">
               <h4 className="font-bold mb-2">Choose Slot</h4>
               <div className="grid grid-cols-2 gap-2 ">
-                {(theatre?.availableSlots ?? []).map((slot, index) => (
-                  <Button
-                    key={index}
-                    onPress={()=>dispatch(setSelectedSlotid(slot?._id))}
-                    variant={
-                      index === (theatre?.availableSlots?.length ?? 0) - 1
-                        ? "default"
-                        : "outline"
-                    }
-                    className={`w-full text-xs md:text-sm ${selectedslotsid===slot._id?"bg-[#F30278] text-white" :"ring-1 ring-[#F30278] text-[#F30278]"} rounded-sm`}
-                  >
-                    {slot?.startTime} - {slot?.endTime}
-                  </Button>
-                ))}
+                {theatre?.slots.map((slot, index) => {
+                  // Check if the slot is available
+                  const isAvailable = theatre?.availableSlots.some(
+                    (availableSlot) =>
+                      availableSlot?.startTime === slot?.startTime &&
+                      availableSlot?.endTime === slot?.endTime
+                  );
+
+                  return (
+                    <Button
+                      key={index}
+                      onPress={() =>
+                        isAvailable && dispatch(setSelectedSlotid(slot?._id))
+                      }
+                      disabled={!isAvailable} // Disable if the slot is not available
+                      variant={isAvailable ? "outline" : "default"}
+                      className={`w-full text-xs md:text-sm ${
+                        selectedslotsid === slot?._id && isAvailable
+                          ? "bg-[#F30278] text-white"
+                          : isAvailable
+                          ? "ring-1 ring-[#F30278] text-[#F30278]"
+                          : "line-through text-gray-400 ring-1 ring-gray-400 cursor-not-allowed"
+                      } rounded-sm`}
+                    >
+                      {slot?.startTime} - {slot?.endTime}
+                    </Button>
+                  );
+                })}
               </div>
             </div>
           ) : (
-           <div className="flex justify-center w-full items-center py-2">
-            <p className="text-[#F30278] font-medium text-sm">No Slots available</p>
-           </div>
+            <div className="flex justify-center w-full items-center py-2">
+              <p className="text-[#F30278] font-medium text-sm">
+                No Slots available
+              </p>
+            </div>
           )}
         </CardContent>
         <CardFooter className="mt-auto flex flex-col justify-center items-center gap-3 w-full px-4">
           <Button
-            isDisabled={theatre?.availableSlots.length === 0}
+            isDisabled={
+              !selectedslotsid || // No slot selected
+              !theatre?.slots.some((slot) => slot._id === selectedslotsid) // Selected slot doesn't belong to this theater
+            }
             onPress={handleProceedWithValidation}
             className="px-8 py-0.5 rounded-sm w-full  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
           >

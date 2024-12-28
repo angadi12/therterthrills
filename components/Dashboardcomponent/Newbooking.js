@@ -15,7 +15,10 @@ import {
   fetchUnsavedBookingByTheaterId,
   Setselectedtheaterid,
 } from "@/lib/Redux/bookingSlice";
-import { fetchtheaterbybranchid, setActivetheatreid } from "@/lib/Redux/theaterSlice";
+import {
+  fetchtheaterbybranchid,
+  setActivetheatreid,
+} from "@/lib/Redux/theaterSlice";
 import { useRouter } from "next/navigation";
 
 import Birthdayicon from "@/public/asset/Birthdayicon.png";
@@ -32,7 +35,7 @@ import Momtobe from "@/public/asset/Momtobe.png";
 import Loveproposal from "@/public/asset/Loveproposal.png";
 import Congratulations from "@/public/asset/Congratulations.png";
 import Image from "next/image";
-import { Getbookingbytheaterid } from "@/lib/API/Booking";
+import { Getbookingbytheaterid,GetbookingbyBranchid } from "@/lib/API/Booking";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Newbooking = () => {
@@ -40,24 +43,65 @@ const Newbooking = () => {
   const dispatch = useDispatch();
   const { Theaterbooking, Selectedtheaterbyid, Theaterloading, Theatererror } =
     useSelector((state) => state.booking);
-  const { branchtheatre, branchtheatreloading, branchtheatreerror,Activetheatreid } =
-    useSelector((state) => state.theater);
+  const {
+    branchtheatre,
+    branchtheatreloading,
+    branchtheatreerror,
+    Activetheatreid,
+  } = useSelector((state) => state.theater);
   const { selectedBranchId } = useSelector((state) => state.branches);
   const [activeEvents, setActiveEvents] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (Activetheatreid) {
-      dispatch(fetchBookingByTheaterId({ TheaterId: Activetheatreid, status: "Active" }));
+    if (Activetheatreid !=="all") {
+      dispatch(
+        fetchBookingByTheaterId({
+          TheaterId: Activetheatreid,
+          status: "Active",
+        })
+      );
     }
   }, [Activetheatreid, dispatch]);
 
   useEffect(() => {
-    if (Activetheatreid) {
-      dispatch(fetchBookingByTheaterId({ TheaterId: Activetheatreid, status: "Active" }));
+    if (Activetheatreid !=="all") {
+      dispatch(
+        fetchBookingByTheaterId({
+          TheaterId: Activetheatreid,
+          status: "Active",
+        })
+      );
     }
   }, [Activetheatreid]);
 
 
+  useEffect(() => {
+    const fetchBookings = async () => {
+      setLoading(true);
+      try {
+        let response;
+          response = await GetbookingbyBranchid(selectedBranchId, "Active");            
+        if (response?.data) {
+          setActiveEvents(response.data);
+        } else {
+          setActiveEvents([]);
+          setLoading(false);
+
+        }
+      } catch (error) {
+        console.error("Failed to fetch bookings:", error);
+        setLoading(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    if (Activetheatreid ==="all") {
+      fetchBookings();
+    }
+  }, [Activetheatreid, selectedBranchId]);
+  
 
   useEffect(() => {
     if (selectedBranchId) {
@@ -81,33 +125,30 @@ const Newbooking = () => {
 
   // useEffect(() => {
   //   const today = new Date();
-  //   const indianTimeOffset = 330; 
-  
+  //   const indianTimeOffset = 330;
+
   //   const convertToISTDateString = (utcDate) => {
   //     const date = new Date(utcDate);
-  //     date.setMinutes(date.getMinutes() + indianTimeOffset); 
-  //     return date.toISOString().split("T")[0]; 
+  //     date.setMinutes(date.getMinutes() + indianTimeOffset);
+  //     return date.toISOString().split("T")[0];
   //   };
-  
+
   //   const todayIST = convertToISTDateString(today);
-  
+
   //   const active =
   //     Theaterbooking?.filter((booking) => {
-  //       const bookingDateIST = convertToISTDateString(booking.date); 
-  //       return bookingDateIST === todayIST; 
+  //       const bookingDateIST = convertToISTDateString(booking.date);
+  //       return bookingDateIST === todayIST;
   //     }) || [];
-  
-  //   setActiveEvents(active);
-  // }, [Theaterbooking, Selectedtheaterbyid, Theatererror]); 
-  
 
+  //   setActiveEvents(active);
+  // }, [Theaterbooking, Selectedtheaterbyid, Theatererror]);
 
   useEffect(() => {
     if (branchtheatre?.length > 0) {
-      dispatch(setActivetheatreid(branchtheatre[0]._id));
+      dispatch(setActivetheatreid("all"));
     }
-  }, [branchtheatre, dispatch,selectedBranchId]);
-
+  }, [branchtheatre, dispatch, selectedBranchId]);
 
   const iconMapping = {
     Birthday: Birthdayicon,
@@ -125,18 +166,16 @@ const Newbooking = () => {
     Congratulations: Congratulations,
   };
 
-
-
   return (
     <Card className="rounded-none shadow-none overflow-hidden">
       <ScrollArea className="h-full">
-      <CardContent className="p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">
-            New Bookings{" "}
-           {/* {<span className="text-pink-500">{Theaterbooking?.counts?.active}</span>} */}
-          </h2>
-          <Select
+        <CardContent className="p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold">
+              New Bookings{" "}
+              {/* {<span className="text-pink-500">{Theaterbooking?.counts?.active}</span>} */}
+            </h2>
+            <Select
               onValueChange={(value) => dispatch(setActivetheatreid(value))}
               value={Activetheatreid}
             >
@@ -149,9 +188,14 @@ const Newbooking = () => {
                     <Spinner color="danger" size="sm" />
                   ) : (
                     <div className="flex items-center gap-2">
-                      {branchtheatre?.find(
+                      {/* {branchtheatre?.find(
                         (theater) => theater?._id === Activetheatreid
-                      )?.name || "Select Theater"}
+                      )?.name || "Select Theater"} */}
+                      {Activetheatreid === "all"
+                        ? "All Theaters"
+                        : branchtheatre?.find(
+                            (theater) => theater?._id === Activetheatreid
+                          )?.name || "Select Theater"}
                     </div>
                   )}
                 </SelectValue>
@@ -160,11 +204,14 @@ const Newbooking = () => {
                 {branchtheatreloading ? (
                   <div className="p-2 text-center">Loading theaters...</div>
                 ) : branchtheatre?.length > 0 ? (
-                  branchtheatre.map((theater) => (
-                    <SelectItem key={theater?._id} value={theater?._id}>
-                      {theater?.name}
-                    </SelectItem>
-                  ))
+                  <>
+                    <SelectItem value="all">All Theaters</SelectItem>
+                    {branchtheatre.map((theater) => (
+                      <SelectItem key={theater?._id} value={theater?._id}>
+                        {theater?.name}
+                      </SelectItem>
+                    ))}
+                  </>
                 ) : (
                   <div className="p-1 text-center text-sm ">
                     No theaters available
@@ -172,76 +219,81 @@ const Newbooking = () => {
                 )}
               </SelectContent>
             </Select>
-        </div>
-      {branchtheatreerror ? (
-          <div className="flex justify-center items-center w-full h-60">
-            <p>No theaters </p>
           </div>
-        ) : (<div className="space-y-4">
-        {Theaterloading ? (
-          <div className="flex justify-center items-center w-full h-60">
-            <Spinner color="danger" />
-          </div>
-        ) : (
-          <>
-            {Theaterbooking?.data?.length === 0 ? (
-              <div className="flex justify-center items-center w-full h-60">
-                <p>No Bookings available</p>
-              </div>
-            ) : (
-              <>
-                {Theatererror === "No bookings found" ? (
-                  <div className="flex justify-center items-center w-full h-60">
-                    <p>No Bookings available</p>
-                  </div>
-                ) : (
-                  Theaterbooking?.data?.map((booking, index) => (
-                    <div
-                      onClick={() => router.push("/dashboard/YourBookings")}
-                      key={index}
-                      className={`flex items-center justify-between p-4 rounded-lg cursor-pointer ${
-                        index === 1
-                          ? "bg-[#F30278] text-white"
-                          : "bg-[#004AAD] text-white"
-                      }`}
-                    >
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-2xl">
-                        <Image
-                                src={iconMapping[booking?.Occasionobject] || ""}
-                                alt={booking?.Occasionobject}
-                                className="w-8 h-8 object-cover"
-                              />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">
-                            {booking?.Occasionobject}
-                          </h3>
-                          <div className="text-sm opacity-80 flex items-center">
-                            <Clock className="w-4 h-4 mr-1" />
-                            {booking?.slotDetails?.startTime} -&nbsp;
-                            {booking?.slotDetails?.endTime}
-                          </div>
-                        </div>
-                      </div>
-                      <ChevronRightIcon className="w-6 h-6" />
+          {branchtheatreerror ? (
+            <div className="flex justify-center items-center w-full h-60">
+              <p>No theaters </p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {Theaterloading || loading ? (
+                <div className="flex justify-center items-center w-full h-60">
+                  <Spinner color="danger" />
+                </div>
+              ) : (
+                <>
+                  {(Activetheatreid === "all" ? activeEvents : Theaterbooking?.data)?.length === 0 ? (
+                    <div className="flex justify-center items-center w-full h-60">
+                      <p>No Bookings available</p>
                     </div>
-                  ))
-                )}
-              </>
-            )}
-          </>
-        )}
-        <Button
-          onPress={() => router.push("/dashboard/YourBookings")}
-          variant="light"
-          className="w-full underline text-[#004AAD] hover:text-blue-700"
-        >
-          View All
-        </Button>
-      </div>)}
-      </CardContent>
-
+                  ) : (
+                    <>
+                      {Theatererror === "No bookings found" ? (
+                        <div className="flex justify-center items-center w-full h-60">
+                          <p>No Bookings available</p>
+                        </div>
+                      ) : (
+                        (Activetheatreid === "all" ? activeEvents : Theaterbooking?.data)?.map((booking, index) => (
+                          <div
+                            onClick={() =>
+                              router.push("/dashboard/YourBookings")
+                            }
+                            key={index}
+                            className={`flex items-center justify-between p-4 rounded-lg cursor-pointer ${
+                              index === 1
+                                ? "bg-[#F30278] text-white"
+                                : "bg-[#004AAD] text-white"
+                            }`}
+                          >
+                            <div className="flex items-center space-x-4">
+                              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-2xl">
+                                <Image
+                                  src={
+                                    iconMapping[booking?.Occasionobject] || ""
+                                  }
+                                  alt={booking?.Occasionobject}
+                                  className="w-8 h-8 object-cover"
+                                />
+                              </div>
+                              <div>
+                                <h3 className="font-semibold">
+                                  {booking?.Occasionobject}
+                                </h3>
+                                <div className="text-sm opacity-80 flex items-center">
+                                  <Clock className="w-4 h-4 mr-1" />
+                                  {booking?.slotDetails?.startTime} -&nbsp;
+                                  {booking?.slotDetails?.endTime}
+                                </div>
+                              </div>
+                            </div>
+                            <ChevronRightIcon className="w-6 h-6" />
+                          </div>
+                        ))
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+              <Button
+                onPress={() => router.push("/dashboard/YourBookings")}
+                variant="light"
+                className="w-full underline text-[#004AAD] hover:text-blue-700"
+              >
+                View All
+              </Button>
+            </div>
+          )}
+        </CardContent>
       </ScrollArea>
     </Card>
   );
