@@ -122,7 +122,7 @@ export default function HourlyAnalyticsChart() {
             <CardTitle>
               {" "}
               {Hourlytheaterid === "all"
-                ? "All Theaters"
+                ? "All Theatres"
                 : branchtheatre?.find(
                     (theater) => theater?._id === Hourlytheaterid
                   )?.name}{" "}
@@ -178,7 +178,7 @@ export default function HourlyAnalyticsChart() {
                   id="location-select"
                   className="w-60 h-10 flex items-center gap-2"
                 >
-                  <SelectValue placeholder="Select Theater">
+                  <SelectValue placeholder="Select Theatre">
                     {branchtheatreloading ? (
                       <Spinner color="danger" size="sm" />
                     ) : (
@@ -188,10 +188,10 @@ export default function HourlyAnalyticsChart() {
                       )?.name || "Select Theater"} */}
 
                         {Hourlytheaterid === "all"
-                          ? "All Theaters"
+                          ? "All Theatres"
                           : branchtheatre?.find(
                               (theater) => theater?._id === Hourlytheaterid
-                            )?.name || "Select Theater"}
+                            )?.name || "Select Theatre"}
                       </div>
                     )}
                   </SelectValue>

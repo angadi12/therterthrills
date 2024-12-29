@@ -118,10 +118,10 @@ const Performancecard = () => {
                       )?.name || "Select Theater"} */}
 
                       {Selectedtheaterbyid === "all"
-                        ? "All Theaters"
+                        ? "All Theatres"
                         : branchtheatre?.find(
                             (theater) => theater?._id === Selectedtheaterbyid
-                          )?.name || "Select Theater"}
+                          )?.name || "Select Theatre"}
                     </div>
                   )}
                 </SelectValue>

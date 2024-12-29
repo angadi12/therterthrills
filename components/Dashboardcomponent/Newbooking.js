@@ -183,7 +183,7 @@ const Newbooking = () => {
                 id="location-select"
                 className="w-60 h-10 flex items-center gap-2"
               >
-                <SelectValue placeholder="Select Theater">
+                <SelectValue placeholder="Select Theatre">
                   {branchtheatreloading ? (
                     <Spinner color="danger" size="sm" />
                   ) : (
@@ -192,10 +192,10 @@ const Newbooking = () => {
                         (theater) => theater?._id === Activetheatreid
                       )?.name || "Select Theater"} */}
                       {Activetheatreid === "all"
-                        ? "All Theaters"
+                        ? "All Theatres"
                         : branchtheatre?.find(
                             (theater) => theater?._id === Activetheatreid
-                          )?.name || "Select Theater"}
+                          )?.name || "Select Theatre"}
                     </div>
                   )}
                 </SelectValue>
@@ -214,7 +214,7 @@ const Newbooking = () => {
                   </>
                 ) : (
                   <div className="p-1 text-center text-sm ">
-                    No theaters available
+                    No theatres available
                   </div>
                 )}
               </SelectContent>
@@ -222,7 +222,7 @@ const Newbooking = () => {
           </div>
           {branchtheatreerror ? (
             <div className="flex justify-center items-center w-full h-60">
-              <p>No theaters </p>
+              <p>No theatres </p>
             </div>
           ) : (
             <div className="space-y-4">

@@ -182,11 +182,11 @@ const Upcomingevents = () => {
                   {branchtheatreloading ? (
                     <Spinner color="danger" size="sm" />
                   ) : upcomingtheatreid === "all" ? (
-                    "All Theaters"
+                    "All Theatres"
                   ) : (
                     branchtheatre?.find(
                       (theater) => theater?._id === upcomingtheatreid
-                    )?.name || "Select Theater"
+                    )?.name || "Select Theatre"
                   )}
                 </SelectValue>
               </SelectTrigger>
@@ -213,7 +213,7 @@ const Upcomingevents = () => {
           </div>
           {branchtheatreerror ? (
             <div className="flex justify-center items-center w-full h-60">
-              <p>No theaters</p>
+              <p>No theatres</p>
             </div>
           ) : loading ? (
             <div className="flex justify-center items-center w-full h-60">
