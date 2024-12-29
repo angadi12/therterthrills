@@ -26,43 +26,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CalendarIcon, MapPin } from "lucide-react";
+import { format, isBefore, startOfToday } from "date-fns";
+import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
+
 import { Spinner } from "@nextui-org/react";
 import {
   fetchtheaterbybranchid,
   setHourlytheaterid,
 } from "@/lib/Redux/theaterSlice";
-import { useEffect } from "react";
-// Sample data for all 24 hours
-const sampleData = {
-  theater: "Jasmine Theatre",
-  date: "2024-12-01",
-  analytics: [
-    { hour: "00:00 - 01:00", totalBookings: 2, totalRevenue: 0 },
-    { hour: "01:00 - 02:00", totalBookings: 2, totalRevenue: 4598 },
-    { hour: "02:00 - 03:00", totalBookings: 1, totalRevenue: 2299 },
-    { hour: "03:00 - 04:00", totalBookings: 0, totalRevenue: 0 },
-    { hour: "04:00 - 05:00", totalBookings: 0, totalRevenue: 0 },
-    { hour: "05:00 - 06:00", totalBookings: 1, totalRevenue: 2299 },
-    { hour: "06:00 - 07:00", totalBookings: 3, totalRevenue: 6897 },
-    { hour: "07:00 - 08:00", totalBookings: 5, totalRevenue: 11495 },
-    { hour: "08:00 - 09:00", totalBookings: 8, totalRevenue: 18392 },
-    { hour: "09:00 - 10:00", totalBookings: 12, totalRevenue: 27588 },
-    { hour: "10:00 - 11:00", totalBookings: 15, totalRevenue: 34485 },
-    { hour: "11:00 - 12:00", totalBookings: 20, totalRevenue: 45980 },
-    { hour: "12:00 - 13:00", totalBookings: 25, totalRevenue: 57475 },
-    { hour: "13:00 - 14:00", totalBookings: 30, totalRevenue: 68970 },
-    { hour: "14:00 - 15:00", totalBookings: 28, totalRevenue: 64372 },
-    { hour: "15:00 - 16:00", totalBookings: 22, totalRevenue: 50578 },
-    { hour: "16:00 - 17:00", totalBookings: 18, totalRevenue: 41382 },
-    { hour: "17:00 - 18:00", totalBookings: 15, totalRevenue: 34485 },
-    { hour: "18:00 - 19:00", totalBookings: 20, totalRevenue: 45980 },
-    { hour: "19:00 - 20:00", totalBookings: 25, totalRevenue: 57475 },
-    { hour: "20:00 - 21:00", totalBookings: 30, totalRevenue: 68970 },
-    { hour: "21:00 - 22:00", totalBookings: 20, totalRevenue: 45980 },
-    { hour: "22:00 - 23:00", totalBookings: 10, totalRevenue: 22990 },
-    { hour: "23:00 - 00:00", totalBookings: 5, totalRevenue: 11495 },
-  ],
-};
+import { useEffect, useState } from "react";
+import {
+  fetchAllHourlyTheaterAnalytics,
+  fetchHourlyTheaterAnalytics,
+  setHourlydate,
+} from "@/lib/Redux/dashboardSlice";
 
 export default function HourlyAnalyticsChart() {
   const dispatch = useDispatch();
@@ -70,6 +54,18 @@ export default function HourlyAnalyticsChart() {
   const { branchtheatre, branchtheatreloading, branchtheatreerror } =
     useSelector((state) => state.theater);
   const { Hourlytheaterid } = useSelector((state) => state.theater);
+  const { Hourlydata, Hourlyloading, Hourlyerror, Hourlydate } = useSelector(
+    (state) => state.theaterAnalytics
+  );
+  const { AllHourlydata, AllHourlyloading, AllHourlyerror } = useSelector(
+    (state) => state.theaterAnalytics
+  );
+  const [popoverOpen, setPopoverOpen] = useState(false);
+
+  const formattedDate =
+    Hourlydate && !isNaN(new Date(Hourlydate))
+      ? format(new Date(Hourlydate), "yyyy-MM-dd")
+      : null;
 
   useEffect(() => {
     if (selectedBranchId) {
@@ -83,19 +79,96 @@ export default function HourlyAnalyticsChart() {
     }
   }, [dispatch, branchtheatre, selectedBranchId]);
 
-  console.log(Hourlytheaterid)
+  useEffect(() => {
+    if (Hourlytheaterid) {
+      if (Hourlytheaterid === "all") {
+        dispatch(
+          fetchAllHourlyTheaterAnalytics({
+            id: selectedBranchId,
+            date: formattedDate,
+          })
+        );
+      } else {
+        dispatch(
+          fetchHourlyTheaterAnalytics({
+            id: Hourlytheaterid,
+            date: formattedDate,
+          })
+        );
+      }
+    }
+  }, [Hourlytheaterid, dispatch, selectedBranchId, Hourlydate]);
 
+  useEffect(() => {
+    if (branchtheatre?.length > 0) {
+      dispatch(setHourlytheaterid("all"));
+    }
+  }, [dispatch, branchtheatre, selectedBranchId]);
+
+  const handleDateSelect = (selectedDate) => {
+    dispatch(setHourlydate(selectedDate?.toISOString()));
+    setPopoverOpen(false);
+  };
+
+  const nameMapping = {
+    totalRevenue: "Total Revenue ₹",
+    totalBookings: "Total Bookings",
+  };
   return (
     <Card className="w-full rounded-none shadow-none ">
       <CardHeader>
         <div className="flex justify-between items-center mb-4">
           <div>
-            <CardTitle>{sampleData.theater} - 24-Hour Analytics</CardTitle>
+            <CardTitle>
+              {" "}
+              {Hourlytheaterid === "all"
+                ? "All Theaters"
+                : branchtheatre?.find(
+                    (theater) => theater?._id === Hourlytheaterid
+                  )?.name}{" "}
+              - 24-Hour Analytics
+            </CardTitle>
             <CardDescription>
-              Bookings and Revenue for {sampleData.date}
+              Bookings and Revenue for {formattedDate}
             </CardDescription>
           </div>
-          <div>
+          <div className="flex items-center gap-2">
+            <div>
+              {/* <label
+            htmlFor="date-picker"
+            className="block text-sm font-medium  text-[#F30278] mb-1"
+          >
+            Choose Date
+          </label> */}
+              <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    onClick={() => setPopoverOpen(!popoverOpen)}
+                    variant={"outline"}
+                    className={`md:w-auto h-10 justify-start text-left font-normal ${
+                      !Hourlydate && "text-muted-foreground"
+                    }`}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4 text-[#F30278]" />
+                    {Hourlydate ? (
+                      format(Hourlydate, "PPP")
+                    ) : (
+                      <span>Choose Date</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="md:w-[400px] w-full mx-auto p-0 ">
+                  <Calendar
+                    className={""}
+                    mode="single"
+                    selected={Hourlydate ? new Date(Hourlydate) : null} // Ensure `date` is passed as a Date object
+                    onSelect={handleDateSelect}
+                    // disabled={isPastDate}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
             <div className="flex items-center space-x-4">
               <Select
                 onValueChange={(value) => dispatch(setHourlytheaterid(value))}
@@ -147,76 +220,94 @@ export default function HourlyAnalyticsChart() {
         </div>
       </CardHeader>
       <CardContent>
-        <ChartContainer
-          config={{
-            totalBookings: {
-              label: "Total Bookings",
-              color: "hsl(var(--chart-1))",
-            },
-            totalRevenue: {
-              label: "Total Revenue",
-              color: "hsl(var(--chart-2))",
-            },
-          }}
-          className="h-[60vh] w-full"
-        >
-          <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart
-              data={sampleData.analytics}
-              margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
-            >
-              <XAxis
-                dataKey="hour"
-                tick={{ fontSize: 10, angle: -45, textAnchor: "end" }}
-                interval={0}
-                height={60}
-              />
-              <YAxis
-                yAxisId="left"
-                orientation="left"
-                tick={{ fontSize: 12 }}
-                label={{
-                  value: "Total Bookings",
-                  angle: -90,
-                  position: "insideLeft",
-                  offset: -5,
+        {Hourlyerror || AllHourlyerror ? (
+          <div className="flex justify-center items-center w-full h-60">
+            <p>No theaters </p>
+          </div>
+        ) : (
+          <>
+            {Hourlyloading || AllHourlyloading ? (
+              <div className="flex justify-center items-center h-64">
+                <Spinner color="danger" />
+              </div>
+            ) : (
+              <ChartContainer
+                config={{
+                  totalBookings: {
+                    label: "TotalBookings",
+                    color: "hsl(var(--chart-1))",
+                  },
+                  totalRevenue: {
+                    label: "TotalRevenue",
+                    color: "hsl(var(--chart-2))",
+                  },
                 }}
-              />
-              <YAxis
-                yAxisId="right"
-                orientation="right"
-                tick={{ fontSize: 12 }}
-                label={{
-                  value: "Total Revenue (₹)",
-                  angle: 90,
-                  position: "insideRight",
-                  offset: 5,
-                }}
-              />
-              <Tooltip
-                formatter={(value, name) => [
-                  name === "totalRevenue" ? `₹${value}` : value,
-                  name === "totalRevenue" ? "Total Revenue" : "Total Bookings",
-                ]}
-              />
-              <Legend verticalAlign="top" height={36} />
-              <Bar
-                dataKey="totalBookings"
-                fill="#004AAD"
-                yAxisId="left"
-                name="Total Bookings"
-              />
-              <Line
-                type="monotone"
-                dataKey="totalRevenue"
-                stroke="#F30278"
-                yAxisId="right"
-                name="Total Revenue"
-                dot={false}
-              />
-            </ComposedChart>
-          </ResponsiveContainer>
-        </ChartContainer>
+                className="h-[60vh] w-full"
+              >
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart
+                    data={
+                      Hourlytheaterid === "all"
+                        ? AllHourlydata?.analytics
+                        : Hourlydata?.analytics
+                    }
+                    margin={{ top: 20, right: 10, left: 10, bottom: 20 }}
+                  >
+                    <XAxis
+                      dataKey="hour"
+                      tick={{ fontSize: 10, angle: -45, textAnchor: "end" }}
+                      interval={0}
+                      height={60}
+                    />
+                    <YAxis
+                      yAxisId="left"
+                      orientation="left"
+                      tick={{ fontSize: 12 }}
+                      label={{
+                        value: "Total Bookings",
+                        angle: -90,
+                        position: "insideLeft",
+                        offset: -5,
+                      }}
+                    />
+                    <YAxis
+                      yAxisId="right"
+                      orientation="right"
+                      tick={{ fontSize: 12 }}
+                      label={{
+                        value: "Total Revenue (₹)",
+                        angle: 90,
+                        position: "insideRight",
+                        offset: 5,
+                      }}
+                    />
+                    <Tooltip
+                      formatter={(value, name) => {
+                        const displayName = nameMapping[name] || name;
+                        return [`${value}`, displayName]; // Format correctly based on your logic
+                      }}
+                    />
+                    <Legend verticalAlign="top" height={36} />
+                    <Bar
+                      dataKey="totalBookings"
+                      fill="#004AAD"
+                      yAxisId="left"
+                      name="Total Bookings"
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="totalRevenue"
+                      stroke="#F30278"
+                      yAxisId="right"
+                      name="Total Revenue"
+                      dot={false}
+                    />
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            )}
+          </>
+        )}
       </CardContent>
     </Card>
   );

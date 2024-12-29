@@ -36,8 +36,10 @@ export default function BookingDashboard() {
   }, [selectedBranchId, dispatch]);
 
   if (status === "loading") {
-    return <DashboardSkeleton/>;
+    return <DashboardSkeleton />;
   }
+
+  console.log(branchSummaryerror);
 
   return (
     <ScrollArea className="p-4 bg-gray-100 ">
@@ -62,7 +64,10 @@ export default function BookingDashboard() {
                   <p className="text-sm">failed to fetch</p>
                 ) : (
                   <p className="text-3xl font-bold">
-                    {branchSummaryData[0]?.activeBookings || 0}
+                    {Array.isArray(branchSummaryData) &&
+                    branchSummaryData.length > 0
+                      ? branchSummaryData[0]?.activeBookings || 0
+                      : 0}
                   </p>
                 )}
               </div>
@@ -112,9 +117,9 @@ export default function BookingDashboard() {
           </Card>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-1 gap-3">
-          <HourlyAnalyticsChart/>
-         </div>
-        
+          <HourlyAnalyticsChart />
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           <Branchanalytics />
 

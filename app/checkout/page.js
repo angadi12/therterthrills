@@ -487,7 +487,7 @@ const CheckoutOnboarding = () => {
         </ModalContent>
       </Modal>
 
-      <Dialog open={open} onOpenChange={setOpen}>
+      {/* <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-[425px] w-11/12 mx-auto">
           <DialogHeader>
             <DialogTitle>Choose Payment Option</DialogTitle>
@@ -525,7 +525,7 @@ const CheckoutOnboarding = () => {
             </Button>
           </DialogFooter>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 };

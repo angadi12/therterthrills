@@ -97,7 +97,7 @@ const Branchanalytics = () => {
                 >
                   <CarouselContent className="-ml-2 md:-ml-4">
                     {branchData?.length > 0 &&
-                      branchData?.map((branch, index) => (
+                      (branchData ?? [])?.map((branch, index) => (
                         <CarouselItem
                           key={index}
                           className="pl-2 md:pl-4 md:basis-1/3 lg:basis-1/3"
