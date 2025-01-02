@@ -11,7 +11,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Image from "next/image";
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function MenuCarousel() {
   const menuImages = [
@@ -29,7 +29,7 @@ export default function MenuCarousel() {
           <span>Food Menu</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-auto h-[90vh] p-0">
+      <DialogContent className=" sm:max-w-[90vw] md:h-[90vh] md:w-auto p-0">
         <ScrollArea className="h-full w-full rounded-md">
           <div className="p-0">
             <Carousel className="w-full max-w-3xl mx-auto">
