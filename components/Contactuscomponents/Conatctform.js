@@ -84,24 +84,24 @@ export default function Contactform() {
     //   setIsLoading(false)
     //   valid = false;
     // }
-    if (!formData.occasion) {
-      toast({
-        title: "Error",
-        description: "Please select an occasion.",
-        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-      });
-      setIsLoading(false);
-      valid = false;
-    }
-    if (formData.addOns.length === 0) {
-      toast({
-        title: "All fields are required!",
-        description: "Please select at least one add-on.",
-        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-      });
-      setIsLoading(false);
-      valid = false;
-    }
+    // if (!formData.occasion) {
+    //   toast({
+    //     title: "Error",
+    //     description: "Please select an occasion.",
+    //     action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+    //   });
+    //   setIsLoading(false);
+    //   valid = false;
+    // }
+    // if (formData.addOns.length === 0) {
+    //   toast({
+    //     title: "All fields are required!",
+    //     description: "Please select at least one add-on.",
+    //     action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+    //   });
+    //   setIsLoading(false);
+    //   valid = false;
+    // }
 
     return valid;
   };
@@ -141,6 +141,13 @@ export default function Contactform() {
           addOns: [],
           details: "",
         });
+      } else {
+        toast({
+          title: "failed",
+          description: "failed to send try again.",
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+        setIsLoading(false);
       }
     } catch (error) {
       console.error("Error creating ticket:", error);
@@ -223,13 +230,19 @@ export default function Contactform() {
                 onChange={handleInputChange}
               />
             </div>
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+            <div className="grid md:grid-cols-1 grid-cols-1 gap-4">
               <Select
                 className="h-12"
                 onValueChange={(value) => handleSelectChange("occasion", value)}
               >
-                <SelectTrigger className={`${formData.occasion.length>0? "h-12 text-black":"h-12 text-gray-500"}`}>
-                  <SelectValue placeholder="Occasion"  className="text-black"/>
+                <SelectTrigger
+                  className={`${
+                    formData.occasion.length > 0
+                      ? "h-12 text-black"
+                      : "h-12 text-gray-500"
+                  }`}
+                >
+                  <SelectValue placeholder="Occasion" className="text-black" />
                 </SelectTrigger>
                 <SelectContent className="h-60 ">
                   <SelectItem value="birthday">Birthday</SelectItem>
@@ -251,7 +264,7 @@ export default function Contactform() {
                   <SelectItem value="Love Proposal">Love Proposal</SelectItem>
                 </SelectContent>
               </Select>
-              <Select className="h-12 text-gray-400" onValueChange={handleAddOnsChange}>
+              {/* <Select className="h-12 text-gray-400" onValueChange={handleAddOnsChange}>
               <SelectTrigger className={`${formData.addOns.length>0? "h-12 text-black":"h-12 text-gray-500"}`}>
               <SelectValue placeholder="Add-Ons" className="text-black" />
                 </SelectTrigger>
@@ -261,7 +274,7 @@ export default function Contactform() {
                   <SelectItem value="Photography">Photography</SelectItem>
                   <SelectItem value="Cakes">Cakes</SelectItem>
                 </SelectContent>
-              </Select>
+              </Select> */}
             </div>
             <Textarea
               className="min-h-[100px]"

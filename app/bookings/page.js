@@ -13,6 +13,7 @@ import {
 import TheatreCardSkeleton from "@/components/Bookingcomponents/TheatreCardSkeleton";
 import { Tabs, Tab, Chip, Spinner } from "@nextui-org/react";
 import { MonitorPlay, CalendarOff, ShoppingBag } from "lucide-react";
+import ActiveBookingcard from "@/components/Bookingcomponents/Activebookingcard";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -23,19 +24,7 @@ const Page = () => {
   const [activeBookings, setActiveEvents] = useState([]);
   const [recentBookings, setRecentEvents] = useState([]);
 
-  // const currentDate = new Date();
 
-  // // Filter Active and Recent bookings
-  // const activeBookings = bookings.filter((booking) => {
-  //   const bookingDate = new Date(booking.date); // Adjust if the date field is named differently
-  //   return bookingDate >= currentDate;
-  // });
-
-
-  // const recentBookings = bookings.filter((booking) => {
-  //   const bookingDate = new Date(booking.date); // Adjust if the date field is named differently
-  //   return bookingDate < currentDate;
-  // });
 
   useEffect(() => {
     dispatch(fetchBookingByUserId(user?._id));
@@ -134,7 +123,7 @@ const Page = () => {
                     </p>
                   ) : (
                     activeBookings?.map((booking, index) => (
-                      <Bookingcard key={index} booking={booking} />
+                      <ActiveBookingcard key={index} booking={booking} />
                     ))
                   )}
                 </>

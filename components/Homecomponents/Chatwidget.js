@@ -52,7 +52,7 @@ export default function ChatWidget() {
               <Button
                 className="px-8 py-0.5 rounded-sm w-full  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
                 onClick={() =>
-                  window.open("https://wa.me/9398617123", "_blank")
+                  window.open("https://wa.me/918885888949", "_blank")
                 }
               >
                 <div className="flex items-center gap-2">

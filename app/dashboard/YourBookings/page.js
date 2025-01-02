@@ -26,6 +26,7 @@ import {
   fetchBookingByTheaterId,
   fetchUnsavedBookingByTheaterId,
   Setselectedtheaterid,
+  fetchBookingByBranchId,
 } from "@/lib/Redux/bookingSlice";
 import { fetchtheaterbybranchid } from "@/lib/Redux/theaterSlice";
 import { Spinner } from "@nextui-org/react";
@@ -98,13 +99,24 @@ export default function ActiveEvents() {
     singlebooking,
     bookingloading,
     bookingerror,
+
+    AllTheaterbooking,
+    AllTheaterloading,
+    AllTheatererror,
   } = useSelector((state) => state.booking);
   const { branchtheatre, branchtheatreloading, branchtheatreerror } =
     useSelector((state) => state.theater);
   const { selectedBranchId } = useSelector((state) => state.branches);
 
   useEffect(() => {
-    if (Selectedtheaterbyid) {
+    if (Selectedtheaterbyid === "all") {
+      dispatch(
+        fetchBookingByBranchId({
+          BranchId: selectedBranchId,
+          status: selectedTab,
+        })
+      );
+    } else {
       dispatch(
         fetchBookingByTheaterId({
           TheaterId: Selectedtheaterbyid,
@@ -120,6 +132,8 @@ export default function ActiveEvents() {
     }
   }, [selectedBranchId, dispatch]);
 
+
+  console.log(AllTheaterbooking)
   // useEffect(()=>{
   // if(Theatererror==="No bookings found"){
 
@@ -207,7 +221,7 @@ export default function ActiveEvents() {
 
   useEffect(() => {
     if (branchtheatre?.length > 0) {
-      dispatch(Setselectedtheaterid(branchtheatre[0]._id));
+      dispatch(Setselectedtheaterid("all"));
     }
   }, [branchtheatre, dispatch, selectedBranchId]);
 
@@ -478,7 +492,7 @@ export default function ActiveEvents() {
               {selectedTab === "Active" && "Active Events"}
               {selectedTab === "upcoming" && "Upcoming Events"}
               {selectedTab === "completed" && "Completed Events"}
-              {selectedTab === "cancelled" && "Cancelled Events"}
+              {selectedTab === "unbooked" && "Unbooked  Events"}
               {selectedTab === "AllBooking" && "All  Booking"}
               {branchtheatreerror ? (
                 ""
@@ -487,8 +501,8 @@ export default function ActiveEvents() {
                   {selectedTab === "Active" && (
                     <Badge
                       color="danger"
-                      content={Theaterbooking?.counts?.active}
-                      isInvisible={!Theaterbooking?.counts?.active}
+                      content={Selectedtheaterbyid !=="all"?Theaterbooking?.counts?.active:AllTheaterbooking?.counts?.active}
+                      isInvisible={Selectedtheaterbyid !=="all"?!Theaterbooking?.counts?.active : !AllTheaterbooking?.counts?.active}
                       size="md"
                     ></Badge>
                   )}
@@ -545,9 +559,11 @@ export default function ActiveEvents() {
                     <Spinner color="danger" size="sm" />
                   ) : (
                     <div className="flex items-center gap-2">
-                      {branchtheatre?.find(
-                        (theater) => theater?._id === Selectedtheaterbyid
-                      )?.name || "Select Theater"}
+                      {Selectedtheaterbyid === "all"
+                        ? "All Theatres"
+                        : branchtheatre?.find(
+                            (theater) => theater?._id === Selectedtheaterbyid
+                          )?.name || "Select Theatre"}
                     </div>
                   )}
                 </SelectValue>
@@ -556,11 +572,14 @@ export default function ActiveEvents() {
                 {branchtheatreloading ? (
                   <div className="p-2 text-center">Loading theaters...</div>
                 ) : branchtheatre?.length > 0 ? (
-                  branchtheatre.map((theater) => (
-                    <SelectItem key={theater?._id} value={theater?._id}>
-                      {theater?.name}
-                    </SelectItem>
-                  ))
+                  <>
+                    <SelectItem value="all">All Theaters</SelectItem>
+                    {branchtheatre.map((theater) => (
+                      <SelectItem key={theater?._id} value={theater?._id}>
+                        {theater?.name}
+                      </SelectItem>
+                    ))}
+                  </>
                 ) : (
                   <div className="p-1 text-center text-sm ">
                     No theaters available
@@ -590,8 +609,8 @@ export default function ActiveEvents() {
             <TabsList className="grid h-14 border-b-1.5 w-full grid-cols-5 sticky top-16 bg-white z-50 px-2">
               <Badge
                 color="danger"
-                content={Theaterbooking.counts?.active}
-                isInvisible={!Theaterbooking.counts?.active}
+                content={Selectedtheaterbyid !=="all"?Theaterbooking?.counts?.active:AllTheaterbooking?.counts?.active}
+                isInvisible={Selectedtheaterbyid !=="all"?!Theaterbooking?.counts?.active : !AllTheaterbooking?.counts?.active}
                 size="md"
               >
                 <TabsTrigger className="w-full" value="Active">
@@ -627,8 +646,8 @@ export default function ActiveEvents() {
                 }
                 size="md"
               >
-                <TabsTrigger className="w-full" value="cancelled">
-                  Cancelled
+                <TabsTrigger className="w-full" value="unbooked">
+                  Unbooked
                 </TabsTrigger>
               </Badge>
               <Badge
@@ -1071,7 +1090,7 @@ export default function ActiveEvents() {
                 </>
               )}
             </TabsContent>
-            <TabsContent value="cancelled">
+            <TabsContent value="unbooked">
               {UnsavedTheaterloading ? (
                 <div className="flex justify-center items-center w-full h-[60vh]">
                   <Spinner color="danger" />

@@ -33,7 +33,7 @@ const AddOns = () => {
   );
 
   const decorationItems = [
-    { name: "Fog Effects", price: 499, image: FogEffects },
+    { name: "Fog Effects", price: 349, image: FogEffects },
     { name: "Party Props", price: 449, image: PartyProps },
     { name: "HBD Letters", price: 199, image: HBDLetters },
     { name: "Candle Path", price: 99, image: CandlePath },
@@ -89,7 +89,7 @@ const AddOns = () => {
               className="flex flex-col items-center relative"
             >
               <Button
-                className={`flex flex-col items-center justify-center h-40 w-28 md:h-48 md:w-40 bg-white p-1 rounded-lg ${
+                className={`flex flex-col items-center justify-center h-40 w-32 md:h-48 md:w-40 bg-white p-1 rounded-lg ${
                   decorations[decoration.name]
                     ? "bg-pink-100 text-[#F30278] ring-1 ring-[#F30278]"
                     : "text-gray-600 hover:bg-gray-200 ring-1 ring-[#F30278]/30"
@@ -152,7 +152,7 @@ const AddOns = () => {
               className="flex relative flex-col items-center"
             >
               <Button
-                className={`flex flex-col items-center justify-center h-40 w-28 md:h-48 md:w-40 bg-white p-1 rounded-lg ${
+                className={`flex flex-col items-center justify-center h-40 w-32 md:h-48 md:w-40 bg-white p-1 rounded-lg ${
                   roses[rose.name]
                     ? "bg-pink-100 text-[#F30278] ring-1 ring-[#F30278]"
                     : "text-gray-600 hover:bg-gray-200 ring-1 ring-[#F30278]/30"

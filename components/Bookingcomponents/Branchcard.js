@@ -1,16 +1,19 @@
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@nextui-org/react";
-import { MapPin, Star, Utensils } from "lucide-react";
+import { MapPin, Star, Utensils,HandPlatter } from "lucide-react";
 import Image from "next/image";
 import { Setselectedproccedbranchid } from "@/lib/Redux/bookingSlice";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import MenuCarousel from "./Menucard";
 
 export default function Branchcard({ branch }) {
     const dispatch=useDispatch()
     const router = useRouter();
 
   return (
+    <>
+
     <Card className="w-full max-w-sm overflow-hidden">
       <CardContent className="space-y-4 pt-6">
         <div className="relative w-full aspect-[16/10] overflow-hidden rounded-lg">
@@ -41,9 +44,12 @@ export default function Branchcard({ branch }) {
               <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
             </div>
           </div>
-          <div className="flex  justify-center rounded-sm gap-2 items-center md:w-60 text-[#F30278] bg-[#F30278]/10 ring-1 ring-[#F30278] p-2 font-semibold text-xs">
-            <Utensils className="w-4 h-4" />
-            <span>Food & Snacks Available</span>
+          <div className="grid grid-cols-2  gap-2 w-full">
+
+         <MenuCarousel/>
+          <Button startContent={ <Utensils className="w-4 h-4" />} className="flex  justify-center rounded-sm gap-2 items-center  text-[#F30278] bg-[#F30278]/10 ring-1 ring-[#F30278] p-2 font-semibold text-xs">
+            <span>Food & Snacks </span>
+          </Button>
           </div>
         </div>
       </CardContent>
@@ -56,5 +62,6 @@ export default function Branchcard({ branch }) {
         </Button>
       </CardFooter>
     </Card>
+    </>
   );
 }

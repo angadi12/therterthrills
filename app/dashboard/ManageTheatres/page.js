@@ -131,7 +131,7 @@ export default function Managetheatre() {
                         alt={`${theater?.name} view ${index + 1}`}
                         height={80}
                         width={600}
-                        className="object-cover h-40 w-full"
+                        className="object-fill h-60 w-full"
                       />
                     </div>
                   </CarouselItem>
@@ -416,7 +416,7 @@ export default function Managetheatre() {
                 Update Theater
               </ModalHeader>
               <ModalBody>
-                <UpdateTheaterForm />
+                <UpdateTheaterForm/>
               </ModalBody>
             </>
           )}

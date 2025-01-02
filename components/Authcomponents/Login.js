@@ -43,7 +43,7 @@ const Login = () => {
   const router = useRouter();
   const path = usePathname();
 
-  const [loginMethod, setLoginMethod] = useState("phone"); // 'phone' or 'email'
+  const [loginMethod, setLoginMethod] = useState("email"); // 'phone' or 'email'
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
@@ -458,7 +458,7 @@ const Login = () => {
               Select Login Method. We will send you an OTP!
             </p>
             <div className="flex items-center gap-4">
-              <Button
+              {/* <Button
                 isIconOnly
                 className={`text-[#004AAD]  ${
                   loginMethod === "phone"
@@ -469,8 +469,8 @@ const Login = () => {
                 onPress={() => setLoginMethod("phone")}
               >
                 <FaPhoneAlt size={24} />
-              </Button>
-              <Divider className="h-6 " orientation="vertical" />
+              </Button> */}
+              {/* <Divider className="h-6 " orientation="vertical" /> */}
               <Button
                 className={`text-[#004AAD] ${
                   loginMethod === "email"
@@ -485,7 +485,7 @@ const Login = () => {
               </Button>
             </div>
             <div className="flex gap-4 w-full">
-              {loginMethod === "phone" && (
+              {/* {loginMethod === "phone" && (
                 <div className="flex items-center gap-2 w-full">
                   {" "}
                   <FaPhoneAlt size={30} className="text-[#F30278]" />
@@ -499,7 +499,7 @@ const Login = () => {
                     onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </div>
-              )}
+              )} */}
 
               {loginMethod === "email" && (
                 <div className="flex items-center gap-2 w-full">
@@ -509,6 +509,7 @@ const Login = () => {
                     label="Email"
                     placeholder="Enter your email"
                     value={email}
+                    
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
@@ -546,6 +547,8 @@ const Login = () => {
                 maxLength={6}
                 value={otp}
                 onChange={(value) => setOtp(value)}
+                
+
               >
                 <InputOTPGroup className="md:gap-4 gap-1">
                   <InputOTPSlot index={0} />

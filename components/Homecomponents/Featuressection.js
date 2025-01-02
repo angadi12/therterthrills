@@ -84,7 +84,7 @@ export default function FeaturesSection() {
             <div className="grid grid-cols-2 md:gap-6 gap-2 ">
               <FeatureItem icon={Cinematic} title="4K Cinematic Experience" />
               <FeatureItem icon={Calender} title="Flexible Booking Options" />
-              <FeatureItem icon={Packages} title="Custom Event Packages" />
+              <FeatureItem icon={Packages} title="Celebration Tailored to You" />
               <FeatureItem
                 icon={Privatespace}
                 title="Exclusive Private Space"

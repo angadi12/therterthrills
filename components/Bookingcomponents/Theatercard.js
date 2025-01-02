@@ -95,7 +95,7 @@ export default function TheatreCard({ theatre }) {
             </span>
           )} */}
         <div className="p-0 w-full">
-          <div className="w-full relative p-0 h-48 overflow-hidden">
+          <div className="w-full relative p-0 h-80 rounded-t-lg  overflow-hidden">
             {theatre?.images?.map((src, index) => (
               <>
                 {currentImage === index && (
@@ -103,9 +103,9 @@ export default function TheatreCard({ theatre }) {
                     key={index}
                     src={src}
                     width={200}
-                    height={200}
+                    height={400}
                     alt={`Theater image ${index + 1}`}
-                    className={`w-full h-48 object-fill rounded-t-l transition-opacity duration-1000`}
+                    className={`w-full h-80 object-fill rounded-t-lg transition-opacity duration-1000`}
                   />
                 )}
               </>

@@ -333,6 +333,7 @@ const UpdateTheaterForm = () => {
       ) : (
         <ScrollArea className="flex flex-col justify-center items-center gap-4 ">
           <div className="flex flex-col justify-center items-center gap-4 p-4">
+          
             <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-4 place-content-center justify-between items-start ">
               <div className="w-full flex flex-col gap-1 items-start">
                 <Label className="mb-2">
@@ -424,7 +425,59 @@ const UpdateTheaterForm = () => {
             </div>
 
             <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-4 place-content-center justify-between items-start ">
+              
               <div className="w-full flex flex-col gap-1 items-start">
+                  <Label className="mb-2">
+                  Select Branch  <span className="text-red-500">*</span>
+                  </Label>
+                <Select
+                  className="h-12"
+                  value={formData?.branch}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, branch: value }))
+                  }
+                  required
+                >
+                  <SelectTrigger className="h-12">
+                    <SelectValue placeholder="Select Branch" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {branches?.map((branch) => (
+                      <SelectItem key={branch?._id} value={branch?._id}>
+                        {branch?.Branchname}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                  </div>
+                  <div className="w-full flex flex-col gap-1 items-start">
+                  <Label className="mb-2">
+                  Select Status <span className="text-red-500">*</span>
+                  </Label>
+                <Select
+                  className="h-12"
+                  value={formData?.status}
+                  onValueChange={(value) =>
+                    setFormData((prev) => ({ ...prev, status: value }))
+                  }
+                  required
+                >
+                  <SelectTrigger className="h-12">
+                    <SelectValue placeholder="Select Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="available">Available</SelectItem>
+                    <SelectItem value="coming soon">Coming Soon</SelectItem>
+                    <SelectItem value="under maintenance">
+                      Under Maintenance
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                  </div>
+              </div>
+
+            <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-4 place-content-center justify-between items-start ">
+              {/* <div className="w-full flex flex-col gap-1 items-start">
                 <Label className="mb-2">
                   Theatre Location Link <span className="text-red-500">*</span>
                 </Label>
@@ -437,7 +490,7 @@ const UpdateTheaterForm = () => {
                   required
                   type="text"
                 />
-              </div>
+              </div> */}
               <div className="w-full flex flex-col gap-1 items-start">
                 <Label className="mb-2">
                   Decoration Amount <span className="text-red-500">*</span>
@@ -454,7 +507,7 @@ const UpdateTheaterForm = () => {
               </div>
             </div>
 
-            <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-4 place-content-center justify-between items-start ">
+            {/* <div className="w-full grid lg:grid-cols-2 grid-cols-1 gap-4 place-content-center justify-between items-start ">
               
             <div className="w-full flex flex-col gap-1 items-start">
                 <Label className="mb-2">
@@ -504,7 +557,7 @@ const UpdateTheaterForm = () => {
                 </SelectContent>
               </Select>
                 </div>
-            </div>
+            </div> */}
 
             <div className="w-full mx-auto p-6 bg-white rounded-lg shadow-md">
               <div className="mb-4">
@@ -584,7 +637,7 @@ const UpdateTheaterForm = () => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Add Time Slot
+                Add Time Slot for  {formData?.name} 
               </ModalHeader>
               <ModalBody>
                 <ScrollArea className="mb-4 h-80">
@@ -691,7 +744,7 @@ const UpdateTheaterForm = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader>Add Amenity</ModalHeader>
+              <ModalHeader>Add Amenity for  {formData?.name} </ModalHeader>
               <ModalBody>
                 <Textarea
                   name="amenity"

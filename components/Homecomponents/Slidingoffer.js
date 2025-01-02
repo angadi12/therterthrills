@@ -18,7 +18,7 @@ export default function Slidingoffer() {
 
   return (
     <>
-   {couponsoffer?.length > 0 && <div className="bg-[#D60000] overflow-hidden whitespace-nowrap hidden md:hiden lg:block z-50 w-full sticky top-0">
+   {couponsoffer?.length > 0 && <div className="bg-[#D60000] overflow-hidden whitespace-nowrap  lg:block z-50 w-full sticky top-0">
       <Marquee pauseOnHover className="[--duration:10s]">
         {couponsoffer?.length > 0 &&
           couponsoffer?.map((coupon, index) => (
