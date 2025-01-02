@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, Clock, MapPin, Users, Tv, Cake } from "lucide-react";
 import { Button } from "@nextui-org/react";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -6,11 +6,24 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectAddOns } from "@/lib/Redux/addOnsSlice";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import { setAgreed } from "@/lib/Redux/checkoutSlice";
+import { setAgreed, setCurrentStep } from "@/lib/Redux/checkoutSlice";
 import { format } from "date-fns";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@nextui-org/react";
+import { useRouter } from "next/navigation";
+import { setSelectedTheater } from "@/lib/Redux/theaterSlice";
+import { Setselectedproccedbranchid } from "@/lib/Redux/bookingSlice";
 
 const Confirmation = () => {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const dispatch = useDispatch();
+  const router = useRouter();
   const { toast } = useToast();
   const addOns = useSelector(selectAddOns);
   const selectedCakes = useSelector((state) => state.cakes.selectedCakes);
@@ -31,7 +44,27 @@ const Confirmation = () => {
     (slot) => slot._id === selectedslotsid
   );
 
+
+
+
+  useEffect(() => {
+    if (bookingDetails?.numberOfPeople===0) {
+      onOpen();
+    }
+  }, []);
+ 
+
+
+  const cleardata =()=>{
+     dispatch(setSelectedTheater(""))
+     dispatch(Setselectedproccedbranchid(""))
+     dispatch(setCurrentStep(0))
+     router.push("/")
+  }
+
+
   return (
+    <>
     <div className="md:col-span-2">
       <div className="bg-[#2076E80D] p-6 rounded-md ring-1 ring-[#004AAD] shadow mb-6">
         <h2 className="text-xl font-semibold mb-4">Overview</h2>
@@ -163,6 +196,36 @@ const Confirmation = () => {
         </div> */}
       </div>
     </div>
+
+
+
+    <Modal
+        hideCloseButton={true}
+        isDismissable={false}
+        isKeyboardDismissDisabled={true}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+      >
+        <ModalContent>
+          <ModalHeader className="flex flex-col gap-1 text-center">
+            Capacity not selected
+          </ModalHeader>
+          <ModalBody>
+            <p className="text-sm ">
+              Please select Capacity of the peaople before proceeding
+            </p>
+          </ModalBody>
+          <ModalFooter className="flex justify-center items-center">
+            <Button
+              onPress={cleardata}
+              className="px-8 py-0.5 rounded-sm w-48  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+            >
+              Go to Book Now
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 
