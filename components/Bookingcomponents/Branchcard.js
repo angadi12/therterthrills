@@ -37,20 +37,22 @@ export default function Branchcard({ branch }) {
           </Button>
         </div>
         <div className="space-y-2 flex flex-col justify-start items-start gap-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between w-full">
             <h3 className="text-xl font-semibold">{branch?.Branchname} - <span className="text-xs text-[#F30278]">({branch?.location})</span></h3>
-            <div className="flex items-center space-x-1">
+            <div className="flex items-center ml-2 space-x-1">
               <span className="font-semibold">4.9</span>
               <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
             </div>
           </div>
+
           <div className="grid grid-cols-2  gap-2 w-full">
 
          <MenuCarousel/>
-          <Button startContent={ <Utensils className="w-4 h-4" />} className="flex  justify-center rounded-sm gap-2 items-center  text-[#F30278] bg-[#F30278]/10 ring-1 ring-[#F30278] p-2 font-semibold text-xs">
+          {/* <Button startContent={ <Utensils className="w-4 h-4" />} className="flex  justify-center rounded-sm gap-2 items-center  text-[#F30278] bg-[#F30278]/10 ring-1 ring-[#F30278] p-2 font-semibold text-xs">
             <span>Food & Snacks </span>
-          </Button>
+          </Button> */}
           </div>
+          
         </div>
       </CardContent>
       <CardFooter>

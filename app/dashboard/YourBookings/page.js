@@ -72,6 +72,8 @@ import {
 } from "@nextui-org/modal";
 import { Badge, Chip } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
+import BookingDatePicker from "@/components/Dashboardcomponent/Bookingdaterange";
+import { setDateRange, selectDateRange } from "@/lib/Redux/BookingdateSlice";
 
 export default function ActiveEvents() {
   const router = useRouter();
@@ -107,6 +109,28 @@ export default function ActiveEvents() {
   const { branchtheatre, branchtheatreloading, branchtheatreerror } =
     useSelector((state) => state.theater);
   const { selectedBranchId } = useSelector((state) => state.branches);
+  const { startDate: reduxStartDate, endDate: reduxEndDate } = useSelector(selectDateRange);
+
+
+
+  // useEffect(() => {
+  //   if (Selectedtheaterbyid === "all") {
+  //     dispatch(
+  //       fetchBookingByBranchId({
+  //         BranchId: selectedBranchId,
+  //         status: selectedTab,
+  //       })
+  //     );
+  //   } else {
+  //     dispatch(
+  //       fetchBookingByTheaterId({
+  //         TheaterId: Selectedtheaterbyid,
+  //         status: selectedTab,
+  //       })
+  //     );
+  //   }
+  // }, [Selectedtheaterbyid, dispatch, selectedTab]);
+
 
   useEffect(() => {
     if (Selectedtheaterbyid === "all") {
@@ -114,6 +138,8 @@ export default function ActiveEvents() {
         fetchBookingByBranchId({
           BranchId: selectedBranchId,
           status: selectedTab,
+          reduxStartDate,
+          reduxEndDate,
         })
       );
     } else {
@@ -121,10 +147,14 @@ export default function ActiveEvents() {
         fetchBookingByTheaterId({
           TheaterId: Selectedtheaterbyid,
           status: selectedTab,
+          reduxStartDate,
+          reduxEndDate,
         })
       );
     }
-  }, [Selectedtheaterbyid, dispatch, selectedTab]);
+  }, [Selectedtheaterbyid, selectedBranchId, selectedTab, reduxStartDate, reduxEndDate, dispatch]);
+
+
 
   useEffect(() => {
     if (selectedBranchId) {
@@ -132,8 +162,7 @@ export default function ActiveEvents() {
     }
   }, [selectedBranchId, dispatch]);
 
-
-  console.log(AllTheaterbooking)
+  console.log(AllTheaterbooking);
   // useEffect(()=>{
   // if(Theatererror==="No bookings found"){
 
@@ -484,9 +513,9 @@ export default function ActiveEvents() {
 
   return (
     <>
-      <section className="w-full mx-auto bg-white">
+      <section className="w-full mx-auto bg-white h-screen">
         <BookingDetailsDialog />
-        <div className="flex justify-between  items-center py-4  sticky top-0 bg-white z-50 p-4">
+        <div className="grid grid-cols-3 h-auto  items-center py-4 sticky top-0  bg-white z-50 p-4 w-full">
           <div className="flex items-center space-x-4 w-full">
             <h1 className="text-2xl font-bold flex items-center gap-4">
               {selectedTab === "Active" && "Active Events"}
@@ -501,16 +530,32 @@ export default function ActiveEvents() {
                   {selectedTab === "Active" && (
                     <Badge
                       color="danger"
-                      content={Selectedtheaterbyid !=="all"?Theaterbooking?.counts?.active:AllTheaterbooking?.counts?.active}
-                      isInvisible={Selectedtheaterbyid !=="all"?!Theaterbooking?.counts?.active : !AllTheaterbooking?.counts?.active}
+                      content={
+                        Selectedtheaterbyid !== "all"
+                          ? Theaterbooking?.counts?.active
+                          : AllTheaterbooking?.counts?.active
+                      }
+                      isInvisible={
+                        Selectedtheaterbyid !== "all"
+                          ? !Theaterbooking?.counts?.active
+                          : !AllTheaterbooking?.counts?.active
+                      }
                       size="md"
                     ></Badge>
                   )}
                   {selectedTab === "upcoming" && (
                     <Badge
                       color="danger"
-                      content={Theaterbooking?.counts?.upcoming}
-                      isInvisible={!Theaterbooking?.counts?.upcoming}
+                      content={
+                        Selectedtheaterbyid !== "all"
+                          ? Theaterbooking?.counts?.upcoming
+                          : AllTheaterbooking?.counts?.upcoming
+                      }
+                      isInvisible={
+                        Selectedtheaterbyid !== "all"
+                          ? !Theaterbooking?.counts?.upcoming
+                          : !AllTheaterbooking?.counts?.upcoming
+                      }
                       size="md"
                     ></Badge>
                   )}
@@ -525,8 +570,16 @@ export default function ActiveEvents() {
                   {selectedTab === "AllBooking" && (
                     <Badge
                       color="danger"
-                      content={Theaterbooking?.counts?.all}
-                      isInvisible={!Theaterbooking?.counts?.all}
+                      content={
+                        Selectedtheaterbyid !== "all"
+                          ? Theaterbooking?.counts?.all
+                          : AllTheaterbooking?.counts?.all
+                      }
+                      isInvisible={
+                        Selectedtheaterbyid !== "all"
+                          ? !Theaterbooking?.counts?.all
+                          : !AllTheaterbooking?.counts?.all
+                      }
                       size="md"
                     ></Badge>
                   )}
@@ -545,14 +598,16 @@ export default function ActiveEvents() {
               )}
             </h1>
           </div>
-          <div className="flex items-center justify-end space-x-2 w-full ">
+          <div className="flex items-center justify-end space-x-2  w-full col-span-2 ">
+          <BookingDatePicker/>
+
             <Select
               onValueChange={(value) => dispatch(Setselectedtheaterid(value))}
               value={Selectedtheaterbyid}
             >
               <SelectTrigger
                 id="location-select"
-                className="w-60 h-10 flex items-center gap-2"
+                className="w-60 h-12 border-1 border-[#F30278]/60 flex items-center rounded-sm gap-2"
               >
                 <SelectValue placeholder="Select Theater">
                   {branchtheatreloading ? (
@@ -587,8 +642,9 @@ export default function ActiveEvents() {
                 )}
               </SelectContent>
             </Select>
+
           </div>
-        </div>
+       </div>
 
         {branchtheatreerror ? (
           <div className="flex flex-col justify-center items-center w-full h-60">
@@ -604,13 +660,21 @@ export default function ActiveEvents() {
           <Tabs
             onValueChange={(value) => setSelectedTab(value)}
             defaultValue="Active"
-            className="w-full pb-5 bg-white  "
+            className="w-full pb-5 bg-white  z-0 "
           >
-            <TabsList className="grid h-14 border-b-1.5 w-full grid-cols-5 sticky top-16 bg-white z-50 px-2">
+            <TabsList className="grid h-14 border-b-1.5 w-full sticky top-0 grid-cols-5  bg-white z-10 px-2">
               <Badge
                 color="danger"
-                content={Selectedtheaterbyid !=="all"?Theaterbooking?.counts?.active:AllTheaterbooking?.counts?.active}
-                isInvisible={Selectedtheaterbyid !=="all"?!Theaterbooking?.counts?.active : !AllTheaterbooking?.counts?.active}
+                content={
+                  Selectedtheaterbyid !== "all"
+                    ? Theaterbooking?.counts?.active
+                    : AllTheaterbooking?.counts?.active
+                }
+                isInvisible={
+                  Selectedtheaterbyid !== "all"
+                    ? !Theaterbooking?.counts?.active
+                    : !AllTheaterbooking?.counts?.active
+                }
                 size="md"
               >
                 <TabsTrigger className="w-full" value="Active">
@@ -619,8 +683,16 @@ export default function ActiveEvents() {
               </Badge>
               <Badge
                 color="danger"
-                content={Theaterbooking?.counts?.upcoming}
-                isInvisible={!Theaterbooking?.counts?.upcoming}
+                content={
+                  Selectedtheaterbyid !== "all"
+                    ? Theaterbooking?.counts?.upcoming
+                    : AllTheaterbooking?.counts?.upcoming
+                }
+                isInvisible={
+                  Selectedtheaterbyid !== "all"
+                    ? !Theaterbooking?.counts?.upcoming
+                    : !AllTheaterbooking?.counts?.upcoming
+                }
                 size="md"
               >
                 <TabsTrigger className="w-full" value="upcoming">
@@ -652,8 +724,16 @@ export default function ActiveEvents() {
               </Badge>
               <Badge
                 color="danger"
-                content={Theaterbooking?.counts?.all}
-                isInvisible={!Theaterbooking?.counts?.all}
+                content={
+                  Selectedtheaterbyid !== "all"
+                    ? Theaterbooking?.counts?.all
+                    : AllTheaterbooking?.counts?.all
+                }
+                isInvisible={
+                  Selectedtheaterbyid !== "all"
+                    ? !Theaterbooking?.counts?.all
+                    : !AllTheaterbooking?.counts?.all
+                }
                 size="md"
               >
                 <TabsTrigger className="w-full" value="AllBooking">
@@ -662,25 +742,25 @@ export default function ActiveEvents() {
               </Badge>
             </TabsList>
             <TabsContent value="upcoming">
-              {Theaterloading ? (
+              {Theaterloading || AllTheaterloading ? (
                 <div className="flex justify-center items-center w-full h-[60vh]">
                   <Spinner color="danger" />
                 </div>
               ) : (
                 <>
-                  {Theaterbooking?.data?.length === 0 ? (
+                  {Theaterbooking?.data?.length === 0 || AllTheaterbooking?.data?.length===0 ? (
                     <div className="flex justify-center items-center w-full h-[60vh]">
                       <p>No Bookings available</p>
                     </div>
                   ) : (
                     <>
-                      {Theatererror === "No bookings found" ? (
+                      {Theatererror || AllTheatererror === "No bookings found" ? (
                         <div className="flex justify-center items-center w-full h-[60vh]">
                           <p>No Bookings available</p>
                         </div>
                       ) : (
                         <div className="space-y-4 mt-4">
-                          {Theaterbooking?.data?.map((event) => (
+                          {(Selectedtheaterbyid === "all"?AllTheaterbooking?.data:Theaterbooking?.data)?.map((event) => (
                             <div
                               key={event._id}
                               className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
@@ -805,25 +885,25 @@ export default function ActiveEvents() {
               )}
             </TabsContent>
             <TabsContent value="Active">
-              {Theaterloading ? (
+              {Theaterloading || AllTheaterloading ? (
                 <div className="flex justify-center items-center w-full h-[60vh]">
                   <Spinner color="danger" />
                 </div>
               ) : (
                 <>
-                  {Theaterbooking.data?.length === 0 ? (
+                  {Theaterbooking.data?.length === 0 || AllTheaterbooking.data?.length === 0 ? (
                     <div className="flex justify-center items-center w-full h-[60vh]">
                       <p>No Bookings available</p>
                     </div>
                   ) : (
                     <>
-                      {Theatererror === "No bookings found" ? (
+                      {Theatererror || AllTheatererror === "No bookings found" ? (
                         <div className="flex justify-center items-center w-full h-[60vh]">
                           <p>No Bookings available</p>
                         </div>
                       ) : (
                         <div className="space-y-4 mt-4">
-                          {Theaterbooking.data?.map((event) => (
+                          {(Selectedtheaterbyid === "all"?AllTheaterbooking?.data:Theaterbooking?.data)?.map((event) => (
                             <div
                               key={event._id}
                               className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
@@ -1243,25 +1323,25 @@ export default function ActiveEvents() {
               )}
             </TabsContent>
             <TabsContent value="AllBooking">
-              {Theaterloading ? (
+              {Theaterloading || AllTheaterloading? (
                 <div className="flex justify-center items-center w-full h-[60vh]">
                   <Spinner color="danger" />
                 </div>
               ) : (
                 <>
-                  {Theaterbooking.data?.length === 0 ? (
+                  {Theaterbooking.data?.length === 0 || AllTheaterbooking.data?.length === 0? (
                     <div className="flex justify-center items-center w-full h-[60vh]">
                       <p>No Bookings available</p>
                     </div>
                   ) : (
                     <>
-                      {Theatererror === "No bookings found" ? (
+                      {Theatererror || AllTheatererror === "No bookings found" ? (
                         <div className="flex justify-center items-center w-full h-[60vh]">
                           <p>No Bookings available</p>
                         </div>
                       ) : (
                         <div className="space-y-4 mt-4">
-                          {Theaterbooking.data?.map((event) => (
+                          {(Selectedtheaterbyid === "all"?AllTheaterbooking?.data:Theaterbooking?.data)?.map((event) => (
                             <div
                               key={event._id}
                               className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
@@ -1387,6 +1467,7 @@ export default function ActiveEvents() {
             </TabsContent>
           </Tabs>
         )}
+       
       </section>
 
       <Modal

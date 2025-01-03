@@ -145,7 +145,7 @@ export default function Footer() {
                     alt="arrow"
                     className="object-contain"
                   />
-                  Terms & Condition
+                  Terms & Conditions
                 </li>
                 <li
                   onClick={() => router.push("/privacy-policy")}
@@ -165,7 +165,7 @@ export default function Footer() {
                 Get Started
               </h3>
               <div className="flex justify-start items-start gap-4 flex-col">
-                <p className="text-redtheme  text-xs">
+                <p className="text-redtheme  text-sm">
                   {`Let’s make your event the best!`}
                 </p>
                 <Button

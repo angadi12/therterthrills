@@ -225,7 +225,7 @@ const UpdateTheaterForm = () => {
 
   const validate = () => {
     if (!formData.name) return "name is required";
-    if (!formData.Locationlink) return "Location link is required";
+    // if (!formData.Locationlink) return "Location link is required";
     if (!formData.location) return "Location is required";
     if (!formData.price) return "Theatre price is required";
     if (!formData.branch) return "branch  is required";

@@ -34,7 +34,7 @@ const Addonss = () => {
   const products = [
     {
       name: "Fog Effect",
-      price: 499,
+      price: 349,
       image: FogEffects,
       category: "Decor Add-ons",
     },

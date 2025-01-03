@@ -23,11 +23,15 @@ import {
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { TrendingUp } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTheaterAnalytics ,fetchAllTheaterAnalytics} from "@/lib/Redux/dashboardSlice";
+import {
+  fetchTheaterAnalytics,
+  fetchAllTheaterAnalytics,
+} from "@/lib/Redux/dashboardSlice";
 import { fetchtheaterbybranchid } from "@/lib/Redux/theaterSlice";
 import { Setselectedtheaterid } from "@/lib/Redux/bookingSlice";
 import { Spinner } from "@nextui-org/react";
 import { color } from "framer-motion";
+import DynamicYearSelect from "./Selectyear";
 
 const Performancecard = () => {
   const [selectedYear, setSelectedYear] = useState("");
@@ -59,18 +63,23 @@ const Performancecard = () => {
   useEffect(() => {
     if (Selectedtheaterbyid) {
       if (Selectedtheaterbyid === "all") {
-        dispatch(fetchAllTheaterAnalytics({id:selectedBranchId,year:new Date().getFullYear()}));
+        dispatch(
+          fetchAllTheaterAnalytics({
+            id: selectedBranchId,
+            year: new Date().getFullYear(),
+          })
+        );
       } else {
         dispatch(fetchTheaterAnalytics({ id: Selectedtheaterbyid }));
       }
     }
-  }, [Selectedtheaterbyid, dispatch,selectedBranchId]);
+  }, [Selectedtheaterbyid, dispatch, selectedBranchId]);
 
   useEffect(() => {
-    if (branchtheatre?.length > 0 ) {
+    if (branchtheatre?.length > 0) {
       dispatch(Setselectedtheaterid("all"));
     }
-  }, [dispatch,branchtheatre,selectedBranchId]);
+  }, [dispatch, branchtheatre, selectedBranchId]);
 
   // useEffect(() => {
   //   if (branchtheatreerror === "Something went wrong") {
@@ -78,9 +87,6 @@ const Performancecard = () => {
 
   //   }
   // }, [branchtheatreerror, dispatch]);
-
-
-
 
   const chartConfig = {
     desktop: {
@@ -93,11 +99,10 @@ const Performancecard = () => {
     },
   };
 
-
   return (
     <Card className="rounded-none shadow-none">
       <CardHeader>
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between gap-4 items-center mb-4">
           <h2 className="text-xl font-bold">Performance</h2>
           <div className="flex items-center space-x-4">
             <Select
@@ -131,13 +136,12 @@ const Performancecard = () => {
                   <Spinner color="danger" size="sm" />
                 ) : branchtheatre?.length > 0 ? (
                   <>
-                  <SelectItem value="all">All Theaters</SelectItem>
-                 { branchtheatre.map((theater) => (
-                    <SelectItem key={theater?._id} value={theater?._id}>
-                      {theater?.name}
-                    </SelectItem>
-                  ))}
-
+                    <SelectItem value="all">All Theaters</SelectItem>
+                    {branchtheatre.map((theater) => (
+                      <SelectItem key={theater?._id} value={theater?._id}>
+                        {theater?.name}
+                      </SelectItem>
+                    ))}
                   </>
                 ) : (
                   <div className="p-1 text-center text-sm ">
@@ -146,6 +150,10 @@ const Performancecard = () => {
                 )}
               </SelectContent>
             </Select>
+            <DynamicYearSelect 
+        label="Select Year (Current or Previous)" 
+        onChange={(year) => console.log(`Selected year: ${year}`)}
+      />
           </div>
         </div>
       </CardHeader>
@@ -156,39 +164,45 @@ const Performancecard = () => {
           </div>
         ) : (
           <>
-         {loading || Allloading?<div className="flex justify-center items-center h-64">
-
-         <Spinner color="danger"/>
-         </div>
-         :
-          <ChartContainer config={chartConfig}>
-            <BarChart accessibilityLayer data={Selectedtheaterbyid==="all"?Alldata?.analytics:data?.analytics}>
-              <CartesianGrid vertical={false} />
-              <XAxis
-                dataKey="month"
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                tickFormatter={(value) => value.slice(0, 3)}
-              />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent indicator="dashed" />}
-              />
-              <Bar
-                dataKey="totalBookings"
-                fill="var(--color-desktop)"
-                radius={4}
-              />
-              <Bar
-                dataKey="totalRevenue"
-                fill="var(--color-mobile)"
-                radius={4}
-              />
-            </BarChart>
-          </ChartContainer>
-          }
-
+            {loading || Allloading ? (
+              <div className="flex justify-center items-center h-64">
+                <Spinner color="danger" />
+              </div>
+            ) : (
+              <ChartContainer config={chartConfig}>
+                <BarChart
+                  accessibilityLayer
+                  data={
+                    Selectedtheaterbyid === "all"
+                      ? Alldata?.analytics
+                      : data?.analytics
+                  }
+                >
+                  <CartesianGrid vertical={false} />
+                  <XAxis
+                    dataKey="month"
+                    tickLine={false}
+                    tickMargin={10}
+                    axisLine={false}
+                    tickFormatter={(value) => value.slice(0, 3)}
+                  />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent indicator="dashed" />}
+                  />
+                  <Bar
+                    dataKey="totalBookings"
+                    fill="var(--color-desktop)"
+                    radius={4}
+                  />
+                  <Bar
+                    dataKey="totalRevenue"
+                    fill="var(--color-mobile)"
+                    radius={4}
+                  />
+                </BarChart>
+              </ChartContainer>
+            )}
           </>
         )}
       </CardContent>

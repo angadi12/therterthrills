@@ -59,7 +59,7 @@ const BookingDetails = ({ theater }) => {
             </div>
             <div className="w-full flex flex-col gap-1 items-start">
             <Label className="mb-2">
-            {theater?.groupSize} Capacity - Max {theater?.maxCapacity}
+            {theater?.groupSize} Min Capacity - {theater?.maxCapacity} Max Capacity 
                 <span className="text-red-500">*</span>
               </Label>
               {/* <Input

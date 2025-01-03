@@ -95,17 +95,17 @@ export default function TheatreCard({ theatre }) {
             </span>
           )} */}
         <div className="p-0 w-full">
-          <div className="w-full relative p-0 h-80 rounded-t-lg  overflow-hidden">
+          <div className="w-full relative py-4 h-80 rounded-t-lg  overflow-hidden">
             {theatre?.images?.map((src, index) => (
               <>
                 {currentImage === index && (
                   <Image
                     key={index}
                     src={src}
-                    width={200}
+                    width={190}
                     height={400}
                     alt={`Theater image ${index + 1}`}
-                    className={`w-full h-80 object-fill rounded-t-lg transition-opacity duration-1000`}
+                    className={`w-11/12 h-80 object-fill mx-auto   rounded-t-lg transition-opacity duration-1000`}
                   />
                 )}
               </>
@@ -125,7 +125,9 @@ export default function TheatreCard({ theatre }) {
         <CardContent className="py-4 w-full">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center">
-              {[...Array(5)].map((_, i) => (
+              <p className="text-[#F30278] rounded-full p-2 text-sm font-medium ring-1 ring-[#F30278] bg-[#F30278]/20">For {theatre?.capacity} people @{theatre?.price} </p>
+              {/* <p>{theatre?.name} {theatre?.capacity} {theatre?.price}</p> */}
+              {/* {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
                   className={`w-4 h-4 ${
@@ -135,7 +137,7 @@ export default function TheatreCard({ theatre }) {
               ))}
               <span className="ml-2 text-sm font-medium text-[#6B6B6B]">
                 {4} Reviews
-              </span>
+              </span> */}
             </div>
             <span className="font-bold text-lg">{theatre?.price}/-</span>
           </div>

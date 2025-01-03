@@ -66,6 +66,16 @@ const Page = () => {
     }
   }, []);
 
+
+
+  const reorderedLocations = [...locationsWithSlots]; // Create a shallow copy to avoid mutating the original array
+
+  // Move an item from index 2 to index 0
+  const [movedItem] = reorderedLocations.splice(2, 1); // Remove the item at index 2
+  reorderedLocations.splice(0, 0, movedItem); 
+
+
+
   return (
     <>
       <Suspense
@@ -87,7 +97,7 @@ const Page = () => {
             </p>
           </div>
           <BookingHeader />
-          <div className="w-11/12 h-full mx-auto pb-20 grid md:grid-cols-2 grid-cols-1 gap-8 justify-center place-content-center items-stretch">
+          <div className="w-11/12 h-full mx-auto pb-20 grid md:grid-cols-2 grid-cols-1 gap-24 justify-center place-content-center items-stretch">
             {isLoading ? (
               Array.from({ length: 6 }).map((_, index) => (
                 <TheatreCardSkeleton key={index} />
@@ -97,9 +107,10 @@ const Page = () => {
                 No theaters available for the selected date and locations.
               </p>
             ) : (
-              locationsWithSlots?.map((theatre, index) => (
-                <TheatreCard key={index} theatre={theatre} />
+              reorderedLocations?.map((theatre, index) => (
+              <TheatreCard key={index} theatre={theatre} />
               ))
+              
             )}
           </div>
         </main>

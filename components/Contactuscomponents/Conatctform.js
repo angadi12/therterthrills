@@ -84,15 +84,15 @@ export default function Contactform() {
     //   setIsLoading(false)
     //   valid = false;
     // }
-    // if (!formData.occasion) {
-    //   toast({
-    //     title: "Error",
-    //     description: "Please select an occasion.",
-    //     action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-    //   });
-    //   setIsLoading(false);
-    //   valid = false;
-    // }
+    if (!formData.occasion) {
+      toast({
+        title: "Error",
+        description: "Please select an occasion.",
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });
+      setIsLoading(false);
+      valid = false;
+    }
     // if (formData.addOns.length === 0) {
     //   toast({
     //     title: "All fields are required!",
