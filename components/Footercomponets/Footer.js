@@ -213,7 +213,7 @@ export default function Footer() {
           </div>
           <p>
             &copy;Copyrights {new Date().getFullYear()} .The Theatre Thrills .
-            All rights reserved.
+            All rights reserved.&nbsp;Designed and developed by Angadi World Technologies
           </p>
           <div>
             {/* <Button size="sm" className="ring-1 ring-white text-white bg-transparent rounded-md">

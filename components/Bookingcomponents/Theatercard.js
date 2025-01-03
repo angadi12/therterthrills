@@ -150,7 +150,7 @@ export default function TheatreCard({ theatre }) {
           <div className="flex gap-2 mb-2">
             <span className="bg-pink-100 ring-1 ring-[#F30278] text-xs text-[#F30278] px-2 py-2 font-semibold rounded flex items-center">
               <Image src={Groupicon2} alt="grp" className="w-3 h-3 mr-1" />{" "}
-              {theatre?.groupSize} People Capacity
+              {theatre?.groupSize} Max Capacity
             </span>
             <span className="bg-pink-100 text-[#F30278] ring-1 ring-[#F30278] text-xs font-semibold px-2 py-1 rounded flex items-center">
               <Image src={Decorations} alt="Alcohol" className="w-3 h-3 mr-1" />{" "}
