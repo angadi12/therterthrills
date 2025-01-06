@@ -318,24 +318,26 @@ export default function Bookingcard({ booking }) {
     </Drawer>
   );
 
+console.log(booking)
+
   return (
     <Card className="w-full flex flex-col mx-auto justify-around items-center p-0 relative">
       <CardHeader className="p-0 w-full">
         <div className="w-full relative p-0 h-48 overflow-hidden top-0">
           <Image
-            src={booking?.theater?.images[0]}
-            alt={`${booking.Occasionobject} booking`}
+            src={booking?.theater?.images?.[0]}
+            alt={`${booking?.Occasionobject} booking`}
             width={200}
             height={200}
-            className={`w-full h-48 object-fill rounded-t-l transition-opacity duration-1000`}
+            className={`w-full h-48 object-fill rounded-t-lg transition-opacity duration-1000`}
           />
         </div>
       </CardHeader>
       <CardContent className="p-2 w-full">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">{booking.Occasionobject}</h2>
+          <h2 className="text-xl font-bold">{booking?.Occasionobject}</h2>
           <span className="text-xl font-bold text-[#F30278]">
-            ₹{booking.TotalAmount}/-
+            ₹{booking?.TotalAmount}/-
           </span>
         </div>
         <Separator className="my-2" />

@@ -12,6 +12,7 @@ import {
   Clapperboard,
   HandCoins,
   IndianRupee,
+  ReceiptIndianRupee 
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -63,6 +64,9 @@ const Sidenav = () => {
       case "/dashboard/Payments":
         setSelected("Payments");
         break;
+      case "/dashboard/Managerefunds":
+        setSelected("Refunds");
+        break;
       case "/dashboard/Expenses":
         setSelected("Expenses");
         break;
@@ -100,6 +104,9 @@ const Sidenav = () => {
         break;
       case "Payments":
         router.push("/dashboard/Payments");
+        break;
+      case "Refunds":
+        router.push("/dashboard/Managerefunds");
         break;
       case "Expenses":
         router.push("/dashboard/Expenses");
@@ -148,11 +155,11 @@ const Sidenav = () => {
         </div>
 
         <nav className="flex flex-col items-start gap-4  px-2 sm:py-5">
-          {!isMinimized && (
+          {/* {!isMinimized && (
             <span className="text-[#F30278] font-medium text-sm transition-all duration-700 ease-in-out">
               Management
             </span>
-          )}
+          )} */}
           <Tabs
             aria-label="Options"
             isVertical={true}
@@ -363,6 +370,36 @@ const Sidenav = () => {
                     </Tooltip>
                   )}
                   {!isMinimized && <span>Payments</span>}
+                </div>
+              }
+            />
+            <Tab
+              key="Refunds"
+              title={
+                <div
+                  className={`flex items-center gap-4 ${
+                    isMinimized ? "justify-center" : "w-44"
+                  }`}
+                >
+                  {!isMinimized ? (
+                    <ReceiptIndianRupee  size={20} />
+                  ) : (
+                    <Tooltip
+                      classNames={{
+                        base: ["before:bg-[#004AAD]"],
+                        content: [
+                          "py-2 px-4 rounded-md",
+                          "text-white bg-[#004AAD]",
+                        ],
+                      }}
+                      showArrow={true}
+                      content="Refunds"
+                      placement="right"
+                    >
+                    <ReceiptIndianRupee  size={20} />
+                    </Tooltip>
+                  )}
+                  {!isMinimized && <span>Refunds</span>}
                 </div>
               }
             />

@@ -6,7 +6,7 @@ export default function DashboardLayout({ children }) {
   return (
     <section>
       <main className="grid grid-cols-1 md:grid-cols-[auto,1fr]    w-full">
-        <div className="w-full h-full md:h-screen">
+        <div className="w-full h-full md:h-screen overflow-hidden">
           <Sidenav />
         </div>
 

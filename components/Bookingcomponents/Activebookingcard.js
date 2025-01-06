@@ -360,7 +360,7 @@ export default function ActiveBookingcard({ booking }) {
             alt={`${booking.Occasionobject} booking`}
             width={200}
             height={200}
-            className={`w-full h-48 object-fill rounded-t-l transition-opacity duration-1000`}
+            className={`w-full h-48 object-fill rounded-t-lg transition-opacity duration-1000`}
           />
         </div>
       </CardHeader>

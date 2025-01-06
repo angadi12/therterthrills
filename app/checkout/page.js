@@ -291,11 +291,12 @@ const CheckoutOnboarding = () => {
                 razorpaySignature: response.razorpay_signature,
               });
               if (verifyResponse.success) {
-                const { orderId } = verifyResponse;
+                const { orderId,paymentId } = verifyResponse;
 
                 const updatedBookingData = {
                   ...bookingData,
                   orderId,
+                  paymentId,
                 };
                 const booked = await Createbooking(updatedBookingData);
                 if (booked?.success) {

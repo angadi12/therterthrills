@@ -28,7 +28,6 @@ import {
   ModalFooter,
 } from "@nextui-org/react";
 import Createtheater from "@/components/Contactuscomponents/Createtheater";
-import { Setselectedtheaterid } from "@/lib/Redux/bookingSlice";
 import { fetchBranches } from "@/lib/Redux/BranchSlice";
 import {
   Dialog,

@@ -13,7 +13,6 @@ const BookingDatePicker = () => {
 
   const [focusedInput, setFocusedInput] = useState(null);
 
-console.log(reduxStartDate,)
 
 
   return (

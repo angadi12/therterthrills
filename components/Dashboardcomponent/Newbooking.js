@@ -12,8 +12,6 @@ import { Button, Spinner } from "@nextui-org/react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchBookingByTheaterId,
-  fetchUnsavedBookingByTheaterId,
-  Setselectedtheaterid,
 } from "@/lib/Redux/bookingSlice";
 import {
   fetchtheaterbybranchid,

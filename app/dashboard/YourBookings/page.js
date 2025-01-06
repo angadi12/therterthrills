@@ -27,11 +27,11 @@ import {
   fetchUnsavedBookingByTheaterId,
   Setselectedtheaterid,
   fetchBookingByBranchId,
+  SetSelectbookingsid,
 } from "@/lib/Redux/bookingSlice";
 import { fetchtheaterbybranchid } from "@/lib/Redux/theaterSlice";
 import { Spinner } from "@nextui-org/react";
 import { format } from "date-fns";
-import { addMinutes } from "date-fns";
 
 import {
   Dialog,
@@ -79,9 +79,6 @@ export default function ActiveEvents() {
   const router = useRouter();
   const { toast } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeEvents, setActiveEvents] = useState([]);
-  const [upcomingEvents, setUpcomingEvents] = useState([]);
-  const [completedEvents, setCompletedEvents] = useState([]);
   const [bookId, Setbookid] = useState("");
   const [Unsavedid, SetUnsavedid] = useState("");
   const [loadingEvents, setLoadingEvents] = useState({});
@@ -91,7 +88,7 @@ export default function ActiveEvents() {
   const dispatch = useDispatch();
   const {
     Theaterbooking,
-    Selectedtheaterbyid,
+    Selectbookingsid,
     Theaterloading,
     Theatererror,
     UnsavedTheaterbooking,
@@ -109,52 +106,39 @@ export default function ActiveEvents() {
   const { branchtheatre, branchtheatreloading, branchtheatreerror } =
     useSelector((state) => state.theater);
   const { selectedBranchId } = useSelector((state) => state.branches);
-  const { startDate: reduxStartDate, endDate: reduxEndDate } = useSelector(selectDateRange);
-
-
-
-  // useEffect(() => {
-  //   if (Selectedtheaterbyid === "all") {
-  //     dispatch(
-  //       fetchBookingByBranchId({
-  //         BranchId: selectedBranchId,
-  //         status: selectedTab,
-  //       })
-  //     );
-  //   } else {
-  //     dispatch(
-  //       fetchBookingByTheaterId({
-  //         TheaterId: Selectedtheaterbyid,
-  //         status: selectedTab,
-  //       })
-  //     );
-  //   }
-  // }, [Selectedtheaterbyid, dispatch, selectedTab]);
-
+  const { startDate: reduxStartDate, endDate: reduxEndDate } =
+    useSelector(selectDateRange);
+  console.log(AllTheaterbooking);
+  console.log(Theaterbooking);
 
   useEffect(() => {
-    if (Selectedtheaterbyid === "all") {
+    if (Selectbookingsid === "all") {
       dispatch(
         fetchBookingByBranchId({
           BranchId: selectedBranchId,
           status: selectedTab,
-          reduxStartDate,
-          reduxEndDate,
+          startDate: reduxStartDate,
+          endDate: reduxEndDate,
         })
       );
     } else {
       dispatch(
         fetchBookingByTheaterId({
-          TheaterId: Selectedtheaterbyid,
+          TheaterId: Selectbookingsid,
           status: selectedTab,
-          reduxStartDate,
-          reduxEndDate,
+          startDate: reduxStartDate,
+          endDate: reduxEndDate,
         })
       );
     }
-  }, [Selectedtheaterbyid, selectedBranchId, selectedTab, reduxStartDate, reduxEndDate, dispatch]);
-
-
+  }, [
+    Selectbookingsid,
+    selectedBranchId,
+    selectedTab,
+    reduxStartDate,
+    reduxEndDate,
+    dispatch,
+  ]);
 
   useEffect(() => {
     if (selectedBranchId) {
@@ -162,95 +146,21 @@ export default function ActiveEvents() {
     }
   }, [selectedBranchId, dispatch]);
 
-  console.log(AllTheaterbooking);
-  // useEffect(()=>{
-  // if(Theatererror==="No bookings found"){
-
-  // }
-  // },[Theatererror,Theaterbooking])
-
-  // useEffect(() => {
-  //   const today = new Date();
-  //   const indianTimeOffset = 330; // IST is UTC+5:30
-
-  //   // Convert a date to IST and format it as 'yyyy-mm-dd'
-  //   const convertToISTDateString = (utcDate) => {
-  //     const date = new Date(utcDate);
-  //     date.setMinutes(date.getMinutes() + indianTimeOffset);
-  //     return date.toISOString().split("T")[0]; // Returns the date in 'yyyy-mm-dd' format
-  //   };
-
-  //   // Get today's IST date in 'yyyy-mm-dd' format
-  //   const todayIST = convertToISTDateString(today);
-
-  //   if (Theaterbooking?.length ) {
-  //     // Filter active events (today's bookings)
-  //     const active =
-  //       Theaterbooking?.filter((booking) => {
-  //         const bookingDateIST = convertToISTDateString(booking.date);
-  //         return bookingDateIST === todayIST;
-  //       }) || [];
-
-  //     // Filter upcoming events (future bookings)
-  //     const upcoming =
-  //       Theaterbooking?.filter((booking) => {
-  //         const bookingDateIST = convertToISTDateString(booking.date);
-  //         return bookingDateIST > todayIST;
-  //       }) || [];
-
-  //     // Filter completed events (past bookings with completed payment)
-  //     const completed =
-  //       Theaterbooking?.filter((booking) => {
-  //         const bookingDateIST = convertToISTDateString(booking.date);
-  //         return (
-  //           booking.paymentStatus === "completed" && bookingDateIST < todayIST
-  //         );
-  //       }) || [];
-
-  //     // Update state
-
-  //     setActiveEvents(active);
-  //     setUpcomingEvents(upcoming);
-  //     setCompletedEvents(completed);
-  //   } else {
-  //     setActiveEvents([]);
-  //     setUpcomingEvents([]);
-  //     setCompletedEvents([]);
-  //   }
-  // }, [Theaterbooking, Selectedtheaterbyid,selectedTab]); // Ensure dependencies include theater-related changes
-
-  // useEffect(() => {
-  //   switch (selectedTab) {
-  //     case "Active":
-  //       setActiveEvents((prev) => [...prev]);
-  //       break;
-  //     case "upcoming":
-  //       setUpcomingEvents((prev) => [...prev]);
-  //       break;
-  //     case "completed":
-  //       setCompletedEvents((prev) => [...prev]);
-  //       break;
-  //     default:
-  //       setActiveEvents([]);
-  //       setUpcomingEvents([]);
-  //       setCompletedEvents([]);
-  //       break;
-  //   }
-  // }, [selectedTab]);
-
   useEffect(() => {
     if (UnsavedTheaterbooking?.length) {
       SetUnsavedid("");
     }
-  }, [UnsavedTheaterbooking, Selectedtheaterbyid]);
+  }, [UnsavedTheaterbooking, Selectbookingsid]);
 
   useEffect(() => {
-    dispatch(fetchUnsavedBookingByTheaterId(Selectedtheaterbyid));
-  }, [Selectedtheaterbyid, dispatch]);
+    if (Selectbookingsid !== "all") {
+      dispatch(fetchUnsavedBookingByTheaterId(Selectbookingsid));
+    }
+  }, [Selectbookingsid, dispatch]);
 
   useEffect(() => {
     if (branchtheatre?.length > 0) {
-      dispatch(Setselectedtheaterid("all"));
+      dispatch(SetSelectbookingsid("all"));
     }
   }, [branchtheatre, dispatch, selectedBranchId]);
 
@@ -279,6 +189,11 @@ export default function ActiveEvents() {
   const formattedDate =
     singlebooking?.date && !isNaN(new Date(singlebooking?.date))
       ? format(new Date(singlebooking?.date), "yyyy-MM-dd")
+      : null;
+  const formattedcancelDate =
+    singlebooking?.cancellationRequestDate &&
+    !isNaN(new Date(singlebooking?.cancellationRequestDate))
+      ? format(new Date(singlebooking?.cancellationRequestDate), "yyyy-MM-dd")
       : null;
 
   const BookingDetailsDialog = () => (
@@ -451,12 +366,51 @@ export default function ActiveEvents() {
                     </span>
                   </p>
                   <div className="flex flex-col justify-start items-start gap-2">
-                    Coupon applied :-
+                    Coupon applied :-{" "}
                     {singlebooking?.coupon && (
-                      <Badge>{singlebooking?.coupon}</Badge>
+                      <p className="text-[#F30278] bg-[#F30278]/20 text-sm ring-1 ring-[#F30278] rounded-full px-2">
+                        {singlebooking?.coupon}
+                      </p>
                     )}
                   </div>
                 </div>
+                <Separator className="bg-[#F30278]" />
+                {singlebooking?.status === "cancelled" && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
+                      Cancellation Details
+                    </h3>
+                    <div className="flex items-center mb-1">
+                      <span>
+                        Status:{" "}
+                        <span className="text-[#F30278]">
+                          {singlebooking?.refundStatus}
+                        </span>
+                      </span>
+                    </div>
+                    <p>
+                      Refund Amount :{" "}
+                      <span className="text-[#F30278]">
+                        ₹{singlebooking?.refundAmount}/-
+                      </span>
+                      <span className="text-xs text-gray-400 ml-2">
+                        (will get refunds in 5-7 days.)
+                      </span>
+                    </p>
+                    <p>
+                      Reason:{" "}
+                      <span className="text-[#F30278] text-xs">
+                        {singlebooking?.cancellationReason}
+                      </span>
+                    </p>
+                    <p>
+                      Date:{" "}
+                      <span className="text-[#F30278] text-xs">
+                        {formattedcancelDate}
+                      </span>
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </ScrollArea>
@@ -499,7 +453,7 @@ export default function ActiveEvents() {
         });
         setDeleteloading(false);
         setIsDelete(!isDelete);
-        dispatch(fetchUnsavedBookingByTheaterId(Selectedtheaterbyid));
+        dispatch(fetchUnsavedBookingByTheaterId(Selectbookingsid));
       }
     } catch (error) {
       toast({
@@ -520,9 +474,9 @@ export default function ActiveEvents() {
             <h1 className="text-2xl font-bold flex items-center gap-4">
               {selectedTab === "Active" && "Active Events"}
               {selectedTab === "upcoming" && "Upcoming Events"}
-              {selectedTab === "completed" && "Completed Events"}
-              {selectedTab === "unbooked" && "Unbooked  Events"}
+              {selectedTab === "cancelled" && "Cancelled Events"}
               {selectedTab === "AllBooking" && "All  Booking"}
+              {selectedTab === "unbooked" && "Unbooked  Events"}
               {branchtheatreerror ? (
                 ""
               ) : (
@@ -531,12 +485,12 @@ export default function ActiveEvents() {
                     <Badge
                       color="danger"
                       content={
-                        Selectedtheaterbyid !== "all"
+                        Selectbookingsid !== "all"
                           ? Theaterbooking?.counts?.active
                           : AllTheaterbooking?.counts?.active
                       }
                       isInvisible={
-                        Selectedtheaterbyid !== "all"
+                        Selectbookingsid !== "all"
                           ? !Theaterbooking?.counts?.active
                           : !AllTheaterbooking?.counts?.active
                       }
@@ -547,23 +501,23 @@ export default function ActiveEvents() {
                     <Badge
                       color="danger"
                       content={
-                        Selectedtheaterbyid !== "all"
+                        Selectbookingsid !== "all"
                           ? Theaterbooking?.counts?.upcoming
                           : AllTheaterbooking?.counts?.upcoming
                       }
                       isInvisible={
-                        Selectedtheaterbyid !== "all"
+                        Selectbookingsid !== "all"
                           ? !Theaterbooking?.counts?.upcoming
                           : !AllTheaterbooking?.counts?.upcoming
                       }
                       size="md"
                     ></Badge>
                   )}
-                  {selectedTab === "completed" && (
+                  {selectedTab === "cancelled" && (
                     <Badge
                       color="danger"
-                      content={Theaterbooking?.counts?.completed}
-                      isInvisible={!Theaterbooking?.counts?.completed}
+                      content={Theaterbooking?.counts?.cancelled}
+                      isInvisible={!Theaterbooking?.counts?.cancelled}
                       size="md"
                     ></Badge>
                   )}
@@ -571,19 +525,19 @@ export default function ActiveEvents() {
                     <Badge
                       color="danger"
                       content={
-                        Selectedtheaterbyid !== "all"
+                        Selectbookingsid !== "all"
                           ? Theaterbooking?.counts?.all
                           : AllTheaterbooking?.counts?.all
                       }
                       isInvisible={
-                        Selectedtheaterbyid !== "all"
+                        Selectbookingsid !== "all"
                           ? !Theaterbooking?.counts?.all
                           : !AllTheaterbooking?.counts?.all
                       }
                       size="md"
                     ></Badge>
                   )}
-                  {selectedTab === "cancelled" && (
+                  {selectedTab === "Unbooked" && (
                     <Badge
                       color="danger"
                       content={UnsavedTheaterbooking?.length}
@@ -599,11 +553,11 @@ export default function ActiveEvents() {
             </h1>
           </div>
           <div className="flex items-center justify-end space-x-2  w-full col-span-2 ">
-          <BookingDatePicker/>
+            <BookingDatePicker />
 
             <Select
-              onValueChange={(value) => dispatch(Setselectedtheaterid(value))}
-              value={Selectedtheaterbyid}
+              onValueChange={(value) => dispatch(SetSelectbookingsid(value))}
+              value={Selectbookingsid}
             >
               <SelectTrigger
                 id="location-select"
@@ -614,10 +568,10 @@ export default function ActiveEvents() {
                     <Spinner color="danger" size="sm" />
                   ) : (
                     <div className="flex items-center gap-2">
-                      {Selectedtheaterbyid === "all"
+                      {Selectbookingsid === "all"
                         ? "All Theatres"
                         : branchtheatre?.find(
-                            (theater) => theater?._id === Selectedtheaterbyid
+                            (theater) => theater?._id === Selectbookingsid
                           )?.name || "Select Theatre"}
                     </div>
                   )}
@@ -642,9 +596,8 @@ export default function ActiveEvents() {
                 )}
               </SelectContent>
             </Select>
-
           </div>
-       </div>
+        </div>
 
         {branchtheatreerror ? (
           <div className="flex flex-col justify-center items-center w-full h-60">
@@ -666,12 +619,12 @@ export default function ActiveEvents() {
               <Badge
                 color="danger"
                 content={
-                  Selectedtheaterbyid !== "all"
+                  Selectbookingsid !== "all"
                     ? Theaterbooking?.counts?.active
                     : AllTheaterbooking?.counts?.active
                 }
                 isInvisible={
-                  Selectedtheaterbyid !== "all"
+                  Selectbookingsid !== "all"
                     ? !Theaterbooking?.counts?.active
                     : !AllTheaterbooking?.counts?.active
                 }
@@ -684,12 +637,12 @@ export default function ActiveEvents() {
               <Badge
                 color="danger"
                 content={
-                  Selectedtheaterbyid !== "all"
+                  Selectbookingsid !== "all"
                     ? Theaterbooking?.counts?.upcoming
                     : AllTheaterbooking?.counts?.upcoming
                 }
                 isInvisible={
-                  Selectedtheaterbyid !== "all"
+                  Selectbookingsid !== "all"
                     ? !Theaterbooking?.counts?.upcoming
                     : !AllTheaterbooking?.counts?.upcoming
                 }
@@ -701,12 +654,38 @@ export default function ActiveEvents() {
               </Badge>
               <Badge
                 color="danger"
-                content={Theaterbooking?.counts?.completed}
-                isInvisible={!Theaterbooking?.counts?.completed}
+                content={
+                  Selectbookingsid !== "all"
+                    ? Theaterbooking?.counts?.cancelled
+                    : AllTheaterbooking?.counts?.cancelled
+                }
+                isInvisible={
+                  Selectbookingsid !== "all"
+                    ? !Theaterbooking?.counts?.cancelled
+                    : !AllTheaterbooking?.counts?.cancelled
+                }
                 size="md"
               >
-                <TabsTrigger className="w-full" value="completed">
-                  Completed
+                <TabsTrigger className="w-full" value="cancelled">
+                  Cancelled
+                </TabsTrigger>
+              </Badge>
+              <Badge
+                color="danger"
+                content={
+                  Selectbookingsid !== "all"
+                    ? Theaterbooking?.counts?.all
+                    : AllTheaterbooking?.counts?.all
+                }
+                isInvisible={
+                  Selectbookingsid !== "all"
+                    ? !Theaterbooking?.counts?.all
+                    : !AllTheaterbooking?.counts?.all
+                }
+                size="md"
+              >
+                <TabsTrigger className="w-full" value="AllBooking">
+                  All Booking
                 </TabsTrigger>
               </Badge>
               <Badge
@@ -722,45 +701,31 @@ export default function ActiveEvents() {
                   Unbooked
                 </TabsTrigger>
               </Badge>
-              <Badge
-                color="danger"
-                content={
-                  Selectedtheaterbyid !== "all"
-                    ? Theaterbooking?.counts?.all
-                    : AllTheaterbooking?.counts?.all
-                }
-                isInvisible={
-                  Selectedtheaterbyid !== "all"
-                    ? !Theaterbooking?.counts?.all
-                    : !AllTheaterbooking?.counts?.all
-                }
-                size="md"
-              >
-                <TabsTrigger className="w-full" value="AllBooking">
-                  All Booking
-                </TabsTrigger>
-              </Badge>
             </TabsList>
             <TabsContent value="upcoming">
-              {Theaterloading || AllTheaterloading ? (
+              {(Selectbookingsid === "all" ? AllTheaterloading : Theaterloading) ? (
                 <div className="flex justify-center items-center w-full h-[60vh]">
                   <Spinner color="danger" />
                 </div>
               ) : (
                 <>
-                  {Theaterbooking?.data?.length === 0 || AllTheaterbooking?.data?.length===0 ? (
+                  {Theaterbooking?.data?.length === 0 ||
+                  AllTheaterbooking?.data?.length === 0 ? (
                     <div className="flex justify-center items-center w-full h-[60vh]">
                       <p>No Bookings available</p>
                     </div>
                   ) : (
                     <>
-                      {Theatererror || AllTheatererror === "No bookings found" ? (
+                      {(Selectbookingsid === "all" ? AllTheatererror : Theatererror) === "No bookings found" ? (
                         <div className="flex justify-center items-center w-full h-[60vh]">
                           <p>No Bookings available</p>
                         </div>
                       ) : (
                         <div className="space-y-4 mt-4">
-                          {(Selectedtheaterbyid === "all"?AllTheaterbooking?.data:Theaterbooking?.data)?.map((event) => (
+                          {(Selectbookingsid === "all"
+                            ? AllTheaterbooking?.data
+                            : Theaterbooking?.data
+                          )?.map((event) => (
                             <div
                               key={event._id}
                               className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
@@ -885,25 +850,31 @@ export default function ActiveEvents() {
               )}
             </TabsContent>
             <TabsContent value="Active">
-              {Theaterloading || AllTheaterloading ? (
+              {(Selectbookingsid === "all" ? AllTheaterloading : Theaterloading) ? (
                 <div className="flex justify-center items-center w-full h-[60vh]">
                   <Spinner color="danger" />
                 </div>
               ) : (
                 <>
-                  {Theaterbooking.data?.length === 0 || AllTheaterbooking.data?.length === 0 ? (
+                  {Theaterbooking.data?.length === 0 ||
+                  AllTheaterbooking.data?.length === 0 ? (
                     <div className="flex justify-center items-center w-full h-[60vh]">
                       <p>No Bookings available</p>
                     </div>
                   ) : (
                     <>
-                      {Theatererror || AllTheatererror === "No bookings found" ? (
+                      {(Selectbookingsid === "all"
+                        ? AllTheatererror
+                        : Theatererror) === "No bookings found" ? (
                         <div className="flex justify-center items-center w-full h-[60vh]">
                           <p>No Bookings available</p>
                         </div>
                       ) : (
                         <div className="space-y-4 mt-4">
-                          {(Selectedtheaterbyid === "all"?AllTheaterbooking?.data:Theaterbooking?.data)?.map((event) => (
+                          {(Selectbookingsid === "all"
+                            ? AllTheaterbooking?.data
+                            : Theaterbooking?.data
+                          )?.map((event) => (
                             <div
                               key={event._id}
                               className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
@@ -962,53 +933,6 @@ export default function ActiveEvents() {
                                   </div>
                                 </div>
                               </div>
-                              {/* <div className="flex-shrink-0 space-y-2 text-blue-600 text-sm">
-                                {event?.selectedCakes &&
-                                  Object.values(event?.selectedCakes)
-                                    ?.slice(0, 1)
-                                    .map((cake, index) => (
-                                      <p key={index} className="text-sm">
-                                        •{cake?.name} x{" "}
-                                        <span className="text-[#F30278]">
-                                          {cake?.quantity}
-                                        </span>
-                                      </p>
-                                    ))}
-
-                                {event?.addOns?.decorations &&
-                                  Object.entries(event?.addOns?.decorations)
-                                    ?.slice(0, 1)
-                                    .map(([name, count]) => (
-                                      <p key={name} className="text-sm">
-                                        • {name} x{" "}
-                                        <span className="text-[#F30278]">
-                                          {count}
-                                        </span>
-                                      </p>
-                                    ))}
-
-                                {event?.addOns?.roses &&
-                                  Object.entries(event?.addOns?.roses)
-                                    ?.slice(0, 1)
-                                    .map(([name, count]) => (
-                                      <p key={name} className="text-sm">
-                                        • {name} x{" "}
-                                        <span className="text-[#F30278]">
-                                          {count}
-                                        </span>
-                                      </p>
-                                    ))}
-                                {event?.addOns?.photography
-                                  ?.slice(0, 1)
-                                  .map((item, index) => (
-                                    <p
-                                      key={index}
-                                      className="text-sm text-[#F30278]"
-                                    >
-                                      • {item}
-                                    </p>
-                                  ))}
-                              </div> */}
                               <Button
                                 onPress={() => {
                                   setIsModalOpen(!isModalOpen),
@@ -1027,26 +951,36 @@ export default function ActiveEvents() {
                 </>
               )}
             </TabsContent>
-            <TabsContent value="completed">
-              {Theaterloading ? (
+            <TabsContent value="cancelled">
+              {(
+                Selectbookingsid === "all" ? AllTheaterloading : Theaterloading
+              ) ? (
                 <div className="flex justify-center items-center w-full h-[60vh]">
                   <Spinner color="danger" />
                 </div>
               ) : (
                 <>
-                  {Theaterbooking.data?.length === 0 ? (
+                  {(Selectbookingsid === "all" &&
+                    AllTheaterbooking?.data?.length === 0) ||
+                  (Selectbookingsid !== "all" &&
+                    Theaterbooking?.data?.length === 0) ? (
                     <div className="flex justify-center items-center w-full h-[60vh]">
                       <p>No Bookings available</p>
                     </div>
                   ) : (
                     <>
-                      {Theatererror === "No bookings found" ? (
+                      {(Selectbookingsid === "all"
+                        ? AllTheatererror
+                        : Theatererror) === "No bookings found" ? (
                         <div className="flex justify-center items-center w-full h-[60vh]">
                           <p>No Bookings available</p>
                         </div>
                       ) : (
                         <div className="space-y-4 mt-4">
-                          {Theaterbooking.data?.map((event) => (
+                          {(Selectbookingsid === "all"
+                            ? AllTheaterbooking?.data
+                            : Theaterbooking?.data
+                          )?.map((event) => (
                             <div
                               key={event._id}
                               className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
@@ -1105,53 +1039,7 @@ export default function ActiveEvents() {
                                   </div>
                                 </div>
                               </div>
-                              {/* <div className="flex-shrink-0 space-y-2 text-blue-600 text-sm">
-                                {event?.selectedCakes &&
-                                  Object.values(event?.selectedCakes)
-                                    ?.slice(0, 1)
-                                    .map((cake, index) => (
-                                      <p key={index} className="text-sm">
-                                        •{cake?.name} x{" "}
-                                        <span className="text-[#F30278]">
-                                          {cake?.quantity}
-                                        </span>
-                                      </p>
-                                    ))}
 
-                                {event?.addOns?.decorations &&
-                                  Object.entries(event?.addOns?.decorations)
-                                    ?.slice(0, 1)
-                                    .map(([name, count]) => (
-                                      <p key={name} className="text-sm">
-                                        • {name} x{" "}
-                                        <span className="text-[#F30278]">
-                                          {count}
-                                        </span>
-                                      </p>
-                                    ))}
-
-                                {event?.addOns?.roses &&
-                                  Object.entries(event?.addOns?.roses)
-                                    ?.slice(0, 1)
-                                    .map(([name, count]) => (
-                                      <p key={name} className="text-sm">
-                                        • {name} x{" "}
-                                        <span className="text-[#F30278]">
-                                          {count}
-                                        </span>
-                                      </p>
-                                    ))}
-                                {event?.addOns?.photography
-                                  ?.slice(0, 1)
-                                  .map((item, index) => (
-                                    <p
-                                      key={index}
-                                      className="text-sm text-[#F30278]"
-                                    >
-                                      • {item}
-                                    </p>
-                                  ))}
-                              </div> */}
                               <Button
                                 onPress={() => {
                                   setIsModalOpen(!isModalOpen),
@@ -1323,25 +1211,35 @@ export default function ActiveEvents() {
               )}
             </TabsContent>
             <TabsContent value="AllBooking">
-              {Theaterloading || AllTheaterloading? (
+              {(
+                Selectbookingsid === "all" ? AllTheaterloading : Theaterloading
+              ) ? (
                 <div className="flex justify-center items-center w-full h-[60vh]">
                   <Spinner color="danger" />
                 </div>
               ) : (
                 <>
-                  {Theaterbooking.data?.length === 0 || AllTheaterbooking.data?.length === 0? (
+                  {(Selectbookingsid === "all" &&
+                    AllTheaterbooking?.data?.length === 0) ||
+                  (Selectbookingsid !== "all" &&
+                    Theaterbooking?.data?.length === 0) ? (
                     <div className="flex justify-center items-center w-full h-[60vh]">
                       <p>No Bookings available</p>
                     </div>
                   ) : (
                     <>
-                      {Theatererror || AllTheatererror === "No bookings found" ? (
+                      {(Selectbookingsid === "all"
+                        ? AllTheatererror
+                        : Theatererror) === "No bookings found" ? (
                         <div className="flex justify-center items-center w-full h-[60vh]">
                           <p>No Bookings available</p>
                         </div>
                       ) : (
                         <div className="space-y-4 mt-4">
-                          {(Selectedtheaterbyid === "all"?AllTheaterbooking?.data:Theaterbooking?.data)?.map((event) => (
+                          {(Selectbookingsid === "all"
+                            ? AllTheaterbooking?.data
+                            : Theaterbooking?.data
+                          )?.map((event) => (
                             <div
                               key={event._id}
                               className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
@@ -1400,53 +1298,6 @@ export default function ActiveEvents() {
                                   </div>
                                 </div>
                               </div>
-                              {/* <div className="flex-shrink-0 space-y-2 text-blue-600 text-sm">
-                                {event?.selectedCakes &&
-                                  Object.values(event?.selectedCakes)
-                                    ?.slice(0, 1)
-                                    .map((cake, index) => (
-                                      <p key={index} className="text-sm">
-                                        •{cake?.name} x{" "}
-                                        <span className="text-[#F30278]">
-                                          {cake?.quantity}
-                                        </span>
-                                      </p>
-                                    ))}
-
-                                {event?.addOns?.decorations &&
-                                  Object.entries(event?.addOns?.decorations)
-                                    ?.slice(0, 1)
-                                    .map(([name, count]) => (
-                                      <p key={name} className="text-sm">
-                                        • {name} x{" "}
-                                        <span className="text-[#F30278]">
-                                          {count}
-                                        </span>
-                                      </p>
-                                    ))}
-
-                                {event?.addOns?.roses &&
-                                  Object.entries(event?.addOns?.roses)
-                                    ?.slice(0, 1)
-                                    .map(([name, count]) => (
-                                      <p key={name} className="text-sm">
-                                        • {name} x{" "}
-                                        <span className="text-[#F30278]">
-                                          {count}
-                                        </span>
-                                      </p>
-                                    ))}
-                                {event?.addOns?.photography
-                                  ?.slice(0, 1)
-                                  .map((item, index) => (
-                                    <p
-                                      key={index}
-                                      className="text-sm text-[#F30278]"
-                                    >
-                                      • {item}
-                                    </p>
-                                  ))}
-                              </div> */}
                               <Button
                                 onPress={() => {
                                   setIsModalOpen(!isModalOpen),
@@ -1467,7 +1318,6 @@ export default function ActiveEvents() {
             </TabsContent>
           </Tabs>
         )}
-       
       </section>
 
       <Modal

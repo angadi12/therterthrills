@@ -75,15 +75,15 @@ export default function Contactform() {
       setIsLoading(false);
       valid = false;
     }
-    // if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-    //   toast({
-    //     title: "Error",
-    //     description: "Valid Email is required.",
-    //     action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-    //   });
-    //   setIsLoading(false)
-    //   valid = false;
-    // }
+    if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      toast({
+        title: "Error",
+        description: "Valid Email is required.",
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });
+      setIsLoading(false)
+      valid = false;
+    }
     if (!formData.occasion) {
       toast({
         title: "Error",

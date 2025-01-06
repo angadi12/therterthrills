@@ -50,7 +50,7 @@ const Login = () => {
   const [confirmationResult, setConfirmationResult] = useState(null);
   const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
-  const [resendTimer, setResendTimer] = useState(30);
+  const [resendTimer, setResendTimer] = useState(0);
   const resendIntervalRef = useRef(null);
   const { isLoginModalOpen, isOtpModalOpen, user } = useSelector(
     (state) => state.auth
@@ -88,84 +88,9 @@ const Login = () => {
     }
   };
 
-  // const handleSendOtp = async () => {
-  //   setIsSendingOtp(true);
-  //   if (loginMethod === "phone") {
-  //     if (phoneNumber.length !== 10) {
-  //       setIsSendingOtp(false);
-  //       return toast({
-  //         title: "Invalid Phone Number",
-  //         description: "Please enter a valid phone number.",
-  //         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-  //       });
-  //     }
-
-  //     setupRecaptcha();
-  //     const fullPhoneNumber = `+91${phoneNumber}`;
-  //     try {
-  //       const result = await signInWithPhoneNumber(
-  //         auth,
-  //         fullPhoneNumber,
-  //         window.recaptchaVerifier
-  //       );
-  //       setConfirmationResult(result);
-  //       toast({
-  //         title: "OTP Has been sent to your number",
-  //         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-  //       });
-  //       dispatch(closeLoginModal());
-  //       dispatch(openOtpModal());
-  //     } catch (error) {
-  //       console.error(error);
-  //       toast({
-  //         title: "Failed to send OTP",
-  //         description: error.message,
-  //         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-  //       });
-  //     }
-  //   } else if (loginMethod === "email") {
-  //     if (!email.includes("@")) {
-  //       setIsSendingOtp(false);
-  //       return toast({
-  //         title: "Invalid Email",
-  //         description: "Please enter a valid email address.",
-  //         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-  //       });
-  //     }
-
-  //     try {
-  //       const response = await Sendotp({ email });
-  //       if (response.status) {
-  //         setIsSendingOtp(false);
-  //         dispatch(closeLoginModal());
-  //         dispatch(openOtpModal());
-  //         toast({
-  //           title: "Email Sent",
-  //           description: `An OTP has been sent to ${email}`,
-  //           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-  //         });
-  //       } else {
-  //         toast({
-  //           title: "Failed to send email OTP",
-  //           description: response?.message,
-  //           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-  //         });
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-  //       toast({
-  //         title: "Failed to send email OTP",
-  //         description: error.response?.message || error.message,
-  //         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-  //       });
-  //     }
-  //   }
-  //   setIsSendingOtp(false);
-  // };
-
   const handleSendOtp = async () => {
     setIsSendingOtp(true);
-
+    setResendTimer(60);
     if (loginMethod === "phone") {
       if (phoneNumber.length !== 10) {
         setIsSendingOtp(false);
@@ -239,103 +164,6 @@ const Login = () => {
     setIsSendingOtp(false);
   };
 
-  // const handleVerifyOtp = async () => {
-  //   setIsVerifyingOtp(true);
-  //   if (otp.length === 6) {
-  //     if (loginMethod === "phone" && confirmationResult) {
-  //       try {
-  //         const result = await confirmationResult.confirm(otp);
-  //         const idToken = await result.user.getIdToken();
-  //         const userData = {
-  //           uid: result.user.uid,
-  //           phoneNumber: result.user.phoneNumber,
-  //           authType: "firebase",
-  //         };
-
-  //         // Call Createuser endpoint
-  //         const response = await Createuser(userData);
-  //         if (response.status === "success") {
-  //           Cookies.set("token", idToken);
-  //           Cookies.set("User", JSON.stringify(response?.data?.user));
-  //           dispatch(setUser(response?.data?.user));
-  //           toast({
-  //             title: "Login successfully",
-  //             action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-  //           });
-  //           router.refresh(path);
-  //           dispatch(closeOtpModal());
-  //           dispatch(setIsAuthenticated());
-  //         } else {
-  //           toast({
-  //             title: "Login failed",
-  //             description: response.message,
-  //             action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-  //           });
-  //         }
-  //       } catch (error) {
-  //         console.error("Invalid OTP:", error);
-  //         toast({
-  //           title: "Failed to verify OTP",
-  //           description: error.message,
-  //           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-  //         });
-  //       }
-  //     } else if (loginMethod === "email") {
-  //       try {
-  //         const response = await Verifyotp({ email, otp: otp });
-  //         if (response.status) {
-  //           const userData = {
-  //             email,
-  //             authType: "emailOtp",
-  //           };
-
-  //           // Call Createuser endpoint
-  //           const createUserResponse = await Createuser(userData);
-
-  //           if (createUserResponse.status === "success") {
-  //             Cookies.set("token", response.token);
-  //             Cookies.set(
-  //               "User",
-  //               JSON.stringify(createUserResponse?.data?.user)
-  //             );
-  //             dispatch(setUser(createUserResponse?.data?.user));
-  //             toast({
-  //               title: "Login successfully",
-  //               action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-  //             });
-  //             dispatch(closeOtpModal());
-  //             dispatch(setIsAuthenticated());
-  //             router.refresh(path);
-  //           } else {
-  //             toast({
-  //               title: "Login failed",
-  //               description: createUserResponse.message,
-  //               action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-  //             });
-  //           }
-  //         } else {
-  //           toast({
-  //             title: "Failed to verify OTP",
-  //             description: response.message,
-  //             action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-  //           });
-  //         }
-  //         // Cookies.set("token", response.data.token);
-  //         // dispatch(closeOtpModal());
-  //         // router.push(redirectTo)
-  //       } catch (error) {
-  //         console.error("Invalid OTP:", error);
-  //         toast({
-  //           title: "Failed to verify OTP",
-  //           description: error.response?.message || error.message,
-  //           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-  //         });
-  //       }
-  //     }
-  //   }
-  //   setIsVerifyingOtp(false);
-  // };
-
   const handleVerifyOtp = async () => {
     setIsVerifyingOtp(true);
 
@@ -385,16 +213,14 @@ const Login = () => {
             );
             dispatch(closeOtpModal());
             router.refresh(path);
-            setOtp("")
+            setOtp("");
           } else {
             throw new Error(createUserResponse.message);
-            setOtp("")
-
+            setOtp("");
           }
         } else {
           throw new Error(response.message);
-          setOtp("")
-
+          setOtp("");
         }
       }
     } catch (error) {
@@ -424,9 +250,10 @@ const Login = () => {
   const handleResendOtp = () => {
     if (resendTimer === 0) {
       setIsSendingOtp(true);
+      handleSendOtp();
       setTimeout(() => {
         setIsSendingOtp(false);
-        setResendTimer(30);
+        setResendTimer(60);
       }, 1000);
     }
   };
@@ -435,6 +262,38 @@ const Login = () => {
     dispatch(openLoginModal());
     dispatch(closeOtpModal());
   };
+
+  useEffect(() => {
+    // Check if the Web OTP API is supported
+    if ("OTPCredential" in window) {
+      const ac = new AbortController();
+      navigator.credentials
+        .get({
+          otp: { transport: ["sms"] },
+          signal: ac.signal,
+        })
+        .then((otp) => {
+          if (otp && otp.code) {
+            setOtp(otp.code);
+            onComplete(otp.code);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      return () => ac.abort();
+    }
+  }, []);
+
+
+useEffect(() => {
+    if (otp.length === 6) {
+      handleVerifyOtp();
+    }
+}, [otp])
+
+
 
   return (
     <div className="overflow-hidden">
@@ -469,8 +328,8 @@ const Login = () => {
                 onPress={() => setLoginMethod("phone")}
               >
                 <FaPhoneAlt size={24} />
-              </Button>
-              <Divider className="h-6 " orientation="vertical" /> */}
+              </Button> */}
+              {/* <Divider className="h-6 " orientation="vertical" /> */}
               <Button
                 className={`text-[#004AAD] ${
                   loginMethod === "email"
@@ -492,7 +351,6 @@ const Login = () => {
                   <Input
                     type="tel"
                     maxLength={10}
-                    
                     label="Mobile Number"
                     placeholder="Enter your mobile number"
                     value={phoneNumber}
@@ -509,7 +367,6 @@ const Login = () => {
                     label="Email"
                     placeholder="Enter your email"
                     value={email}
-                    
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
@@ -546,9 +403,9 @@ const Login = () => {
               <InputOTP
                 maxLength={6}
                 value={otp}
-                onChange={(value) => setOtp(value)}
-                
-
+                onChange={(value) => {
+                  setOtp(value);
+                }}
               >
                 <InputOTPGroup className="md:gap-4 gap-1">
                   <InputOTPSlot index={0} />
