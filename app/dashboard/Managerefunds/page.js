@@ -51,7 +51,7 @@ useEffect(() => {
   return (
     <>
       <section className="flex justify-center items-center w-full h-auto flex-col mx-auto ">
-        <div className="w-full justify-start items-start gap-4  bg-white z-20">
+        <div className="w-full justify-start items-start gap-4  bg-white z-20 sticky top-0">
           <div className="w-full px-4 py-4 text-start flex justify-between items-center">
             <p className="text-lg font-semibold w-60">Manage Refunds</p>
             <div className="flex items-center justify-end space-x-2  w-full col-span-2 ">

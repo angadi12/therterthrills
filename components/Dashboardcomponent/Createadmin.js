@@ -158,7 +158,7 @@ const Createadmin = () => {
               <SelectValue placeholder="Select Login type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="firebase">Phone</SelectItem>
+              <SelectItem value="mobileOtp">Phone</SelectItem>
               <SelectItem value="emailOtp">Email</SelectItem>
             </SelectContent>
           </Select>

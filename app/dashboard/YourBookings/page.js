@@ -306,8 +306,8 @@ export default function ActiveEvents() {
               </div>
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
-                    Add-Ons
+                  <h3 className="text-lg capitalize font-semibold mb-2 text-[#004AAD]">
+                    Add-Ons & decorations
                   </h3>
                   <div className="grid grid-cols-2 gap-2">
                     {singlebooking?.Addons?.decorations &&
@@ -601,7 +601,7 @@ export default function ActiveEvents() {
               </SelectContent>
             </Select>
           </div>
-        </div>
+       
 
         {branchtheatreerror ? (
           <div className="flex flex-col justify-center items-center w-full h-60">
@@ -617,9 +617,9 @@ export default function ActiveEvents() {
           <Tabs
             onValueChange={(value) => setSelectedTab(value)}
             defaultValue="Active"
-            className="w-full pb-5 bg-white  z-0 "
+            className="w-full pb-5 bg-white  z-0 col-span-3 "
           >
-            <TabsList className="grid h-14 border-b-1.5 w-full sticky top-0 grid-cols-5  bg-white z-10 px-2">
+            <TabsList className="grid h-14 col-span-3 border-b-1.5 w-full mt-4 grid-cols-5  bg-white z-10 px-2">
               <Badge
                 color="danger"
                 content={
@@ -1340,6 +1340,7 @@ export default function ActiveEvents() {
             </TabsContent>
           </Tabs>
         )}
+        </div>
       </section>
 
       <Modal

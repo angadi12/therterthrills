@@ -43,7 +43,7 @@ const Login = () => {
   const router = useRouter();
   const path = usePathname();
 
-  const [loginMethod, setLoginMethod] = useState("email"); // 'phone' or 'email'
+  const [loginMethod, setLoginMethod] = useState("phone"); // 'phone' or 'email'
   const [phoneNumber, setPhoneNumber] = useState("");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
