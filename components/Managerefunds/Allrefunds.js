@@ -24,6 +24,7 @@ import {
   Chip,
   Pagination,
   Spinner,
+  User,
 } from "@nextui-org/react";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -66,6 +67,9 @@ import {
   ModalFooter,
 } from "@nextui-org/react";
 import { fetchAllRefunds, fetchRefundDetails } from "@/lib/Redux/RefundSlice";
+import { selectDateRange } from "@/lib/Redux/BookingdateSlice";
+import { fetchBranches } from "@/lib/Redux/BranchSlice";
+import { CheckCircle2, Hourglass } from "lucide-react";
 
 const INITIAL_VISIBLE_COLUMNS = [
   "name",
@@ -73,7 +77,7 @@ const INITIAL_VISIBLE_COLUMNS = [
   "whatsappNumber",
   "Occasionobject",
   "createdAt",
-  "method",
+  "payment",
   "TotalAmount",
   "actions",
 ];
@@ -84,12 +88,11 @@ export function capitalize(str) {
 
 const columns = [
   { name: "ID", uid: "id" },
-  { name: "NAME", uid: "name" },
+  { name: "OCCASION", uid: "Occasionobject" },
   { name: "BOOKING_ID", uid: "bookingId" },
   { name: "CONTACT", uid: "whatsappNumber" },
-  { name: "OCCASION", uid: "Occasionobject" },
   { name: "RECEIVED ON", uid: "createdAt" },
-  { name: "METHOD", uid: "method" },
+  { name: "PAYMENT ID", uid: "payment" },
   { name: "AMOUNT", uid: "TotalAmount" },
   { name: "ACTION", uid: "actions" },
 ];
@@ -97,10 +100,6 @@ const columns = [
 export default function Allrefunds() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const dispatch = useDispatch();
-  const payments = useSelector(selectPayments);
-  // const loading = useSelector(selectPaymentsLoading);
-  // const error = useSelector(selectPaymentsError);
-  const date = useSelector((state) => state.payments.dateRange);
   const Selectedpaymentid = useSelector(
     (state) => state.payments.Selectedpaymentid
   );
@@ -110,13 +109,26 @@ export default function Allrefunds() {
   const singlePayment = useSelector(selectSinglePayment);
   const singleLoading = useSelector(selectSinglePaymentLoading);
   const singleError = useSelector(selectSinglePaymentError);
+  const { startDate: reduxStartDate, endDate: reduxEndDate } =
+    useSelector(selectDateRange);
+  const { selectedBranchId } = useSelector((state) => state.branches);
 
-console.log(refunds)
-console.log(refundDetails)
+  console.log("Selectedpaymentid", Selectedpaymentid);
+  console.log(refundDetails);
 
   useEffect(() => {
-    dispatch(fetchAllRefunds());
+    dispatch(fetchBranches());
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(
+      fetchAllRefunds({
+        BranchId: selectedBranchId,
+        startDate: reduxStartDate,
+        endDate: reduxEndDate,
+      })
+    );
+  }, [dispatch, selectedBranchId, reduxStartDate, reduxEndDate]);
 
   useEffect(() => {
     if (Selectedpaymentid) {
@@ -160,7 +172,7 @@ console.log(refundDetails)
     return formattedDate.toLowerCase();
   };
 
-  const pages = Math.ceil(payments?.length / rowsPerPage);
+  const pages = Math.ceil(refunds?.length / rowsPerPage);
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -190,7 +202,7 @@ console.log(refundDetails)
     }
 
     return filteredUsers;
-  }, [payments, filterValue, statusFilter]);
+  }, [refunds, filterValue, statusFilter]);
 
   const items = React.useMemo(() => {
     const start = (page - 1) * rowsPerPage;
@@ -213,17 +225,24 @@ console.log(refundDetails)
     const cellValue = user[columnKey];
 
     switch (columnKey) {
-      case "name":
+      case "Occasionobject":
         return (
-          <p className="text-bold text-sm capitalize text-default-500">
-            {user?.bookingDetails?.fullName}
-          </p>
+          <User
+            avatarProps={{
+              radius: "sm",
+              src: user?.booking?.theater?.images[0],
+            }}
+            description={user?.booking?.theater?.name}
+            name={user?.booking?.Occasionobject}
+          >
+            {user.email}
+          </User>
         );
       case "bookingId":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize text-default-500">
-              {user?.bookingDetails?.bookingId}
+              {user?.booking?.bookingId}
             </p>
           </div>
         );
@@ -231,7 +250,7 @@ console.log(refundDetails)
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize text-default-500">
-              {user?.bookingDetails?.whatsappNumber}
+              {user?.booking?.whatsappNumber}
             </p>
           </div>
         );
@@ -251,20 +270,20 @@ console.log(refundDetails)
             </p>
           </div>
         );
-      case "method":
+      case "TotalAmount":
         return (
           <div className="flex flex-col items-start">
             <Chip color="success" size="sm" className="text-white uppercase">
               {" "}
-              {user?.method}
+              ₹{(user?.refund?.amount / 100).toFixed(2)}
             </Chip>
           </div>
         );
-      case "TotalAmount":
+      case "payment":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-sm capitalize text-default-500">
-              ₹{(user?.refund?.amount / 100).toFixed(2)}
+              {user?.refund?.payment_id}
             </p>
           </div>
         );
@@ -273,7 +292,8 @@ console.log(refundDetails)
           <div className="relative flex justify-end items-center gap-2">
             <Button
               onPress={() => {
-                onOpenChange(!isOpen), dispatch(setSelectedpaymentid(user?.refund?.payment_id));
+                onOpenChange(!isOpen),
+                  dispatch(setSelectedpaymentid(user?.refund?.id));
               }}
               size="sm"
               className="rounded-sm text-xs  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
@@ -343,7 +363,7 @@ console.log(refundDetails)
     visibleColumns,
     onSearchChange,
     onRowsPerPageChange,
-    payments?.length,
+    refunds?.length,
     hasSearchFilter,
   ]);
 
@@ -358,7 +378,7 @@ console.log(refundDetails)
         <Pagination
           isCompact
           classNames={{
-            wrapper: "gap-0 overflow-visible h-10 p-1 rounded ",
+            wrapper: "gap-0 overflow-visible h-10 p-1 rounded z-0 ",
             item: "w-8 h-8 text-small rounded-none bg-transparent",
             cursor: " bg-gradient-to-b shadow-lg from-[#F30278] to-[#F30278]",
           }}
@@ -395,15 +415,13 @@ console.log(refundDetails)
 
   const classNames = React.useMemo(
     () => ({
-      wrapper: ["h-screen", "max-w-3xl"],
+      wrapper: ["h-[90vh]", "max-w-3xl"],
       th: [
         "bg-[#004AAD]",
         "text-white",
         "border-b",
         "border-divider",
-        "sticky",
-        "top-20",
-        "z-10",
+       
       ],
       td: [
         "p-4",
@@ -422,6 +440,111 @@ console.log(refundDetails)
     []
   );
 
+  function StepItem({ title, description, status }) {
+    return (
+      <div className="flex items-start space-x-3">
+        <div
+          className={cn(
+            "flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-medium",
+            status === "complete"
+              ? "border-reen-600  bg-green-600 text-primary-foreground"
+              : "border-muted-foreground bg-yellow-600 text-primary-foreground border-yellow-500"
+          )}
+        >
+          {status === "complete" ? (
+            <CheckCircle2 className="h-4 w-4" />
+          ) : (
+            <Hourglass className="h-4 w-4" />
+          )}
+        </div>
+        <div className="space-y-1">
+          <p className="text-sm font-medium leading-none">{title}</p>
+          {description && (
+            <p className="text-sm text-muted-foreground">{description}</p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  function InfoRow({ label, value, copyable = false, className }) {
+    return (
+      <div className={cn("flex items-center justify-between py-2", className)}>
+        <div className="flex items-center text-sm gap-1 text-muted-foreground">
+          {label}
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="font-medium text-sm">{value}</span>
+          {copyable && (
+            <Button
+              variant="light"
+              isIconOnly
+              className="h-4 w-4 text-muted-foreground hover:text-foreground"
+              onClick={() => navigator.clipboard.writeText(value)}
+            >
+              <Copy className="h-3 w-3" />
+            </Button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  const statusMapping = {
+    pending: {
+      title: "Refund Initiated",
+      description: "Refund request has been received and is being processed.",
+      icon: "⏳",
+      badgeColor: "bg-yellow-400",
+    },
+    processed: {
+      title: "Refund processed",
+      description: "Amount will be credited to customer’s bank account within 5-7 working days after the refund has processed.",
+      icon: "✅",
+      badgeColor: "bg-green-400",
+    },
+    failed: {
+      title: "Refund Failed",
+      description:
+        "The refund could not be processed. Possible reasons include customer or bank-related issues.",
+      icon: "❌",
+      badgeColor: "bg-red-400",
+    },
+  };
+
+  <StepItem
+    title={statusMapping[refundDetails?.status]?.title}
+    description={statusMapping[refundDetails?.status]?.description}
+    status={statusMapping[refundDetails?.status]?.status}
+  />;
+
+  const refundSteps = [
+    {
+      status: "pending",
+      title: "Refund Initiated",
+      description: "Refund request has been received and is being processed.",
+    },
+    {
+      status: "processing",
+      title: "Refund Processing",
+      description: "Takes 3-5 working days.",
+    },
+    {
+      status: "processed",
+      title: "Refund Completed",
+      description: "Amount will be credited to customer’s bank account within 5-7 working days after the refund has processed.",
+    },
+  ];
+
+  refundSteps.map((step) => (
+    <StepItem
+      key={step.status}
+      title={step.title}
+      description={step.description}
+      status={refundDetails?.status === step.status ? "current" : "complete"}
+    />
+  ));
+
   return (
     <>
       {/* {loading ? (
@@ -431,7 +554,7 @@ console.log(refundDetails)
       ) : ( */}
       <Table
         isCompact
-        className="px-4"
+        className="px-4 h-[90vh]"
         removeWrapper
         aria-label="Example table with custom cells, pagination and sorting"
         bottomContent={bottomContent}
@@ -504,7 +627,7 @@ console.log(refundDetails)
       >
         <ModalContent>
           {(onClose) =>
-            singleLoading ? (
+            loading ? (
               <ModalBody>
                 {" "}
                 <div className="flex justify-center items-center h-80">
@@ -517,108 +640,73 @@ console.log(refundDetails)
                   <div className="flex items-center justify-between px-4">
                     <div className="flex items-center gap-3">
                       <span className="text-2xl font-semibold">
-                        {" "}
-                        ₹{(singlePayment?.amount / 100).toFixed(2)}
+                        ₹{(refundDetails?.amount / 100).toFixed(2)}
                       </span>
-                      <Badge variant="secondary" className="rounded-md">
-                        {singlePayment?.captured ? (
-                          <Badge className={"bg-green-400"}>captured</Badge>
-                        ) : (
-                          <Badge className={"bg-red-400"}>not captured</Badge>
-                        )}
+                      <Badge
+                        className={
+                          statusMapping[refundDetails?.status]?.badgeColor
+                        }
+                      >
+                        {refundDetails?.status}
                       </Badge>
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      Created on: {formatTimestamp(singlePayment?.created_at)}
+                      Created on: {formatTimestamp(refundDetails?.created_at)}
                     </div>
                   </div>
                 </ModalHeader>
                 <ModalBody>
-                  <div className="grid grid-cols-1 gap-6 w-full mx-auto">
-                    <div className="space-y-6">
-                      <div className="rounded-lg border">
-                        <div className="bg-muted px-4 py-3 font-semibold">
-                          Details
-                        </div>
-                        <ScrollArea className="h-[400px]">
-                          <div className="p-4">
-                            <dl className="space-y-4">
-                              <div className="grid grid-cols-3 gap-4">
-                                <dt className="text-sm font-medium text-muted-foreground">
-                                  Payment ID
-                                </dt>
-                                <dd className="col-span-2 flex items-center gap-2 text-sm">
-                                  {singlePayment?.id}
-                                </dd>
+                  <div className="space-y-6">
+                    <div className="space-y-0 divide-y">
+                      <InfoRow
+                        label="Refund ID"
+                        value={refundDetails?.id}
+                        copyable
+                      />
+                      <InfoRow
+                        label="ARN/RRN"
+                        value={refundDetails?.acquirer_data.rrn}
+                        copyable
+                      />
+                      <InfoRow
+                        label="Amount"
+                        value={(refundDetails?.amount / 100).toFixed(2)}
+                      />
+                      <InfoRow
+                        label="Refund speed"
+                        value={refundDetails?.speed_requested}
+                      />
+                      <InfoRow
+                        label="Issued on"
+                        value={formatTimestamp(refundDetails?.created_at)}
+                      />
+                      <InfoRow
+                        label="Notes"
+                        value={refundDetails?.notes?.reason}
+                      />
+                    </div>
+
+                    <div className="space-y-3">
+                      <h4 className="font-medium text-sm">Refund Status</h4>
+                      <div className="space-y-4">
+                        {Object.entries(statusMapping).map(
+                          ([key, { title, description, icon }]) => (
+                            <div
+                              key={key}
+                              className={`flex items-start gap-3 ${
+                                refundDetails?.status === key
+                                  ? "text-black"
+                                  : "text-gray-400"
+                              }`}
+                            >
+                              <span className="text-lg">{icon}</span>
+                              <div>
+                                <h5 className="font-medium">{title}</h5>
+                                <p className="text-sm">{description}</p>
                               </div>
-                              <div className="grid grid-cols-3 gap-4">
-                                <dt className="text-sm font-medium text-muted-foreground">
-                                  Bank RRN
-                                </dt>
-                                <dd className="col-span-2 text-sm">
-                                  {singlePayment?.acquirer_data?.rrn}
-                                </dd>
-                              </div>
-                              <div className="grid grid-cols-3 gap-4">
-                                <dt className="text-sm font-medium text-muted-foreground">
-                                  Order ID
-                                </dt>
-                                <dd className="col-span-2 flex items-center gap-2 text-sm">
-                                  {singlePayment?.order_id}
-                                </dd>
-                              </div>
-                              <div className="grid grid-cols-3 gap-4">
-                                <dt className="text-sm font-medium text-muted-foreground">
-                                  Payment method
-                                </dt>
-                                <dd className="col-span-2 text-sm">
-                                  {singlePayment?.method} ({singlePayment?.vpa})
-                                </dd>
-                              </div>
-                              <div className="grid grid-cols-3 gap-4">
-                                <dt className="text-sm font-medium text-muted-foreground">
-                                  Customer details
-                                </dt>
-                                <dd className="col-span-2 space-y-1 text-sm">
-                                  <div className="flex items-center gap-2">
-                                    {singlePayment?.contact}
-                                  </div>
-                                  <div>{singlePayment?.email}</div>
-                                </dd>
-                              </div>
-                              <div className="grid grid-cols-3 gap-4">
-                                <dt className="text-sm font-medium text-muted-foreground">
-                                  Total Fee
-                                </dt>
-                                <dd className="col-span-2 space-y-1 text-sm">
-                                  <div>
-                                    ₹{(singlePayment?.fee / 100).toFixed(2)}
-                                  </div>
-                                  <div className="text-muted-foreground">
-                                    Razorpay Fee +₹
-                                    {(
-                                      (singlePayment?.fee -
-                                        singlePayment?.tax) /
-                                      100
-                                    ).toFixed(2)}
-                                  </div>
-                                  <div className="text-muted-foreground">
-                                    GST +₹
-                                    {(singlePayment?.tax / 100).toFixed(2)}
-                                  </div>
-                                </dd>
-                              </div>
-                              <div className="grid grid-cols-3 gap-4">
-                                <dt className="text-sm font-medium text-muted-foreground">
-                                  Description
-                                </dt>
-                                <dd className="col-span-2 text-sm">
-                                  {singlePayment?.description}
-                                </dd>
-                              </div>
-                            </dl>
-                          </div>
-                        </ScrollArea>
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
                   </div>

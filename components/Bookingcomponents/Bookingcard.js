@@ -311,6 +311,43 @@ export default function Bookingcard({ booking }) {
                   <span className="text-[#F30278]">{booking?.orderId}</span>
                 </p>
               </div>
+              <Separator className="bg-[#F30278]" />
+              {booking?.status === "cancelled" && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
+                    Cancellation Details
+                  </h3>
+                  <div className="flex items-center mb-1">
+                    <span>
+                      Status:{" "}
+                      <span className="text-[#F30278]">
+                        {booking?.refundStatus}
+                      </span>
+                    </span>
+                  </div>
+                  <p>
+                    Refund Amount :{" "}
+                    <span className="text-[#F30278]">
+                      ₹{booking?.refundAmount}/-
+                    </span>
+                    <span className="text-xs text-gray-400 ml-2">
+                      (will get refunds in 5-7 days.)
+                    </span>
+                  </p>
+                  <p>
+                    Reason:{" "}
+                    <span className="text-[#F30278] text-xs">
+                      {booking?.cancellationReason}
+                    </span>
+                  </p>
+                  <p>
+                    Date:{" "}
+                    <span className="text-[#F30278] text-xs">
+                      {formattedcancelDate}
+                    </span>
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </ScrollArea>
@@ -318,10 +355,9 @@ export default function Bookingcard({ booking }) {
     </Drawer>
   );
 
-console.log(booking)
 
   return (
-    <Card className="w-full flex flex-col mx-auto justify-around items-center p-0 relative">
+    <Card className="w-full flex flex-col mx-auto justify-around items-center shadow-md p-0 relative">
       <CardHeader className="p-0 w-full">
         <div className="w-full relative p-0 h-48 overflow-hidden top-0">
           <Image
@@ -355,7 +391,7 @@ console.log(booking)
             </div>
             <div className="flex items-center">
               <MapPin className="w-4 h-4 mr-2" />
-              <span className="md:text-sm text-xs">{booking?.theater?.location}</span>
+              <span className="md:text-sm text-xs capitalize">{booking?.theater?.location}</span>
             </div>
             <div className="flex items-center">
               <Clock className="w-4 h-4 mr-2" />
@@ -415,7 +451,7 @@ console.log(booking)
         </div>
       </CardContent>
       <Separator className="my-2 mx-auto" />
-      <CardFooter className="flex justify-center items-center w-full mt-auto">
+      <CardFooter className="grid grid-cols-1 justify-center items-center gap-2 w-full mt-auto">
         <Button
           className="px-8 py-0.5 rounded-sm w-full md:hidden block  border-none bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
           onClick={() => setIsDrawerOpen(true)}
@@ -428,6 +464,9 @@ console.log(booking)
         >
           View Details
         </Button>
+        {booking.status === "cancelled" && <Button isDisabled={true} variant="solid" color="danger" className="w-full">
+          Cancelled
+        </Button>}
       </CardFooter>
       <BookingDetailsDialog />
       <BookingDetailsDrawer />

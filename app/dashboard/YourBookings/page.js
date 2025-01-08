@@ -516,8 +516,12 @@ export default function ActiveEvents() {
                   {selectedTab === "cancelled" && (
                     <Badge
                       color="danger"
-                      content={Theaterbooking?.counts?.cancelled}
-                      isInvisible={!Theaterbooking?.counts?.cancelled}
+                      content={ Selectbookingsid !== "all"
+                          ? Theaterbooking?.counts?.cancelled
+                          : AllTheaterbooking?.counts?.cancelled}
+                      isInvisible={Selectbookingsid !== "all"
+                          ? !Theaterbooking?.counts?.cancelled
+                          : !AllTheaterbooking?.counts?.cancelled}
                       size="md"
                     ></Badge>
                   )}
@@ -553,7 +557,7 @@ export default function ActiveEvents() {
             </h1>
           </div>
           <div className="flex items-center justify-end space-x-2  w-full col-span-2 ">
-            <BookingDatePicker />
+           {selectedTab==="AllBooking" && <BookingDatePicker />}
 
             <Select
               onValueChange={(value) => dispatch(SetSelectbookingsid(value))}
@@ -672,6 +676,19 @@ export default function ActiveEvents() {
               </Badge>
               <Badge
                 color="danger"
+                content={UnsavedTheaterbooking?.length}
+                isInvisible={
+                  UnsavedTheatererror === "Nobookings" ||
+                  UnsavedTheaterbooking?.length === 0
+                }
+                size="md"
+              >
+                <TabsTrigger className="w-full" value="unbooked">
+                  Unbooked
+                </TabsTrigger>
+              </Badge>
+              <Badge
+                color="danger"
                 content={
                   Selectbookingsid !== "all"
                     ? Theaterbooking?.counts?.all
@@ -686,19 +703,6 @@ export default function ActiveEvents() {
               >
                 <TabsTrigger className="w-full" value="AllBooking">
                   All Booking
-                </TabsTrigger>
-              </Badge>
-              <Badge
-                color="danger"
-                content={UnsavedTheaterbooking?.length}
-                isInvisible={
-                  UnsavedTheatererror === "Nobookings" ||
-                  UnsavedTheaterbooking?.length === 0
-                }
-                size="md"
-              >
-                <TabsTrigger className="w-full" value="unbooked">
-                  Unbooked
                 </TabsTrigger>
               </Badge>
             </TabsList>
@@ -983,7 +987,7 @@ export default function ActiveEvents() {
                           )?.map((event) => (
                             <div
                               key={event._id}
-                              className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
+                              className="flex relative items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
                             >
                               <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
                                 <Image
@@ -1049,6 +1053,15 @@ export default function ActiveEvents() {
                               >
                                 View Details
                               </Button>
+                             {event?.status ==="cancelled" && <Button
+                              variant="solid"
+                              size="sm"
+                              color="danger"
+                              radius="none"
+                              className="absolute top-0 right-0 rounded-tr-lg rounded-bl-lg"
+                              >
+                               {event?.status}
+                              </Button>}
                             </div>
                           ))}
                         </div>
@@ -1242,7 +1255,7 @@ export default function ActiveEvents() {
                           )?.map((event) => (
                             <div
                               key={event._id}
-                              className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
+                              className="flex relative items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
                             >
                               <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
                                 <Image
@@ -1307,6 +1320,15 @@ export default function ActiveEvents() {
                               >
                                 View Details
                               </Button>
+                              {event?.status ==="cancelled" && <Button
+                              variant="solid"
+                              size="sm"
+                              color="danger"
+                              radius="none"
+                              className="absolute top-0 right-0 rounded-tr-lg rounded-bl-lg"
+                              >
+                               {event?.status}
+                              </Button>}
                             </div>
                           ))}
                         </div>

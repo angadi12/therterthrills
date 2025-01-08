@@ -224,7 +224,7 @@ const Newbooking = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {Theaterloading || loading ? (
+              {(Activetheatreid === "all" ?loading:Theaterloading) ? (
                 <div className="flex justify-center items-center w-full h-60">
                   <Spinner color="danger" />
                 </div>

@@ -374,7 +374,7 @@ export default function PaymentsTable() {
         <Pagination
           isCompact
           classNames={{
-            wrapper: "gap-0 overflow-visible h-10 p-1 rounded ",
+            wrapper: "gap-0 overflow-visible h-10 p-1 rounded z-0 ",
             item: "w-8 h-8 text-small rounded-none bg-transparent",
             cursor: " bg-gradient-to-b shadow-lg from-[#F30278] to-[#F30278]",
           }}
@@ -417,9 +417,7 @@ export default function PaymentsTable() {
         "text-white",
         "border-b",
         "border-divider",
-        "sticky",
-        "top-20",
-        "z-10",
+       
       ],
       td: [
         "p-4",
@@ -447,7 +445,7 @@ export default function PaymentsTable() {
       ) : ( */}
       <Table
         isCompact
-        className="px-4"
+        className="px-4 h-screen"
         removeWrapper
         aria-label="Example table with custom cells, pagination and sorting"
         bottomContent={bottomContent}

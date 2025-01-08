@@ -47,47 +47,106 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  fetchRefundBookingByBranchId,
+  fetchRefundBookingByTheaterId,
+  initiateRefund,
+} from "@/lib/Redux/RefundSlice";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import { CreatRefund } from "@/lib/API/Refund";
 
 const Recentrefunds = () => {
+  const { toast } = useToast();
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isrefundOpen, setIsrefundModalOpen] = useState(false);
   const [bookId, Setbookid] = useState("");
+  const [paymentid, Setpaymentid] = useState("");
   const [amount, setAmount] = useState("");
   const [instantRefund, setInstantRefund] = useState(false);
   const [comment, setComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Handle refund submission
-    console.log({
-      amount,
-      instantRefund,
-      comment,
-    });
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+
+    const refundData = {
+      paymentId: paymentid,
+      amount: amount,
+      reason: comment,
+    };
+
+    try {
+      const response = await CreatRefund(refundData);
+      if (response.success === true) {
+        toast({
+          title: "Refund issued successfully!",
+          description: "Refund has been issued",
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+        setIsrefundModalOpen(false)
+        dispatch(
+          fetchBookingByBranchId({
+            BranchId: selectedBranchId,
+            status: "cancelled",
+            startDate: reduxStartDate,
+            endDate: reduxEndDate,
+          })
+        );
+        dispatch(
+          fetchRefundBookingByTheaterId({
+            TheaterId: Selectedtheaterbyid,
+            status: "cancelled",
+            startDate: reduxStartDate,
+            endDate: reduxEndDate,
+          })
+        );
+
+      } else {
+        toast({
+          title: "Failed!",
+          description: "Failed to issue refund. Please try again.",
+          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "An error occurred while issuing the refund.",
+        description: error,
+        action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  const handleClick = (amount, id, reason) => {
+    setAmount(amount);
+    Setpaymentid(id);
+    setComment(reason);
+  };
+
   useSelector((state) => state.theater);
   const { selectedBranchId } = useSelector((state) => state.branches);
+  const { Selectedtheaterbyid, singlebooking, bookingloading, bookingerror } =
+    useSelector((state) => state.booking);
   const {
-    Theaterbooking,
-    Selectedtheaterbyid,
-    Theaterloading,
-    Theatererror,
-    singlebooking,
-    bookingloading,
-    bookingerror,
-    AllTheaterbooking,
-    AllTheaterloading,
-    AllTheatererror,
-  } = useSelector((state) => state.booking);
+    RefundTheaterbooking,
+    RefundTheaterloading,
+    RefundTheatererror,
+
+    RefundAllTheaterbooking,
+    RefundAllTheaterloading,
+    RefundAllTheatererror,
+  } = useSelector((state) => state.refunds);
   const { startDate: reduxStartDate, endDate: reduxEndDate } =
     useSelector(selectDateRange);
-
-console.log(AllTheaterbooking)
 
   useEffect(() => {
     if (Selectedtheaterbyid === "all") {
       dispatch(
-        fetchBookingByBranchId({
+        fetchRefundBookingByBranchId({
           BranchId: selectedBranchId,
           status: "cancelled",
           startDate: reduxStartDate,
@@ -96,7 +155,7 @@ console.log(AllTheaterbooking)
       );
     } else {
       dispatch(
-        fetchBookingByTheaterId({
+        fetchRefundBookingByTheaterId({
           TheaterId: Selectedtheaterbyid,
           status: "cancelled",
           startDate: reduxStartDate,
@@ -372,30 +431,36 @@ console.log(AllTheaterbooking)
       <BookingDetailsDialog />
 
       <div className="w-full flex flex-col justify-center items-center h-auto py-4 px-4  mx-auto">
-        {(Selectedtheaterbyid === "all" ? AllTheaterloading : Theaterloading) ? (
+        {(
+          Selectedtheaterbyid === "all"
+            ? RefundAllTheaterloading
+            : RefundTheaterloading
+        ) ? (
           <div className="flex justify-center items-center w-full h-[60vh]">
             <Spinner color="danger" />
           </div>
         ) : (
           <>
             {(Selectedtheaterbyid === "all" &&
-              AllTheaterbooking?.data?.length === 0) ||
+              RefundAllTheaterbooking?.data?.length === 0) ||
             (Selectedtheaterbyid !== "all" &&
-              Theaterbooking?.data?.length === 0) ? (
+              RefundTheaterbooking?.data?.length === 0) ? (
               <div className="flex justify-center items-center w-full h-[60vh]">
                 <p>No Bookings available</p>
               </div>
             ) : (
               <>
-                {(Selectedtheaterbyid === "all" ? AllTheatererror : Theatererror) === "No bookings found" ? (
+                {(Selectedtheaterbyid === "all"
+                  ? RefundAllTheatererror
+                  : RefundTheatererror) === "No bookings found" ? (
                   <div className="flex justify-center items-center w-full h-[60vh]">
                     <p>No Bookings available</p>
                   </div>
                 ) : (
                   <div className="space-y-4 w-full">
                     {(Selectedtheaterbyid === "all"
-                      ? AllTheaterbooking?.data
-                      : Theaterbooking?.data
+                      ? RefundAllTheaterbooking?.data
+                      : RefundTheaterbooking?.data
                     )?.map((event) => (
                       <div
                         key={event._id}
@@ -463,13 +528,16 @@ console.log(AllTheaterbooking)
                         </Button>
                         {event?.refundStatus === "requested" &&
                           event?.status === "cancelled" && (
-                            <Dialog>
+                            <Dialog open={isrefundOpen} onOpenChange={setIsrefundModalOpen}>
                               <DialogTrigger>
                                 <button
-                                  //   onPress={() => {
-                                  //     setIsModalOpen(!isModalOpen),
-                                  //       Setbookid(event?._id);
-                                  //   }}
+                                  onClick={() =>
+                                    handleClick(
+                                      event?.refundAmount,
+                                      event?.paymentId,
+                                      event?.cancellationReason
+                                    )
+                                  }
                                   className="px-8 py-0.5 rounded-sm h-10  border-none bg-red-500 text-white  "
                                 >
                                   Issue Refund
@@ -495,8 +563,8 @@ console.log(AllTheaterbooking)
                                       Refund Amount{" "}
                                       <span className="text-red-500">*</span>
                                     </Label>
-                                    <div className="relative">
-                                      <span className="absolute left-3 top-2.5 text-gray-500">
+                                    <div className="relative items-center flex">
+                                      <span className="absolute left-3 top-2 text-gray-500">
                                         ₹
                                       </span>
                                       <Input
@@ -519,7 +587,7 @@ console.log(AllTheaterbooking)
                                     </p>
                                   </div>
 
-                                  <div className="flex items-center space-x-2 bg-gray-50 p-4 rounded-lg">
+                                  {/* <div className="flex items-center space-x-2 bg-gray-50 p-4 rounded-lg">
                                     <Checkbox
                                       id="instant"
                                       checked={instantRefund}
@@ -536,7 +604,7 @@ console.log(AllTheaterbooking)
                                       </Label>
                                       <Info className="h-4 w-4 text-gray-400" />
                                     </div>
-                                  </div>
+                                  </div> */}
 
                                   <div className="space-y-2">
                                     <Label
@@ -558,7 +626,9 @@ console.log(AllTheaterbooking)
 
                                   <Button
                                     type="submit"
-                                    className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+                                    isLoading={isSubmitting}
+                                    onPress={handleSubmit}
+                                    className="px-8 py-0.5 rounded-sm w-full  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
                                   >
                                     Issue refund
                                   </Button>

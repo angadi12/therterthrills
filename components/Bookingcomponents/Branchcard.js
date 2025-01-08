@@ -29,7 +29,7 @@ export default function Branchcard({ branch }) {
             variant="solid"
             onClick={() =>router.push(branch?.Locationlink)}
 
-            className="absolute rounded-full bottom-4 right-4 bg-[#F30278] hover:bg-[#F30278]/90 text-white space-x-2"
+            className="absolute rounded-full bottom-6 right-4 bg-[#F30278] hover:bg-[#F30278]/90 text-white space-x-2"
             size="sm"
           >
             <MapPin className="w-4 h-4 text-white font-semibold" />

@@ -30,7 +30,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { MdEmail } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
 import { useRouter, usePathname } from "next/navigation";
-import { Sendotp, Verifyotp, Createuser } from "@/lib/API/Auth";
+import { Sendotp, Verifyotp, Createuser,SendMobileOtp } from "@/lib/API/Auth";
 import {
   InputOTP,
   InputOTPGroup,
@@ -75,18 +75,18 @@ const Login = () => {
     });
   };
 
-  const setupRecaptcha = () => {
-    if (typeof window !== "undefined" && !window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(
-        auth,
-        "recaptcha-container",
-        {
-          size: "invisible",
-          callback: () => handleSendOtp(),
-        }
-      );
+  const formatMobileNumber = (mobile) => {
+    if (mobile.length === 12 && mobile.startsWith("91")) {
+      // If the mobile number already has 12 digits and starts with "91", do nothing
+      return mobile;
+    } else if (mobile.length === 10) {
+      // If the mobile number is 10 digits, add the "91" prefix
+      return "91" + mobile;
+    } else {
+      throw new Error("Invalid mobile number length. It should be 10 digits or 12 digits with 91 prefix.");
     }
   };
+  
 
   const handleSendOtp = async () => {
     setIsSendingOtp(true);
@@ -102,21 +102,22 @@ const Login = () => {
       }
 
       try {
-        setupRecaptcha();
-        const fullPhoneNumber = `+91${phoneNumber}`;
-        const result = await signInWithPhoneNumber(
-          auth,
-          fullPhoneNumber,
-          window.recaptchaVerifier
-        );
-        setConfirmationResult(result);
-        toast({
-          title: "OTP Sent",
-          description: `An OTP has been sent to ${phoneNumber}`,
-          action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
-        });
-        dispatch(closeLoginModal());
-        dispatch(openOtpModal());
+        const response = await SendMobileOtp({ mobile:formatMobileNumber(phoneNumber) });
+        if (response.status) {
+          toast({
+            title: "Email OTP Sent",
+            description: `OTP has been sent to ${formatMobileNumber(phoneNumber)}`,
+            action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+          });
+          dispatch(closeLoginModal());
+          dispatch(openOtpModal());
+        } else {
+          toast({
+            title: "Email OTP Failed",
+            description: response?.message,
+            action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+          });
+        }
       } catch (error) {
         console.error(error);
         toast({
@@ -164,9 +165,81 @@ const Login = () => {
     setIsSendingOtp(false);
   };
 
+  // const handleVerifyOtp = async () => {
+  //   setIsVerifyingOtp(true);
+
+  //   if (otp.length !== 6) {
+  //     setIsVerifyingOtp(false);
+  //     return toast({
+  //       title: "Invalid OTP",
+  //       description: "OTP should be 6 digits long.",
+  //       action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+  //     });
+  //   }
+
+  //   try {
+  //     if (loginMethod === "phone" && confirmationResult) {
+  //       const result = await confirmationResult.confirm(otp);
+  //       const idToken = await result.user.getIdToken();
+
+  //       const userData = {
+  //         uid: result.user.uid,
+  //         phoneNumber: result.user.phoneNumber,
+  //         authType: "firebase",
+  //       };
+
+  //       const response = await Createuser(userData);
+  //       if (response.status === "success") {
+  //         storeUserDetails(idToken, response?.data?.user, dispatch, toast);
+  //         dispatch(closeOtpModal());
+  //         router.refresh(path);
+  //         setOtp("");
+  //       } else {
+  //         throw new Error(response.message);
+  //       }
+  //     } else if (loginMethod === "email") {
+  //       const response = await Verifyotp({ email, otp });
+  //       if (response.status) {
+  //         const createUserResponse = await Createuser({
+  //           email,
+  //           authType: "emailOtp",
+  //         });
+
+  //         if (createUserResponse.status === "success") {
+  //           storeUserDetails(
+  //             response.token,
+  //             createUserResponse?.data?.user,
+  //             dispatch,
+  //             toast
+  //           );
+  //           dispatch(closeOtpModal());
+  //           router.refresh(path);
+  //           setOtp("");
+  //         } else {
+  //           throw new Error(createUserResponse.message);
+  //           setOtp("");
+  //         }
+  //       } else {
+  //         throw new Error(response.message);
+  //         setOtp("");
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during OTP verification:", error);
+  //     toast({
+  //       title: "OTP Verification Failed",
+  //       description: error.response?.message || error.message,
+  //       action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+  //     });
+  //   }
+
+  //   setIsVerifyingOtp(false);
+  // };
+
+
   const handleVerifyOtp = async () => {
     setIsVerifyingOtp(true);
-
+  
     if (otp.length !== 6) {
       setIsVerifyingOtp(false);
       return toast({
@@ -175,35 +248,18 @@ const Login = () => {
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
     }
-
+  
     try {
-      if (loginMethod === "phone" && confirmationResult) {
-        const result = await confirmationResult.confirm(otp);
-        const idToken = await result.user.getIdToken();
-
-        const userData = {
-          uid: result.user.uid,
-          phoneNumber: result.user.phoneNumber,
-          authType: "firebase",
-        };
-
-        const response = await Createuser(userData);
-        if (response.status === "success") {
-          storeUserDetails(idToken, response?.data?.user, dispatch, toast);
-          dispatch(closeOtpModal());
-          router.refresh(path);
-          setOtp("");
-        } else {
-          throw new Error(response.message);
-        }
-      } else if (loginMethod === "email") {
-        const response = await Verifyotp({ email, otp });
+      if (loginMethod === "phone") {
+        // Mobile OTP verification flow
+        const response = await Verifyotp({mobile:formatMobileNumber(phoneNumber), otp });
         if (response.status) {
           const createUserResponse = await Createuser({
-            email,
-            authType: "emailOtp",
+            phoneNumber: formatMobileNumber(phoneNumber),
+            authType: "mobileOtp",
+            otp:otp
           });
-
+  
           if (createUserResponse.status === "success") {
             storeUserDetails(
               response.token,
@@ -216,11 +272,34 @@ const Login = () => {
             setOtp("");
           } else {
             throw new Error(createUserResponse.message);
-            setOtp("");
           }
         } else {
           throw new Error(response.message);
-          setOtp("");
+        }
+      } else if (loginMethod === "email") {
+        // Email OTP verification flow
+        const response = await Verifyotp({ email, otp });
+        if (response.status) {
+          const createUserResponse = await Createuser({
+            email,
+            authType: "emailOtp",
+          });
+  
+          if (createUserResponse.status === "success") {
+            storeUserDetails(
+              response.token,
+              createUserResponse?.data?.user,
+              dispatch,
+              toast
+            );
+            dispatch(closeOtpModal());
+            router.refresh(path);
+            setOtp("");
+          } else {
+            throw new Error(createUserResponse.message);
+          }
+        } else {
+          throw new Error(response.message);
         }
       }
     } catch (error) {
@@ -231,9 +310,12 @@ const Login = () => {
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
     }
-
+  
     setIsVerifyingOtp(false);
   };
+  
+
+
 
   useEffect(() => {
     if (resendTimer > 0) {
@@ -317,7 +399,7 @@ useEffect(() => {
               Select Login Method. We will send you an OTP!
             </p>
             <div className="flex items-center gap-4">
-              {/* <Button
+              <Button
                 isIconOnly
                 className={`text-[#004AAD]  ${
                   loginMethod === "phone"
@@ -328,8 +410,8 @@ useEffect(() => {
                 onPress={() => setLoginMethod("phone")}
               >
                 <FaPhoneAlt size={24} />
-              </Button> */}
-              {/* <Divider className="h-6 " orientation="vertical" /> */}
+              </Button>
+              <Divider className="h-6 " orientation="vertical" />
               <Button
                 className={`text-[#004AAD] ${
                   loginMethod === "email"
@@ -344,7 +426,7 @@ useEffect(() => {
               </Button>
             </div>
             <div className="flex gap-4 w-full">
-              {/* {loginMethod === "phone" && (
+              {loginMethod === "phone" && (
                 <div className="flex items-center gap-2 w-full">
                   {" "}
                   <FaPhoneAlt size={30} className="text-[#F30278]" />
@@ -357,7 +439,7 @@ useEffect(() => {
                     onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </div>
-              )} */}
+              )}
 
               {loginMethod === "email" && (
                 <div className="flex items-center gap-2 w-full">

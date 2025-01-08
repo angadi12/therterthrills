@@ -1,15 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Calendar } from "@/components/ui/calendar";
-import { Button } from "@/components/ui/button";
-import { CalendarIcon, MapPin } from "lucide-react";
-import { format, isBefore, startOfToday } from "date-fns";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
+import { useEffect, useState } from "react";
+import { MapPin } from 'lucide-react';
+import { useDispatch, useSelector } from "react-redux";
+import { Spinner } from "@nextui-org/react";
 import {
   Select,
   SelectContent,
@@ -17,70 +11,53 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchTheaterLocations,
-  fetchLocationsAndSlots,
-  setSelectedLocation,
-  setDate,
-} from "@/lib/Redux/theaterSlice";
-import { Spinner } from "@nextui-org/react";
-import { Setselectedproccedbranchid } from "@/lib/Redux/bookingSlice";
 import { fetchBranches } from "@/lib/Redux/BranchSlice";
 import Branchcard from "./Branchcard";
 import Branchcardskeleton from "./Branchcardskeleton";
 
 export default function Branchselection() {
-    const [selectedbranch,setselectedbranch]=useState("")
+  const [selectedbranch, setselectedbranch] = useState("");
   const dispatch = useDispatch();
   const { branches, status } = useSelector((state) => state.branches);
-  const { proccedwithbranchid } = useSelector((state) => state.booking);
 
   useEffect(() => {
     dispatch(fetchBranches());
   }, [dispatch]);
 
-
   const filteredBranches = selectedbranch
-  ? branches?.filter((branch) => branch?._id === selectedbranch)
-  : branches;
-
-
-
+    ? branches?.filter((branch) => branch?._id === selectedbranch)
+    : branches;
 
   return (
-    <div className="w-11/12 mx-auto md:py-12 py-6">
-      <div className="flex justify-between items-center md:gap-8 gap-4 flex-col md:flex-row">
-        <h1 className="md:text-4xl text-xl font-medium hidden md:block">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="flex flex-col items-center justify-center max-w-2xl mx-auto space-y-8">
+        <h1 className="text-4xl font-medium text-center">
           Choose Your{" "}
           <span className="bg-clip-text font-bold inline-block text-transparent bg-gradient-to-r from-[#004AAD] via-[#F30278] to-[#E2B600]">
             Branch location!
           </span>
         </h1>
-        <div className="md:w-[400px] w-80 mx-auto">
+        <div className="w-full max-w-md">
           <label
             htmlFor="location-select"
-            className="block text-sm font-medium text-[#F30278] mb-1"
+            className="block text-sm font-medium text-[#F30278] mb-1 text-center"
           >
             Choose Branch Location
           </label>
           <Select
-            onValueChange={(value) =>
-              setselectedbranch(value)
-            }
+            onValueChange={(value) => setselectedbranch(value)}
             value={selectedbranch}
           >
             <SelectTrigger
               id="location-select"
-              className="w-full  h-12 flex items-center gap-2"
+              className="w-full h-12 flex items-center gap-2"
             >
               <SelectValue placeholder="Select location">
                 {status === "loading" ? (
                   <Spinner color="danger" size="sm" />
                 ) : (
                   <div className="flex items-center gap-2">
-                    <MapPin className="mr-2 h-4 w-4  text-[#F30278]" />
-                    {/* {proccedwithbranchid || "Select location"} */}
+                    <MapPin className="mr-2 h-4 w-4 text-[#F30278]" />
                     {branches?.find(
                       (theater) => theater?._id === selectedbranch
                     )?.location || "Select location"}
@@ -89,40 +66,35 @@ export default function Branchselection() {
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
-              {/* {branches?.map((location) => (
-                <SelectItem key={location} value={location._id}>
-                  {location?.location} - {location?.Branchname}
-                </SelectItem>
-              ))} */}
-              {status === "loading"  ? (
+              {status === "loading" ? (
                 <Spinner color="danger" size="sm" />
               ) : branches?.length > 0 ? (
                 branches.map((location) => (
-                    <SelectItem key={location} value={location._id}>
+                  <SelectItem key={location._id} value={location._id}>
                     {location?.location} - {location?.Branchname}
-                    </SelectItem>
-                  ))
-                ) : (
-                  <div className="p-1 text-center text-sm ">
-                    No Branches available
-                  </div>
-                )}
+                  </SelectItem>
+                ))
+              ) : (
+                <div className="p-1 text-center text-sm">
+                  No Branches available
+                </div>
+              )}
             </SelectContent>
           </Select>
         </div>
       </div>
 
-      <div className="w-full h-full mx-auto md:py-20 py-6 md:pb-8 pb-12 grid md:grid-cols-3 grid-cols-1 gap-8 justify-center place-content-center items-stretch">
+      <div className={`mt-12 grid ${filteredBranches?.length === 1 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'} gap-8 place-items-center max-w-7xl mx-auto`}>
         {status === "loading" ? (
           Array.from({ length: 6 }).map((_, index) => (
             <Branchcardskeleton key={index} />
           ))
-        ) : filteredBranches?.length === 0? (
-          <p className="col-span-3 text-center text-lg font-medium">
-            No branches available 
+        ) : filteredBranches?.length === 0 ? (
+          <p className="col-span-full text-center text-lg font-medium">
+            No branches available
           </p>
         ) : (
-            filteredBranches?.map((branch, index) => (
+          filteredBranches?.map((branch, index) => (
             <Branchcard key={index} branch={branch} />
           ))
         )}
@@ -130,3 +102,4 @@ export default function Branchselection() {
     </div>
   );
 }
+

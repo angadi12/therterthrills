@@ -55,9 +55,9 @@ useEffect(() => {
           <div className="w-full px-4 py-4 text-start flex justify-between items-center">
             <p className="text-lg font-semibold w-60">Manage Refunds</p>
             <div className="flex items-center justify-end space-x-2  w-full col-span-2 ">
-              <BookingDatePicker />
+             { selected === "All Refunds" && <BookingDatePicker />}
 
-              <Select
+            { selected !== "All Refunds" && <Select
                 onValueChange={(value) => dispatch(Setselectedtheaterid(value))}
                 value={Selectedtheaterbyid}
               >
@@ -97,7 +97,7 @@ useEffect(() => {
                     </div>
                   )}
                 </SelectContent>
-              </Select>
+              </Select>}
             </div>
           </div>
           <div className="w-full flex justify-between items-center px-4 ">
