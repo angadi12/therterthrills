@@ -24,12 +24,22 @@ import {
   setSelectedTheater,
   setSelectedSlotid,
 } from "@/lib/Redux/theaterSlice";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay"
+import { VideoModal } from "./Videomodal";
 
 export default function TheatreCard({ theatre }) {
   const router = useRouter();
   const { toast } = useToast();
   const dispatch = useDispatch();
-
+  const [api, setApi] = useState();
+  const [current, setCurrent] = useState(0);
   const [currentImage, setCurrentImage] = useState(0);
   const icon = [Groupicon2, Cakeicon, refundicon, TVicon, Speakericon];
   const { selectedLocation, selectedslotsid, selectedTheater, date } =
@@ -42,7 +52,15 @@ export default function TheatreCard({ theatre }) {
     return () => clearInterval(timer);
   }, []);
 
-  console.log(theatre);
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
 
   const handleProceedWithValidation = () => {
     // Dispatch the selected theater
@@ -88,14 +106,57 @@ export default function TheatreCard({ theatre }) {
 
   return (
     <>
-      <Card className="w-full flex flex-col mx-auto justify-around items-center p-0 relative">
+      <Card className="w-full flex flex-col mx-auto justify-around overflow-hidden items-center p-0 relative">
         {/* {isBestSeller && (
             <span className="absolute rounded-full top-2 right-2 bg-[#FFA800] text-white text-xs font-bold px-2 py-1 ">
               Best Seller
             </span>
           )} */}
         <div className="p-0 w-full">
-          <div className="w-full relative md:py-4 p-0 h-80 rounded-t-lg  overflow-hidden">
+          <Carousel
+            setApi={setApi}
+            plugins={[
+              Autoplay({
+                delay: 4000,
+              }),
+            ]}
+            className="w-full"
+          >
+            <CarouselContent>
+              {theatre?.images?.map((src, index) => (
+                <CarouselItem key={index}>
+                  <div className="md:p-2 p-0">
+                    <Image
+                      src={src}
+                      width={190}
+                      height={400}
+                      alt={`Theater image ${index + 1}`}
+                      className="w-full h-80 object-fill rounded-t-lg"
+                    />
+                    {index === 0 && theatre?.videoUrl && (
+                    <VideoModal videoUrl={theatre.videoUrl} />
+                  )}
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+            <div className="absolute bottom-4 left-0 right-0">
+              <div className="flex items-center justify-center gap-2">
+                {theatre?.images?.map((_, index) => (
+                  <button
+                    key={index}
+                    className={`w-3 h-3 rounded-full transition-colors ${
+                      index === current ? "bg-[#F30278]" : "bg-[#F30278]/30"
+                    }`}
+                    onClick={() => api?.scrollTo(index)}
+                  />
+                ))}
+              </div>
+            </div>
+          </Carousel>
+          {/* <div className="w-full relative md:py-4 p-0 h-80 rounded-t-lg  overflow-hidden">
             {theatre?.images?.map((src, index) => (
               <>
                 {currentImage === index && (
@@ -120,12 +181,14 @@ export default function TheatreCard({ theatre }) {
                 />
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
         <CardContent className="py-4 w-full">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center">
-              <p className="text-[#F30278] rounded-full p-2 text-sm font-medium ring-1 ring-[#F30278] bg-[#F30278]/20">For {theatre?.capacity} people @{theatre?.price} </p>
+              <p className="text-[#F30278] rounded-full md:p-2 p-2 md:text-sm text-xs font-medium ring-1 ring-[#F30278] bg-[#F30278]/20">
+                For {theatre?.capacity} people @{theatre?.price}{" "}
+              </p>
               {/* <p>{theatre?.name} {theatre?.capacity} {theatre?.price}</p> */}
               {/* {[...Array(5)].map((_, i) => (
                 <Star

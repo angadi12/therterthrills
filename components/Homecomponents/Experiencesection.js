@@ -26,15 +26,15 @@ export default function ExperienceSection() {
           {/* Text and Intro */}
           <div className="flex flex-col gap-2 justify-center w-full">
             <div>
-              <h2 className="md:text-4xl text-2xl font-bold mb-2">
+              <h2 className="md:text-4xl text-2xl text-center md:text-left font-bold mb-2">
                 Choose us for your ultimate
               </h2>
-              <h2 className="text-4xl font-bold mb-8">
+              <h2 className="md:text-4xl text-2xl text-center md:text-left  font-bold mb-8">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#004AAD] via-[#F30278] to-[#E2B600]">
                   Private Theatre Experience!
                 </span>
               </h2>
-              <Divider className="w-3/4 mr-auto" />
+              <Divider className="md:w-3/4 w-full mr-auto" />
             </div>
             <div className="hidden md:block">
 

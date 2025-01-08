@@ -31,7 +31,7 @@ export default function Branchselection() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex flex-col items-center justify-center max-w-2xl mx-auto space-y-8">
-        <h1 className="text-4xl font-medium text-center">
+        <h1 className="md:text-4xl text-2xl font-medium text-center">
           Choose Your{" "}
           <span className="bg-clip-text font-bold inline-block text-transparent bg-gradient-to-r from-[#004AAD] via-[#F30278] to-[#E2B600]">
             Branch location!
@@ -84,7 +84,7 @@ export default function Branchselection() {
         </div>
       </div>
 
-      <div className={`mt-12 grid ${filteredBranches?.length === 1 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'} gap-8 place-items-center max-w-7xl mx-auto`}>
+      <div className={`md:mt-12 mt-6 pb-12 grid ${filteredBranches?.length === 1 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'} gap-8 place-items-center max-w-7xl mx-auto`}>
         {status === "loading" ? (
           Array.from({ length: 6 }).map((_, index) => (
             <Branchcardskeleton key={index} />

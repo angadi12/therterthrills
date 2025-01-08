@@ -22,7 +22,7 @@ export default function Slidingoffer() {
       <Marquee pauseOnHover className="[--duration:10s]">
         {couponsoffer?.length > 0 &&
           couponsoffer?.map((coupon, index) => (
-            <span key={index} className="text-white py-2 inline-block w-full">
+            <span key={index} className="text-white md:py-2 inline-block w-full">
               {coupon}
             </span>
           ))}

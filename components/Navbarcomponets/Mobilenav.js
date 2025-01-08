@@ -27,6 +27,7 @@ import {
   TicketSlash,
   GlobeLock,
   HandPlatter,
+  SquareArrowOutUpRight 
 } from "lucide-react";
 
 const navigationItems = [
@@ -111,6 +112,7 @@ export default function Mobilenav() {
           >
             BOOK NOW
           </Button>
+          <span onClick={()=>router.push("https://www.angadiworldtech.com/")} className="underline cursor-pointer text-center text-[#004AAD] text-xs ">Developed by AWT Pvt Ltd<SquareArrowOutUpRight className="inline-block text-[#F30278] cursor-pointer h-4 w-4 ml-2 mb-1"/></span>
         </nav>
       </SheetContent>
     </Sheet>

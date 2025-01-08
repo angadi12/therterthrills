@@ -15,6 +15,7 @@ import {
   Popcorn,
   MonitorPlay,
   Clapperboard,
+  SquareArrowOutUpRight
 } from "lucide-react";
 import Link from "next/link";
 
@@ -213,7 +214,7 @@ export default function Footer() {
           </div>
           <p>
             &copy;Copyrights {new Date().getFullYear()} .The Theatre Thrills .
-            All rights reserved.&nbsp;Designed and developed by Angadi World Technologies
+            All rights reserved.&nbsp;<span onClick={()=>router.push("https://www.angadiworldtech.com/")} className="underline cursor-pointer ">Developed by Angadi World Technologies Pvt Ltd<SquareArrowOutUpRight className="inline-block cursor-pointer h-4 w-4 ml-2 mb-1"/></span>
           </p>
           <div>
             {/* <Button size="sm" className="ring-1 ring-white text-white bg-transparent rounded-md">

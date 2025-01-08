@@ -67,11 +67,11 @@ export default function TestimonialCarousel() {
     <div className="w-11/12 mx-auto md:py-24 py-8 ">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-center place-content-center items-stretch">
         <div className=''>
-          <h2 className="text-4xl font-bold mb-2">
+          <h2 className="md:text-4xl text-2xl text-center md:text-left font-bold mb-2">
             <span className="bg-clip-text inline-block text-transparent bg-gradient-to-r from-[#004AAD] via-[#F30278] to-[#E2B600]">Wonderful Feedbacks</span>{" "}
           </h2>
-          <h3 className="md:text-3xl text-2xl font-bold md:mb-6 mb-3">from our customers!</h3>
-          <p className="text-gray-600 md:mb-8 mb-4">
+          <h3 className="md:text-3xl text-2xl text-center md:text-left font-bold md:mb-6 mb-3">from our customers!</h3>
+          <p className="text-gray-600 text-center md:text-left md:mb-8 mb-4">
 {`            We take pride in delivering exceptional experiences tailored to your needs. Here's what some of our satisfied clients have to say about their time at The Theatre Thrills
 `}          </p>
           <div className=" space-x-2 hidden md:flex">

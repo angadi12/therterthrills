@@ -72,13 +72,13 @@ export default function FeaturesSection() {
             </div>
           </div>
           <div className="w-full md:w-1/2 md:pl-12">
-            <h2 className="md:text-4xl text-2xl font-bold mb-4">
+            <h2 className="md:text-4xl text-2xl text-center md:text-left font-bold mb-4">
               We make your celebration{" "}
               <span className="bg-clip-text inline-block text-transparent bg-gradient-to-r from-[#004AAD] via-[#F30278] to-[#E2B600]">
                 a Blockbuster!
               </span>
             </h2>
-            <p className="text-gray-600 leading-7 mb-6">
+            <p className="text-gray-600 md:text-left text-justify break-all md:break-normal leading-7 mb-6">
               {`At The Theatre Thrills, we provide private theatre space for a personalized entertainment experience. Whether you're hosting a movie night, birthday, or party, we make it unforgettable with our state-of-the-art theatres and event customization.`}{" "}
             </p>
             <div className="grid grid-cols-2 md:gap-6 gap-2 ">

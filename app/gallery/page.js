@@ -3,41 +3,45 @@ import Gallary from "@/public/asset/Gallary.png"
 import Image from 'next/image'
 import Branchselect from '@/components/Gallerycomponents/Branchselect'
 import Partycategory from '@/components/Gallerycomponents/Partycategory'
-import Reunion1 from "@/public/asset/Reunion1.png"
-import Reunion2 from "@/public/asset/Reunion2.png"
-import Reunion3 from "@/public/asset/Reunion3.png"
-import Annie1 from "@/public/asset/Annie1.png"
-import Annie2 from "@/public/asset/Annie2.png"
-import Annie3 from "@/public/asset/Annie3.png"
-import Birth1 from "@/public/asset/Birth1.png"
-import Birth2 from "@/public/asset/Birth2.png"
-import Birth3 from "@/public/asset/Birth3.png"
+
 
 const page = () => {
 
   const partyCategories = [
     {
-      title: "Reunion Party",
+      title: "Jasmine Theatre",
       images: [
-        Reunion1,
-        Reunion2,
-        Reunion3,
+        "https://res.cloudinary.com/dladopmsn/image/upload/v1736346851/Jasmine_1_ruhcya.jpg",
+        "https://res.cloudinary.com/dladopmsn/image/upload/v1736346682/Jasmine_2_fg1owz.jpg",
+        "https://res.cloudinary.com/dladopmsn/image/upload/v1736346699/Jasmine_3_ktdh24.jpg",
+        "https://res.cloudinary.com/dladopmsn/image/upload/v1736346688/Jasmine_4_uapcb7.jpg"
       ],
     },
     {
-      title: "Anniversary Party",
+      title: "Rose Theatre",
       images: [
-       Annie1,
-       Annie2,
-       Annie3,
+        "https://res.cloudinary.com/dladopmsn/image/upload/v1736346899/rose_1_krmbkb.jpg",
+        "https://res.cloudinary.com/dladopmsn/image/upload/v1736346711/rose_2_ukgaoj.jpg",
+        "https://res.cloudinary.com/dladopmsn/image/upload/v1736346699/rose_3_b1aewn.jpg",
+        "https://res.cloudinary.com/dladopmsn/image/upload/v1736346695/rose_4_nwulps.jpg"
       ],
     },
     {
-      title: "Birthday Party",
+      title: "Lily Theatre",
       images: [
-        Birth1,
-        Birth2,
-        Birth3,
+        "https://res.cloudinary.com/dladopmsn/image/upload/v1736346903/Lily_1_ud3cam.jpg",
+    "https://res.cloudinary.com/dladopmsn/image/upload/v1736346730/Lily2_uhhghf.jpg",
+    "https://res.cloudinary.com/dladopmsn/image/upload/v1736346725/Lily_3_yeknnq.jpg",
+    "https://res.cloudinary.com/dladopmsn/image/upload/v1736346708/Lily_4_ohmeiq.jpg"
+      ],
+    },
+    {
+      title: "Iris Theatre",
+      images: [
+        "https://res.cloudinary.com/dladopmsn/image/upload/v1736346842/iris_1_yo4he2.jpg",
+    "https://res.cloudinary.com/dladopmsn/image/upload/v1736346662/iris_2_jekswd.jpg",
+    "https://res.cloudinary.com/dladopmsn/image/upload/v1736346709/iris_3_j9ihem.jpg",
+    "https://res.cloudinary.com/dladopmsn/image/upload/v1736346665/iris_4_bal2ab.jpg"
       ],
     },
   ]

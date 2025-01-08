@@ -149,13 +149,13 @@ export default function CustomServices() {
   return (
     <section className="py-16 bg-[#F7F7F7]">
       <div className="md:w-11/12 w-full mx-auto">
-        <h2 className="md:text-4xl text-2xl font-bold text-center mb-2">
+        <h2 className="md:text-4xl text-2xl font-bold text-center mb-2 w-full">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#004AAD] to-[#F30278] ">
             Custom Services
           </span>{" "}
           for an Unforgettable Experience!
         </h2>
-        <p className="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
+        <p className="text-center md:leading-7  text-gray-600 mb-12 md:max-w-3xl w-11/12 mx-auto">
           At The Theatre Thrills, we offer customized services to enhance your
           experience. From private screenings to unique decorations, we ensure
           every celebration is special and memorable.
@@ -222,7 +222,7 @@ function ServiceCard({
             </div>
           </div>
           <h3 className="text-sm font-semibold mb-2">{title}</h3>
-          <p className="text-gray-600 text-xs">{description}</p>
+          <p className="text-gray-600 text-sm md:text-xs px-4 md:px-0">{description}</p>
         </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[900px]">

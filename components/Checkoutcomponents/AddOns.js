@@ -206,11 +206,11 @@ const AddOns = () => {
         </div>
 
         <h2 className="text-xl font-semibold mb-4">Photography</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 mx-auto gap-4">
           {photographyItems.map((option) => (
             <Button
               key={option.name}
-              className={`flex flex-col items-center justify-center p-1 h-40 w-28 md:h-48 md:w-40 bg-white rounded-lg ${
+              className={`flex flex-col items-center justify-center p-1 h-48 w-32 md:h-48 md:w-40 bg-white rounded-lg ${
                 photography.includes(option.name)
                   ? "bg-pink-100 text-[#F30278] ring-1 ring-[#F30278]"
                   : "text-gray-600 hover:bg-gray-200 ring-1 ring-[#F30278]/30"

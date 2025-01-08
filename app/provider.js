@@ -86,7 +86,7 @@ export function NextuiProviderWrapper({ children }) {
         pathname === "/Profile/accountinfo" ||
         pathname === "/Login" ? null : (
           <>
-          <ChatWidget/>
+         {pathname !== "/checkout" && <ChatWidget/>}
 
             <Topfooter />
 
