@@ -105,7 +105,7 @@ const Login = () => {
         const response = await SendMobileOtp({ mobile:formatMobileNumber(phoneNumber) });
         if (response.status) {
           toast({
-            title: "Email OTP Sent",
+            title: "OTP Sent",
             description: `OTP has been sent to ${formatMobileNumber(phoneNumber)}`,
             action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
           });
@@ -113,7 +113,7 @@ const Login = () => {
           dispatch(openOtpModal());
         } else {
           toast({
-            title: "Email OTP Failed",
+            title: "OTP Failed",
             description: response?.message,
             action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
           });
