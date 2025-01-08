@@ -330,6 +330,7 @@ const Login = () => {
   }, [resendTimer]);
 
   const handleResendOtp = () => {
+     setOtp("")
     if (resendTimer === 0) {
       setIsSendingOtp(true);
       handleSendOtp();
