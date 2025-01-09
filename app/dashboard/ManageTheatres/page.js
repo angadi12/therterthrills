@@ -123,7 +123,7 @@ export default function Managetheatre() {
             <Carousel className="w-full">
               <CarouselContent>
                 {theater?.images?.map((image, index) => (
-                  <CarouselItem key={index}>
+                  <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                     <div className="relative basis-1/3  w-full overflow-hidden rounded-lg">
                       <Image
                         src={image}
@@ -136,6 +136,11 @@ export default function Managetheatre() {
                   </CarouselItem>
                 ))}
               </CarouselContent>
+              <div className="absolute bottom-6  transform -translate-x-1/2 -translate-y-1/2  left-1/2  ">
+              <CarouselNext className="bg-pink-500 text-white"></CarouselNext>
+              <CarouselPrevious className="bg-pink-500 text-white"></CarouselPrevious>
+
+              </div>
             </Carousel>
 
             {/* Price and Capacity Badges */}

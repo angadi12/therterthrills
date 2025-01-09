@@ -5,6 +5,8 @@ import { Button } from "@nextui-org/react";
 import FogEffects from "@/public/asset/FogEffects.png";
 import PartyProps from "@/public/asset/PartyProps.png";
 import HBDLetters from "@/public/asset/HBDLetters.png";
+import HBD from "@/public/asset/HBD.png";
+import LEDnumbers from "@/public/asset/LEDnumbers.png";
 import CandlePath from "@/public/asset/CandlePath.png";
 
 import Singlerose from "@/public/asset/Singlerose.png";
@@ -36,6 +38,7 @@ const AddOns = () => {
     { name: "Fog Effects", price: 349, image: FogEffects },
     { name: "Party Props", price: 449, image: PartyProps },
     { name: "HBD Letters", price: 99, image: HBDLetters },
+    { name: "LED Numbers", price: 99, image: LEDnumbers },
     { name: "Candle Path", price: 99, image: CandlePath },
   ];
 
@@ -89,7 +92,7 @@ const AddOns = () => {
               className="flex flex-col items-center relative"
             >
               <Button
-                className={`flex flex-col items-center justify-center h-40 w-32 md:h-48 md:w-40 bg-white p-1 rounded-lg ${
+                className={`flex flex-col items-center justify-center h-40 w-32 md:h-52 md:w-40 bg-white p-1 rounded-lg ${
                   decorations[decoration.name]
                     ? "bg-pink-100 text-[#F30278] ring-1 ring-[#F30278]"
                     : "text-gray-600 hover:bg-gray-200 ring-1 ring-[#F30278]/30"
@@ -101,7 +104,7 @@ const AddOns = () => {
                   alt={decoration.name}
                   width={80}
                   height={80}
-                  className="mb-2 rounded-full"
+                  className="mb-2 md:h-24 md:w-24 w-20 h-20 rounded-full"
                 />
                 <div className="flex flex-col justify-start pb-3">
                   <span className="text-sm">{decoration.name}</span>

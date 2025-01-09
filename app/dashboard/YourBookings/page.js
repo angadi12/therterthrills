@@ -461,26 +461,6 @@ export default function ActiveEvents() {
                   <p className="text-lg font-semibold text-[#F30278]">
                     Total: ₹{singleunbooking?.TotalAmount}/-
                   </p>
-                  <Chip className={"bg-green-500 text-white"}>
-                    {/* ₹{singleunbooking?.paymentAmount} Paid */}₹
-                    {singleunbooking?.paymentType === "full"
-                      ? singleunbooking?.TotalAmount
-                      : singleunbooking?.paymentAmount}
-                    /- paid
-                  </Chip>
-                  <Chip className={"bg-red-500 text-white"}>
-                    ₹
-                    {singleunbooking?.paymentType === "advance"
-                      ? singleunbooking?.TotalAmount -
-                        singleunbooking?.paymentAmount
-                      : 0}
-                    &nbsp;to pay
-                  </Chip>
-                  {singleunbooking?.coupon && (
-                    <Chip className={"bg-yellow-500 text-white"}>
-                      ₹{singleunbooking?.discountAmount} Coupon discount
-                    </Chip>
-                  )}{" "}
                 </div>
                 <Separator className="bg-[#F30278]" />
                 <div className="grid md:grid-cols-1 grid-cols-1 gap-2">
@@ -586,40 +566,51 @@ export default function ActiveEvents() {
                 <Separator className="bg-[#F30278]" />
                 <div>
                   <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
-                    Payment Details
+                    User Details
                   </h3>
                   <div className="flex items-center mb-2">
-                    <CreditCard className="w-4 h-4 mr-2 text-[#004AAD]" />
+                    <Users className="w-4 h-4 mr-2 text-[#004AAD]" />
                     <span>
-                      Status:{" "}
+                      User name:{" "}
                       <span className="text-[#F30278]">
-                        {singleunbooking?.paymentStatus}
+                        {singleunbooking?.fullName}
                       </span>
                     </span>
                   </div>
-                  <p>
-                    Amount Paid:{" "}
-                    <span className="text-[#F30278]">
-                      ₹
-                      {singleunbooking?.paymentType === "full"
-                        ? singleunbooking?.TotalAmount
-                        : singleunbooking?.paymentAmount}
-                      /-
+                  <div className="flex flex-col justify-start gap-2">
+
+                  {singleunbooking?.whatsappNumber && (
+                    <span>
+                      User whatsappNumber:{" "}
+                      <span className="text-[#F30278]">
+                        {singleunbooking?.whatsappNumber}
+                      </span>
                     </span>
-                  </p>
-                  <p>
-                    Order ID:{" "}
-                    <span className="text-[#F30278]">
-                      {singleunbooking?.orderId}
+                  )}
+                  {singleunbooking?.user?.phoneNumber && (
+                    <span>
+                      User Number:{" "}
+                      <span className="text-[#F30278]">
+                        {singleunbooking?.user?.phoneNumber}
+                      </span>
                     </span>
-                  </p>
-                  <div className="flex flex-col justify-start items-start gap-2">
-                    Coupon applied :-{" "}
-                    {singleunbooking?.coupon && (
-                      <p className="text-[#F30278] bg-[#F30278]/20 text-sm ring-1 ring-[#F30278] rounded-full px-2">
-                        {singleunbooking?.coupon}
-                      </p>
-                    )}
+                  )}
+                  {singleunbooking?.email && (
+                    <span>
+                      User Email:{" "}
+                      <span className="text-[#F30278]">
+                        {singleunbooking?.email}
+                      </span>
+                    </span>
+                  )}
+                  {singleunbooking?.user?.email && (
+                    <span>
+                      User Email:{" "}
+                      <span className="text-[#F30278]">
+                        {singleunbooking?.user?.email}
+                      </span>
+                    </span>
+                  )}
                   </div>
                 </div>
                 <Separator className="bg-[#F30278]" />
@@ -1365,7 +1356,7 @@ export default function ActiveEvents() {
                             {UnsavedTheaterbooking?.map((event) => (
                               <div
                                 key={event._id}
-                                className="flex relative items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
+                                className="flex relative items-center space-x-2 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
                               >
                                 <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
                                   <Image
@@ -1396,7 +1387,7 @@ export default function ActiveEvents() {
                                     <div className="flex items-center text-gray-600">
                                       <Users className="h-4 w-4 mr-2" />
                                       <span className="text-sm">
-                                        {event?.Occasionobject}
+                                        {event?.fullName}
                                       </span>
                                     </div>
                                     <div className="flex items-center text-gray-600">
@@ -1415,10 +1406,13 @@ export default function ActiveEvents() {
                                       </span>
                                     </div>
                                     <div className="flex items-center text-gray-600">
-                                      <Clock className="h-4 w-4 mr-2" />
+                                    {event?.user?.phoneNumber ? <Phone  className="h-4 w-4 mr-2" />
+                                     : <Mail   className="h-4 w-4 mr-2" />}
                                       <span className="text-sm">
-                                        {event?.slotDetails?.startTime}-
-                                        {event?.slotDetails?.endTime}
+                                      {event?.user?.phoneNumber ?
+                                      <span>{event?.user?.phoneNumber}</span>:
+                                      <span className="text-xs">{event?.user?.email}</span>} 
+
                                       </span>
                                     </div>
                                   </div>
