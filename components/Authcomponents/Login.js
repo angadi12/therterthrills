@@ -480,7 +480,7 @@ useEffect(() => {
           </ModalHeader>
           <ModalBody>
             <p className="text-center text-sm text-muted-foreground">
-              Code sent to {phoneNumber ? +91 - phoneNumber : email}
+              Code sent to {loginMethod === "phone" ? phoneNumber: email}
             </p>
             <div className="flex justify-center gap-2">
               <InputOTP

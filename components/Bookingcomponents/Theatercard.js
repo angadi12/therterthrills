@@ -210,7 +210,7 @@ export default function TheatreCard({ theatre }) {
               <p className="text-white md:text-sm text-xs px-2 bg-[#F30278] rounded-full p-1">{`${theatre?.availableSlots.length} slots available`}</p>
             )}
           </div>
-          <div className="flex gap-2 mb-2">
+          <div className="flex justify-between w-full md:justify-start gap-2 mb-2">
             <span className="bg-pink-100 ring-1 ring-[#F30278] text-xs text-[#F30278] px-2 py-2 font-semibold rounded flex items-center">
               <Image src={Groupicon2} alt="grp" className="w-3 h-3 mr-1" />{" "}
               {theatre?.groupSize} Max Capacity

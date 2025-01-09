@@ -15,7 +15,7 @@ export function VideoModal({ videoUrl }) {
     <>
       <Button
         onClick={() => setIsOpen(true)}
-        className="absolute bottom-4 right-8 transform -translate-x-1/2 -translate-y-1/2 bg-[#004AAD]/90 hover:bg-[#F30278]/70 rounded-full w-10 h-10 flex items-center justify-center group transition-all duration-200"
+        className="absolute bottom-4 right-4 transform -translate-x-1/2 -translate-y-1/2 bg-[#F30278]/90 hover:bg-[#F30278]/70 rounded-full w-10 h-10 flex items-center justify-center group transition-all duration-200"
       >
         <Play className="w-8 h-8 text-white group-hover:scale-110 transition-transform" fill="#F30278" />
       </Button>
@@ -35,7 +35,7 @@ export function VideoModal({ videoUrl }) {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.2 }}
-              className="z-50 w-[90vw] h-[80vh] max-w-6xl bg-black rounded-lg overflow-hidden"
+              className="z-50 md:w-[90vw] h-[80vh] md:max-w-6xl w-full bg-black rounded-lg overflow-hidden"
             >
               <Button
                 onClick={() => setIsOpen(false)}
