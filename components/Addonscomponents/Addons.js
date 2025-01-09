@@ -8,7 +8,7 @@ import PartyProps from "@/public/asset/PartyProps.png";
 import HBDLetters from "@/public/asset/HBDLetters.png";
 import LEDnumbers from "@/public/asset/LEDnumbers.png";
 import Photoclipping from "@/public/asset/Photoclipping.png";
-
+import CandlePath from "@/public/asset/CandlePath.png";
 
 import Singlerose from "@/public/asset/Singlerose.png";
 import RoseBouquet from "@/public/asset/RoseBouquet.png";
@@ -17,7 +17,6 @@ import Photography1 from "@/public/asset/Photography1.png";
 import Photography2 from "@/public/asset/Photography2.png";
 import Photography3 from "@/public/asset/Photography3.png";
 import Photography4 from "@/public/asset/Photography4.png";
-
 
 import Vanilla from "@/public/asset/Vanilla.png";
 import Strawberry from "@/public/asset/Strawberry.png";
@@ -62,6 +61,7 @@ const Addonss = () => {
       image: HBDLetters,
       category: "Decor Add-ons",
     },
+    { name: "Candle Path", price: 99, image: CandlePath , category: "Decor Add-ons",},
   ];
 
   const roses = [
@@ -79,7 +79,7 @@ const Addonss = () => {
     },
   ];
 
-  const photographyItems  = [
+  const photographyItems = [
     { name: "20 Pictures", price: 299, image: Photography1 },
     { name: "30 Pictures", price: 499, image: Photography2 },
     { name: "40 Pictures", price: 699, image: Photography3 },
@@ -97,7 +97,7 @@ const Addonss = () => {
     { id: 8, name: "Black Forest", price: 599, image: Blackforest },
     { id: 9, name: "White Forest", price: 599, image: whiteforest },
     { id: 10, name: "Chocochips", price: 599, image: Chocochips },
-];
+  ];
 
   return (
     <div className="w-11/12 mx-auto md:py-20 py-8 flex flex-col items-start gap-8">
@@ -125,7 +125,7 @@ const Addonss = () => {
         <div className="bg-[#F30278]/10 p-3 border border-[#F30278] flex gap-2 items-center">
           <Info color="#F30278" className=" text-[#F30278]" />
           <p className="text-[#F30278] text-sm">
-          {`  For Photoclippings, Our Team Will Reach Out To You On The Day Of
+            {`  For Photoclippings, Our Team Will Reach Out To You On The Day Of
             Booking. You Need To Send 16 Soft Copies Of The Photos You Want To
             Place Inside The Theater.`}
           </p>
@@ -153,7 +153,6 @@ const Addonss = () => {
             </div>
           ))}
         </div>
-       
       </div>
 
       <div className="flex flex-col gap-6 w-full mx-auto">
@@ -180,7 +179,7 @@ const Addonss = () => {
         <div className="bg-[#F30278]/10 p-3 border border-[#F30278] flex gap-2 items-center">
           <Info color="#F30278" className=" text-[#F30278]" />
           <p className="text-[#F30278] text-sm">
-         {`Timing of the photography is according to the availability of the photographer.`}
+            {`Timing of the photography is according to the availability of the photographer.`}
           </p>
         </div>
       </div>
@@ -209,7 +208,9 @@ const Addonss = () => {
       </div>
 
       <div className="flex flex-col gap-6 w-full mx-auto">
-        <h2 className="text-2xl font-bold">Cakes <span className="text-sm text-[#F30278]">(Eggless)</span></h2>
+        <h2 className="text-2xl font-bold">
+          Cakes <span className="text-sm text-[#F30278]">(Eggless)</span>
+        </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {cakes.map((product) => (
             <div
@@ -232,11 +233,10 @@ const Addonss = () => {
         <div className="bg-[#F30278]/10 p-3 border border-[#F30278] flex gap-2 items-center">
           <Info color="#F30278" className=" text-[#F30278]" />
           <p className="text-[#F30278] text-sm">
-         {`Images are for demonstration purposes only. Actual cake may look different.`}
+            {`Images are for demonstration purposes only. Actual cake may look different.`}
           </p>
         </div>
       </div>
-
     </div>
   );
 };

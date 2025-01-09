@@ -1411,7 +1411,7 @@ export default function ActiveEvents() {
                                       <span className="text-sm">
                                       {event?.user?.phoneNumber ?
                                       <span>{event?.user?.phoneNumber}</span>:
-                                      <span className="text-xs">{event?.user?.email}</span>} 
+                                      <span className="text-sm">{event?.user?.email}</span>} 
 
                                       </span>
                                     </div>

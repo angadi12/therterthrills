@@ -125,7 +125,7 @@ export default function TheatreCard({ theatre }) {
             <CarouselContent>
               {theatre?.images?.map((src, index) => (
                 <CarouselItem key={index}>
-                  <div className="md:p-2 p-0">
+                 {index ===0 && <div className="md:p-2 p-0">
                     <Image
                       src={src}
                       width={190}
@@ -133,16 +133,16 @@ export default function TheatreCard({ theatre }) {
                       alt={`Theater image ${index + 1}`}
                       className="w-full h-80 object-fill rounded-t-lg"
                     />
-                    {index === 0 && theatre?.videoUrl && (
+                    {/* {index === 0 && theatre?.videoUrl && (
                     <VideoModal videoUrl={theatre.videoUrl} />
-                  )}
-                  </div>
+                  )} */}
+                  </div>}
                 </CarouselItem>
               ))}
             </CarouselContent>
             <CarouselPrevious />
             <CarouselNext />
-            <div className="absolute bottom-4 left-0 right-0">
+            {/* <div className="absolute bottom-4 left-0 right-0">
               <div className="flex items-center justify-center gap-2">
                 {theatre?.images?.map((_, index) => (
                   <button
@@ -154,7 +154,7 @@ export default function TheatreCard({ theatre }) {
                   />
                 ))}
               </div>
-            </div>
+            </div> */}
           </Carousel>
           {/* <div className="w-full relative md:py-4 p-0 h-80 rounded-t-lg  overflow-hidden">
             {theatre?.images?.map((src, index) => (

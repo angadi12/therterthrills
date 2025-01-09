@@ -1,4 +1,5 @@
 "use client";
+
 import React, { Suspense, useEffect } from "react";
 import Theaterbook from "@/public/asset/Theaterbook.png";
 import Image from "next/image";
@@ -13,7 +14,6 @@ import {
   fetchTheaterLocations,
 } from "@/lib/Redux/theaterSlice";
 import { setBookingField } from "@/lib/Redux/checkoutSlice";
-import Branchselection from "@/components/Bookingcomponents/Branchselection";
 import {
   Modal,
   ModalContent,
@@ -23,6 +23,16 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
+
+// Utility function to rearrange the array
+const rearrangeArray = (array, index1, index2) => {
+  if (array.length > Math.max(index1, index2)) {
+    const newArray = [...array];
+    [newArray[index1], newArray[index2]] = [newArray[index2], newArray[index1]]; // Swap elements
+    return newArray;
+  }
+  return array; // Return original array if indices are out of bounds
+};
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -49,12 +59,14 @@ const Page = () => {
     dispatch(fetchAllTheaters(formattedDate));
   }, [dispatch, formattedDate]);
 
-  // if (error || locationsWithSlotserror) {
-  //   return <p>Error: {error || locationsWithSlotserror}</p>;
-  // }
-
   const isLoading = loading || locationsWithSlotsloading;
   const noData = !locationsWithSlots?.length && !isLoading;
+
+  // Rearrange the locationsWithSlots array to swap the second and third items
+  const rearrangedLocations =
+    locationsWithSlots?.length >= 3
+      ? rearrangeArray(locationsWithSlots, 1, 2)
+      : locationsWithSlots;
 
   useEffect(() => {
     dispatch(setBookingField({ field: "numberOfPeople", value: 0 }));
@@ -64,13 +76,7 @@ const Page = () => {
     if (!proccedwithbranchid) {
       onOpen();
     }
-  }, []);
-
-
-
-
-
-
+  }, [proccedwithbranchid, onOpen]);
 
   return (
     <>
@@ -103,10 +109,9 @@ const Page = () => {
                 No theaters available for the selected date and locations.
               </p>
             ) : (
-              locationsWithSlots?.map((theatre, index) => (
-              <TheatreCard key={index} theatre={theatre} />
+              rearrangedLocations?.map((theatre, index) => (
+                <TheatreCard key={index} theatre={theatre} />
               ))
-              
             )}
           </div>
         </main>
@@ -129,8 +134,7 @@ const Page = () => {
           <ModalFooter className="flex justify-center items-center">
             <Button
               onPress={() => router.push("/choosebranch")}
-              className="px-8 py-0.5 rounded-sm w-48  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-            >
+              className="px-8 py-0.5 rounded-sm w-48  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "            >
               Choose Branch
             </Button>
           </ModalFooter>
