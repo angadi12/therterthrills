@@ -123,14 +123,14 @@ export default function Managetheatre() {
             <Carousel className="w-full">
               <CarouselContent>
                 {theater?.images?.map((image, index) => (
-                  <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                  <CarouselItem key={index} >
                     <div className="relative basis-1/3  w-full overflow-hidden rounded-lg">
                       <Image
                         src={image}
                         alt={`${theater?.name} view ${index + 1}`}
                         height={80}
                         width={600}
-                        className="object-fill h-60 w-full"
+                        className="object-cover h-60 w-full mx-auto"
                       />
                     </div>
                   </CarouselItem>

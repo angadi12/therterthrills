@@ -246,7 +246,7 @@ export default function TheatreCard({ theatre }) {
               <div className="grid grid-cols-2 gap-2 ">
                 {theatre?.slots.map((slot, index) => {
                   // Check if the slot is available
-                  const isAvailable = theatre?.availableSlots.some(
+                  const isAvailable = theatre?.availableSlots?.some(
                     (availableSlot) =>
                       availableSlot?.startTime === slot?.startTime &&
                       availableSlot?.endTime === slot?.endTime

@@ -40,13 +40,13 @@ import {
   Input,
   Textarea,
 } from "@nextui-org/react";
-import { fetchBookingByUserId } from "@/lib/Redux/bookingSlice";
-import React from "react";
+import { fetchBookingByBranchId, fetchBookingByUserId } from "@/lib/Redux/bookingSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { format } from "date-fns";
 import { fetchRefundDetails } from "@/lib/Redux/RefundSlice";
 import { setSelectedpaymentid } from "@/lib/Redux/paymentSlice";
 import { Copy } from "lucide-react";
+import { setDateRange, selectDateRange } from "@/lib/Redux/BookingdateSlice";
 
 export default function RefundRequestModal({ booking }) {
   const [isOpen, onOpenChange] = useState(false);
@@ -63,7 +63,9 @@ export default function RefundRequestModal({ booking }) {
   const { refundDetails, loading, error } = useSelector(
     (state) => state.refunds
   );
-
+ const { selectedBranchId } = useSelector((state) => state.branches);
+  const { startDate: reduxStartDate, endDate: reduxEndDate } =
+    useSelector(selectDateRange);
   useEffect(() => {
     if (Selectedpaymentid) {
       dispatch(fetchRefundDetails(Selectedpaymentid));
@@ -87,6 +89,14 @@ export default function RefundRequestModal({ booking }) {
         });
         onOpenChange(false);
         dispatch(fetchBookingByUserId(user?._id));
+         dispatch(
+        fetchBookingByBranchId({
+          BranchId: selectedBranchId,
+          status: selectedTab,
+          startDate: reduxStartDate,
+          endDate: reduxEndDate,
+        })
+      );
         form.reset();
       } else {
         toast({
@@ -270,6 +280,7 @@ export default function RefundRequestModal({ booking }) {
           variant="solid"
           radius="sm"
           color="danger"
+          className="px-8 py-0.5"
           onPress={() => onOpenChange(true)}
         >
           Cancel Booking

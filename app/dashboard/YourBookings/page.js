@@ -75,11 +75,14 @@ import { Badge, Chip } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import BookingDatePicker from "@/components/Dashboardcomponent/Bookingdaterange";
 import { setDateRange, selectDateRange } from "@/lib/Redux/BookingdateSlice";
+import RefundRequestModal from "@/components/Bookingcomponents/Requestrefund";
+import Changeslot from "@/components/Dashboardcomponent/Changeslot";
 
 export default function ActiveEvents() {
   const router = useRouter();
   const { toast } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [ModalOpen, setModalOpen] = useState(false);
   const [isunbookedModalOpen, setIsunbookedModalOpen] = useState(false);
   const [bookId, Setbookid] = useState("");
   const [UnbookId, Setunbookid] = useState("");
@@ -578,39 +581,38 @@ export default function ActiveEvents() {
                     </span>
                   </div>
                   <div className="flex flex-col justify-start gap-2">
-
-                  {singleunbooking?.whatsappNumber && (
-                    <span>
-                      User whatsappNumber:{" "}
-                      <span className="text-[#F30278]">
-                        {singleunbooking?.whatsappNumber}
+                    {singleunbooking?.whatsappNumber && (
+                      <span>
+                        User whatsappNumber:{" "}
+                        <span className="text-[#F30278]">
+                          {singleunbooking?.whatsappNumber}
+                        </span>
                       </span>
-                    </span>
-                  )}
-                  {singleunbooking?.user?.phoneNumber && (
-                    <span>
-                      User Number:{" "}
-                      <span className="text-[#F30278]">
-                        {singleunbooking?.user?.phoneNumber}
+                    )}
+                    {singleunbooking?.user?.phoneNumber && (
+                      <span>
+                        User Number:{" "}
+                        <span className="text-[#F30278]">
+                          {singleunbooking?.user?.phoneNumber}
+                        </span>
                       </span>
-                    </span>
-                  )}
-                  {singleunbooking?.email && (
-                    <span>
-                      User Email:{" "}
-                      <span className="text-[#F30278]">
-                        {singleunbooking?.email}
+                    )}
+                    {singleunbooking?.email && (
+                      <span>
+                        User Email:{" "}
+                        <span className="text-[#F30278]">
+                          {singleunbooking?.email}
+                        </span>
                       </span>
-                    </span>
-                  )}
-                  {singleunbooking?.user?.email && (
-                    <span>
-                      User Email:{" "}
-                      <span className="text-[#F30278]">
-                        {singleunbooking?.user?.email}
+                    )}
+                    {singleunbooking?.user?.email && (
+                      <span>
+                        User Email:{" "}
+                        <span className="text-[#F30278]">
+                          {singleunbooking?.user?.email}
+                        </span>
                       </span>
-                    </span>
-                  )}
+                    )}
                   </div>
                 </div>
                 <Separator className="bg-[#F30278]" />
@@ -847,7 +849,7 @@ export default function ActiveEvents() {
           </div>
 
           {branchtheatreerror ? (
-            <div className="flex flex-col justify-center items-center w-full h-60">
+            <div className="flex flex-col col-span-3 justify-center items-center w-full h-60">
               <p>No theatres </p>
               <Button
                 onClick={() => router.push("/dashboard/ManageTheatres")}
@@ -1086,15 +1088,33 @@ export default function ActiveEvents() {
                                     </p>
                                   ))}
                               </div> */}
+                                <div className="flex flex-col justify-center items-center gap-2">
                                 <Button
+                                size="md"
                                   onPress={() => {
                                     setIsModalOpen(!isModalOpen),
                                       Setbookid(event?._id);
                                   }}
-                                  className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                                  className="px-8  rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
                                 >
                                   View Details
                                 </Button>
+                                {/* <Button
+                                size="md"
+                                variant="solid"
+                                color="warning"
+                                radius="sm"
+                                className="text-white uppercase px-8 py-0.5"
+                                  onPress={() => 
+                                    setModalOpen(!ModalOpen)
+                                  }
+                                >
+                                 Change Slot
+                                </Button> */}
+                                <Changeslot booking={event}/>
+                                <RefundRequestModal booking={event}/>
+
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -1406,47 +1426,65 @@ export default function ActiveEvents() {
                                       </span>
                                     </div>
                                     <div className="flex items-center text-gray-600">
-                                    {event?.user?.phoneNumber ? <Phone  className="h-4 w-4 mr-2" />
-                                     : <Mail   className="h-4 w-4 mr-2" />}
+                                      {event?.user?.phoneNumber ? (
+                                        <Phone className="h-4 w-4 mr-2" />
+                                      ) : (
+                                        <Mail className="h-4 w-4 mr-2" />
+                                      )}
                                       <span className="text-sm">
-                                      {event?.user?.phoneNumber ?
-                                      <span>{event?.user?.phoneNumber}</span>:
-                                      <span className="text-sm">{event?.user?.email}</span>} 
-
+                                        {event?.user?.phoneNumber ? (
+                                          <span>
+                                            {event?.user?.phoneNumber}
+                                          </span>
+                                        ) : (
+                                          <span className="text-sm">
+                                            {event?.user?.email}
+                                          </span>
+                                        )}
                                       </span>
                                     </div>
                                   </div>
                                 </div>
-                                <Button
-                                  size="sm"
-                                  isLoading={loadingEvents[event._id] || false}
-                                  onPress={() => handleSendReminder(event._id)}
-                                  className=" rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-                                >
-                                  Send Reminder
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  onPress={() => {
-                                    setIsunbookedModalOpen(
-                                      !isunbookedModalOpen
-                                    ),
-                                      Setunbookid(event?._id);
-                                  }}
-                                  className=" rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-                                >
-                                  View Details
-                                </Button>
-                                <Button
-                                  onClick={() => {
-                                    setIsDelete(!isDelete),
-                                      SetUnsavedid(event?._id);
-                                  }}
-                                  isIconOnly
-                                  className="absolute top-0 right-0 rounded-sm text-[#F30278] bg-[#004AAD]/10"
-                                >
-                                  <Trash2 />
-                                </Button>
+                                <div className="flex flex-col justify-center items-center gap-2 mt-6 ">
+                                  <Button
+                                    size="sm"
+                                    isLoading={
+                                      loadingEvents[event._id] || false
+                                    }
+                                    onPress={() =>
+                                      handleSendReminder(event._id)
+                                    }
+                                    className=" rounded-sm text-xs w-36  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200  shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                                  >
+                                    Send Reminder
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    onPress={() => {
+                                      setIsunbookedModalOpen(
+                                        !isunbookedModalOpen
+                                      ),
+                                        Setunbookid(event?._id);
+                                    }}
+                                    className=" rounded-sm text-xs w-36  border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200  shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                                  >
+                                    View Details
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => {
+                                      setIsDelete(!isDelete),
+                                        SetUnsavedid(event?._id);
+                                    }}
+                                    variant="solid"
+                                    color="danger"
+                                    // isIconOnly
+                                    className="rounded-sm w-36 uppercase"
+                                  >
+                                    {/* <Trash2 /> */}
+                                    Delete
+                                  </Button>
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -1579,6 +1617,7 @@ export default function ActiveEvents() {
               </TabsContent>
             </Tabs>
           )}
+
         </div>
       </section>
 
@@ -1620,6 +1659,48 @@ export default function ActiveEvents() {
           )}
         </ModalContent>
       </Modal>
+
+      {/* <Modal
+        backdrop="opaque"
+        isDismissable={false}
+        isKeyboardDismissDisabled={true}
+        isOpen={ModalOpen}
+        size="3xl"
+        motionProps={{
+          variants: {
+            enter: {
+              y: 0,
+              opacity: 1,
+              transition: {
+                duration: 0.3,
+                ease: "easeOut",
+              },
+            },
+            exit: {
+              y: 20,
+              opacity: 0,
+              transition: {
+                duration: 0.2,
+                ease: "easeIn",
+              },
+            },
+          },
+        }}
+        onOpenChange={setModalOpen}
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+               Change Slot
+              </ModalHeader>
+              <ModalBody>
+              <Changeslot/>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal> */}
     </>
   );
 }

@@ -44,7 +44,6 @@ export default function ActiveBookingcard({ booking }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-
   const formattedDate =
     booking?.date && !isNaN(new Date(booking?.date))
       ? format(new Date(booking?.date), "yyyy-MM-dd")
@@ -76,19 +75,23 @@ export default function ActiveBookingcard({ booking }) {
                 </p>
               </div>
               <Separator className="bg-[#F30278]" />
-              <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+              <div className="grid md:grid-cols-1 grid-cols-1 gap-4">
                 <div className="flex items-center">
                   <Calendar className="w-4 h-4 mr-2 text-[#004AAD]" />
                   <span className="text-sm">{formattedDate}</span>
                 </div>
                 <div className="flex items-center">
                   <Users className="w-4 h-4 mr-2 text-[#004AAD]" />
-                  <span className="text-sm">
-                    {booking?.numberOfPeople} Members
+                  <span className="text-sm flex items-center gap-2">
+                  {booking?.numberOfPeople} Members
+                    <span className="text-[#F30278] bg-[#F30278]/20 text-sm ring-1 ring-[#F30278] rounded-full px-2">
+                      Extra person{" "}
+                      {booking?.numberOfPeople - booking?.theater?.groupSize}
+                    </span>
                   </span>
                 </div>
                 <div className="flex items-center">
-                  <Phone className="w-6 h-6 mr-2 text-[#004AAD]" />
+                  <Phone className="w-4 h-4 mr-2 text-[#004AAD]" />
                   <span className="text-sm">{booking?.whatsappNumber}</span>
                 </div>
                 <div className="flex items-center">
@@ -264,8 +267,12 @@ export default function ActiveBookingcard({ booking }) {
                 </div>
                 <div className="flex items-center">
                   <Users className="w-4 h-4 mr-2 text-[#004AAD]" />
-                  <span className="text-sm">
-                    {booking?.numberOfPeople} Members
+                  <span className="text-sm flex items-center gap-2">
+                  {booking?.numberOfPeople} Members
+                    <span className="text-[#F30278] bg-[#F30278]/20 text-sm ring-1 ring-[#F30278] rounded-full px-2">
+                      Extra person{" "}
+                      {booking?.numberOfPeople - booking?.theater?.groupSize}
+                    </span>
                   </span>
                 </div>
                 <div className="flex items-center">
@@ -550,8 +557,6 @@ export default function ActiveBookingcard({ booking }) {
         <BookingDetailsDialog />
         <BookingDetailsDrawer />
       </Card>
-
-     
     </>
   );
 }
