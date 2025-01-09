@@ -213,7 +213,7 @@ export default function Footer() {
            </Link>
           </div>
           <p>
-            &copy;Copyrights {new Date().getFullYear()} .The Theatre Thrills .
+            &copy;Copyright 2024 .The Theatre Thrills .
             All rights reserved.&nbsp;<span onClick={()=>router.push("https://www.angadiworldtech.com/")} className="underline cursor-pointer ">Developed by Angadi World Technologies Pvt Ltd<SquareArrowOutUpRight className="inline-block cursor-pointer h-4 w-4 ml-2 mb-1"/></span>
           </p>
           <div>

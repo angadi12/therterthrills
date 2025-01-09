@@ -35,7 +35,7 @@ const AddOns = () => {
   const decorationItems = [
     { name: "Fog Effects", price: 349, image: FogEffects },
     { name: "Party Props", price: 449, image: PartyProps },
-    { name: "HBD Letters", price: 199, image: HBDLetters },
+    { name: "HBD Letters", price: 99, image: HBDLetters },
     { name: "Candle Path", price: 99, image: CandlePath },
   ];
 

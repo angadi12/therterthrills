@@ -28,6 +28,7 @@ import {
   Setselectedtheaterid,
   fetchBookingByBranchId,
   SetSelectbookingsid,
+  fetchUnBookingById,
 } from "@/lib/Redux/bookingSlice";
 import { fetchtheaterbybranchid } from "@/lib/Redux/theaterSlice";
 import { Spinner } from "@nextui-org/react";
@@ -79,7 +80,9 @@ export default function ActiveEvents() {
   const router = useRouter();
   const { toast } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isunbookedModalOpen, setIsunbookedModalOpen] = useState(false);
   const [bookId, Setbookid] = useState("");
+  const [UnbookId, Setunbookid] = useState("");
   const [Unsavedid, SetUnsavedid] = useState("");
   const [loadingEvents, setLoadingEvents] = useState({});
   const [isDelete, setIsDelete] = useState(false);
@@ -98,6 +101,10 @@ export default function ActiveEvents() {
     singlebooking,
     bookingloading,
     bookingerror,
+
+    singleunbooking,
+    bookingunloading,
+    bookingunerror,
 
     AllTheaterbooking,
     AllTheaterloading,
@@ -186,6 +193,12 @@ export default function ActiveEvents() {
     }
   }, [dispatch, bookId]);
 
+  useEffect(() => {
+    if (UnbookId) {
+      dispatch(fetchUnBookingById(UnbookId));
+    }
+  }, [dispatch, UnbookId]);
+
   const formattedDate =
     singlebooking?.date && !isNaN(new Date(singlebooking?.date))
       ? format(new Date(singlebooking?.date), "yyyy-MM-dd")
@@ -242,15 +255,20 @@ export default function ActiveEvents() {
                   )}{" "}
                 </div>
                 <Separator className="bg-[#F30278]" />
-                <div className="grid md:grid-cols-2 grid-cols-1 gap-4">
+                <div className="grid md:grid-cols-1 grid-cols-1 gap-2">
                   <div className="flex items-center">
                     <Calendar className="w-4 h-4 mr-2 text-[#004AAD]" />
                     <span className="text-sm">{formattedDate}</span>
                   </div>
                   <div className="flex items-center">
                     <Users className="w-4 h-4 mr-2 text-[#004AAD]" />
-                    <span className="text-sm">
-                      {singlebooking?.numberOfPeople} Members
+                    <span className="text-sm flex items-center gap-2">
+                      {singlebooking?.numberOfPeople} Members{" "}
+                      <span className="text-[#F30278] bg-[#F30278]/20 text-sm ring-1 ring-[#F30278] rounded-full px-2">
+                        Extra person{" "}
+                        {singlebooking?.numberOfPeople -
+                          singlebooking?.theater?.groupSize}
+                      </span>
                     </span>
                   </div>
                   <div className="flex items-center">
@@ -419,6 +437,236 @@ export default function ActiveEvents() {
     </Dialog>
   );
 
+  const UnbookedBookingDetailsDialog = () => (
+    <Dialog open={isunbookedModalOpen} onOpenChange={setIsunbookedModalOpen}>
+      {bookingunloading ? (
+        <div className="w-full   flex justify-center items-center"></div>
+      ) : (
+        <DialogContent className="sm:max-w-[900px] md:h-auto h-96 flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="text-[#004AAD]">
+              Booking Details
+            </DialogTitle>
+          </DialogHeader>
+          <ScrollArea className="flex-grow">
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-8 p-6">
+              <div className="space-y-6 md:border-r md:pr-4 md:border-[#F30278]">
+                <div>
+                  <h2 className="text-2xl font-bold text-[#004AAD]">
+                    {singleunbooking?.Occasionobject}
+                  </h2>
+                  <p className="text-lg font-semibold text-[#F30278]">
+                    Booking ID: {singleunbooking?.bookingId}
+                  </p>
+                  <p className="text-lg font-semibold text-[#F30278]">
+                    Total: ₹{singleunbooking?.TotalAmount}/-
+                  </p>
+                  <Chip className={"bg-green-500 text-white"}>
+                    {/* ₹{singleunbooking?.paymentAmount} Paid */}₹
+                    {singleunbooking?.paymentType === "full"
+                      ? singleunbooking?.TotalAmount
+                      : singleunbooking?.paymentAmount}
+                    /- paid
+                  </Chip>
+                  <Chip className={"bg-red-500 text-white"}>
+                    ₹
+                    {singleunbooking?.paymentType === "advance"
+                      ? singleunbooking?.TotalAmount -
+                        singleunbooking?.paymentAmount
+                      : 0}
+                    &nbsp;to pay
+                  </Chip>
+                  {singleunbooking?.coupon && (
+                    <Chip className={"bg-yellow-500 text-white"}>
+                      ₹{singleunbooking?.discountAmount} Coupon discount
+                    </Chip>
+                  )}{" "}
+                </div>
+                <Separator className="bg-[#F30278]" />
+                <div className="grid md:grid-cols-1 grid-cols-1 gap-2">
+                  <div className="flex items-center">
+                    <Calendar className="w-4 h-4 mr-2 text-[#004AAD]" />
+                    <span className="text-sm">{formattedDate}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Users className="w-4 h-4 mr-2 text-[#004AAD]" />
+                    <span className="text-sm flex items-center gap-2">
+                      {singleunbooking?.numberOfPeople} Members{" "}
+                      <span className="text-[#F30278] bg-[#F30278]/20 text-sm ring-1 ring-[#F30278] rounded-full px-2">
+                        Extra person{" "}
+                        {singleunbooking?.numberOfPeople -
+                          singleunbooking?.theater?.groupSize}
+                      </span>
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <Phone className="w-4 h-4 mr-2 text-[#004AAD]" />
+                    <span className="text-sm">
+                      {singleunbooking?.whatsappNumber}
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <Mail className="w-4 h-4 mr-2 text-[#004AAD]" />
+                    <span className="text-sm">{singleunbooking?.email}</span>
+                  </div>
+                </div>
+                <Separator className="bg-[#F30278]" />
+                <div>
+                  <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
+                    Cake Details
+                  </h3>
+                  <p>
+                    Eggless:{" "}
+                    <span className="text-[#F30278]">
+                      {singleunbooking?.isEggless ? "Yes" : "No"}
+                    </span>
+                  </p>
+                  <p>
+                    Cake Text:{" "}
+                    <span className="text-[#F30278]">
+                      {singleunbooking?.cakeText}
+                    </span>
+                  </p>
+                  <p>
+                    Nick Name:{" "}
+                    <span className="text-[#F30278]">
+                      {singleunbooking?.nickname}
+                    </span>
+                  </p>
+                  <p>
+                    Partner Nickname:{" "}
+                    <span className="text-[#F30278]">
+                      {singleunbooking?.partnerNickname}
+                    </span>
+                  </p>
+                  {singleunbooking?.Cakes &&
+                    Object?.values(singleunbooking?.Cakes).map(
+                      (cake, index) => (
+                        <p key={index} className="text-sm">
+                          {cake?.name} x {cake?.quantity} -{" "}
+                          <span className="text-[#F30278]">
+                            ₹{cake?.price * cake?.quantity}
+                          </span>
+                        </p>
+                      )
+                    )}
+                </div>
+              </div>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg capitalize font-semibold mb-2 text-[#004AAD]">
+                    Add-Ons & decorations
+                  </h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {singleunbooking?.Addons?.decorations &&
+                      Object.entries(singleunbooking.Addons.decorations).map(
+                        ([key, value]) => (
+                          <div key={key}>
+                            {/* Render your content using key and value */}
+                            {key}: {value}
+                          </div>
+                        )
+                      )}
+                    {singleunbooking?.Addons?.roses &&
+                      Object?.entries(singleunbooking?.Addons?.roses).map(
+                        ([name, count]) => (
+                          <p key={name} className="text-sm">
+                            {name} x{" "}
+                            <span className="text-[#F30278]">{count}</span>
+                          </p>
+                        )
+                      )}
+                    {singleunbooking?.Addons?.photography.map((item, index) => (
+                      <p key={index} className="text-sm text-[#F30278]">
+                        {item}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+                <Separator className="bg-[#F30278]" />
+                <div>
+                  <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
+                    Payment Details
+                  </h3>
+                  <div className="flex items-center mb-2">
+                    <CreditCard className="w-4 h-4 mr-2 text-[#004AAD]" />
+                    <span>
+                      Status:{" "}
+                      <span className="text-[#F30278]">
+                        {singleunbooking?.paymentStatus}
+                      </span>
+                    </span>
+                  </div>
+                  <p>
+                    Amount Paid:{" "}
+                    <span className="text-[#F30278]">
+                      ₹
+                      {singleunbooking?.paymentType === "full"
+                        ? singleunbooking?.TotalAmount
+                        : singleunbooking?.paymentAmount}
+                      /-
+                    </span>
+                  </p>
+                  <p>
+                    Order ID:{" "}
+                    <span className="text-[#F30278]">
+                      {singleunbooking?.orderId}
+                    </span>
+                  </p>
+                  <div className="flex flex-col justify-start items-start gap-2">
+                    Coupon applied :-{" "}
+                    {singleunbooking?.coupon && (
+                      <p className="text-[#F30278] bg-[#F30278]/20 text-sm ring-1 ring-[#F30278] rounded-full px-2">
+                        {singleunbooking?.coupon}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <Separator className="bg-[#F30278]" />
+                {singleunbooking?.status === "cancelled" && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
+                      Cancellation Details
+                    </h3>
+                    <div className="flex items-center mb-1">
+                      <span>
+                        Status:{" "}
+                        <span className="text-[#F30278]">
+                          {singleunbooking?.refundStatus}
+                        </span>
+                      </span>
+                    </div>
+                    <p>
+                      Refund Amount :{" "}
+                      <span className="text-[#F30278]">
+                        ₹{singleunbooking?.refundAmount}/-
+                      </span>
+                      <span className="text-xs text-gray-400 ml-2">
+                        (will get refunds in 5-7 days.)
+                      </span>
+                    </p>
+                    <p>
+                      Reason:{" "}
+                      <span className="text-[#F30278] text-xs">
+                        {singleunbooking?.cancellationReason}
+                      </span>
+                    </p>
+                    <p>
+                      Date:{" "}
+                      <span className="text-[#F30278] text-xs">
+                        {formattedcancelDate}
+                      </span>
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </ScrollArea>
+        </DialogContent>
+      )}
+    </Dialog>
+  );
+
   const handleSendReminder = async (eventId) => {
     setLoadingEvents((prev) => ({ ...prev, [eventId]: true }));
     try {
@@ -469,6 +717,7 @@ export default function ActiveEvents() {
     <>
       <section className="w-full mx-auto bg-white h-screen">
         <BookingDetailsDialog />
+        <UnbookedBookingDetailsDialog />
         <div className="grid grid-cols-3 h-auto  items-center py-4 sticky top-0  bg-white z-50 p-4 w-full">
           <div className="flex items-center space-x-4 w-full">
             <h1 className="text-2xl font-bold flex items-center gap-4">
@@ -516,12 +765,16 @@ export default function ActiveEvents() {
                   {selectedTab === "cancelled" && (
                     <Badge
                       color="danger"
-                      content={ Selectbookingsid !== "all"
+                      content={
+                        Selectbookingsid !== "all"
                           ? Theaterbooking?.counts?.cancelled
-                          : AllTheaterbooking?.counts?.cancelled}
-                      isInvisible={Selectbookingsid !== "all"
+                          : AllTheaterbooking?.counts?.cancelled
+                      }
+                      isInvisible={
+                        Selectbookingsid !== "all"
                           ? !Theaterbooking?.counts?.cancelled
-                          : !AllTheaterbooking?.counts?.cancelled}
+                          : !AllTheaterbooking?.counts?.cancelled
+                      }
                       size="md"
                     ></Badge>
                   )}
@@ -557,7 +810,7 @@ export default function ActiveEvents() {
             </h1>
           </div>
           <div className="flex items-center justify-end space-x-2  w-full col-span-2 ">
-           {selectedTab==="AllBooking" && <BookingDatePicker />}
+            {selectedTab === "AllBooking" && <BookingDatePicker />}
 
             <Select
               onValueChange={(value) => dispatch(SetSelectbookingsid(value))}
@@ -601,194 +854,201 @@ export default function ActiveEvents() {
               </SelectContent>
             </Select>
           </div>
-       
 
-        {branchtheatreerror ? (
-          <div className="flex flex-col justify-center items-center w-full h-60">
-            <p>No theatres </p>
-            <Button
-              onClick={() => router.push("/dashboard/ManageTheatres")}
-              className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+          {branchtheatreerror ? (
+            <div className="flex flex-col justify-center items-center w-full h-60">
+              <p>No theatres </p>
+              <Button
+                onClick={() => router.push("/dashboard/ManageTheatres")}
+                className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+              >
+                Add theatre
+              </Button>
+            </div>
+          ) : (
+            <Tabs
+              onValueChange={(value) => setSelectedTab(value)}
+              defaultValue="Active"
+              className="w-full pb-5 bg-white  z-0 col-span-3 "
             >
-              Add theatre
-            </Button>
-          </div>
-        ) : (
-          <Tabs
-            onValueChange={(value) => setSelectedTab(value)}
-            defaultValue="Active"
-            className="w-full pb-5 bg-white  z-0 col-span-3 "
-          >
-            <TabsList className="grid h-14 col-span-3 border-b-1.5 w-full mt-4 grid-cols-5  bg-white z-10 px-2">
-              <Badge
-                color="danger"
-                content={
-                  Selectbookingsid !== "all"
-                    ? Theaterbooking?.counts?.active
-                    : AllTheaterbooking?.counts?.active
-                }
-                isInvisible={
-                  Selectbookingsid !== "all"
-                    ? !Theaterbooking?.counts?.active
-                    : !AllTheaterbooking?.counts?.active
-                }
-                size="md"
-              >
-                <TabsTrigger className="w-full" value="Active">
-                  Active
-                </TabsTrigger>
-              </Badge>
-              <Badge
-                color="danger"
-                content={
-                  Selectbookingsid !== "all"
-                    ? Theaterbooking?.counts?.upcoming
-                    : AllTheaterbooking?.counts?.upcoming
-                }
-                isInvisible={
-                  Selectbookingsid !== "all"
-                    ? !Theaterbooking?.counts?.upcoming
-                    : !AllTheaterbooking?.counts?.upcoming
-                }
-                size="md"
-              >
-                <TabsTrigger className="w-full" value="upcoming">
-                  Upcoming
-                </TabsTrigger>
-              </Badge>
-              <Badge
-                color="danger"
-                content={
-                  Selectbookingsid !== "all"
-                    ? Theaterbooking?.counts?.cancelled
-                    : AllTheaterbooking?.counts?.cancelled
-                }
-                isInvisible={
-                  Selectbookingsid !== "all"
-                    ? !Theaterbooking?.counts?.cancelled
-                    : !AllTheaterbooking?.counts?.cancelled
-                }
-                size="md"
-              >
-                <TabsTrigger className="w-full" value="cancelled">
-                  Cancelled
-                </TabsTrigger>
-              </Badge>
-              <Badge
-                color="danger"
-                content={UnsavedTheaterbooking?.length}
-                isInvisible={
-                  UnsavedTheatererror === "Nobookings" ||
-                  UnsavedTheaterbooking?.length === 0
-                }
-                size="md"
-              >
-                <TabsTrigger className="w-full" value="unbooked">
-                  Unbooked
-                </TabsTrigger>
-              </Badge>
-              <Badge
-                color="danger"
-                content={
-                  Selectbookingsid !== "all"
-                    ? Theaterbooking?.counts?.all
-                    : AllTheaterbooking?.counts?.all
-                }
-                isInvisible={
-                  Selectbookingsid !== "all"
-                    ? !Theaterbooking?.counts?.all
-                    : !AllTheaterbooking?.counts?.all
-                }
-                size="md"
-              >
-                <TabsTrigger className="w-full" value="AllBooking">
-                  All Booking
-                </TabsTrigger>
-              </Badge>
-            </TabsList>
-            <TabsContent value="upcoming">
-              {(Selectbookingsid === "all" ? AllTheaterloading : Theaterloading) ? (
-                <div className="flex justify-center items-center w-full h-[60vh]">
-                  <Spinner color="danger" />
-                </div>
-              ) : (
-                <>
-                  {Theaterbooking?.data?.length === 0 ||
-                  AllTheaterbooking?.data?.length === 0 ? (
-                    <div className="flex justify-center items-center w-full h-[60vh]">
-                      <p>No Bookings available</p>
-                    </div>
-                  ) : (
-                    <>
-                      {(Selectbookingsid === "all" ? AllTheatererror : Theatererror) === "No bookings found" ? (
-                        <div className="flex justify-center items-center w-full h-[60vh]">
-                          <p>No Bookings available</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-4 mt-4">
-                          {(Selectbookingsid === "all"
-                            ? AllTheaterbooking?.data
-                            : Theaterbooking?.data
-                          )?.map((event) => (
-                            <div
-                              key={event._id}
-                              className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
-                            >
-                              <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
-                                <Image
-                                  src={iconMapping[event?.Occasionobject] || ""}
-                                  alt={event?.Occasionobject}
-                                  className="w-8 h-8 object-cover"
-                                />
-                              </div>
-                              <div className="flex-grow">
-                                <h2 className="text-xl font-semibold">
-                                  {event?.Occasionobject}
-                                </h2>
-                                <div className="grid grid-cols-3 gap-4 mt-2">
-                                  <div className="flex items-center text-gray-600">
-                                    <MapPin className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.theater?.name}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <MapPin className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.theater?.location}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Users className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.Occasionobject}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Users className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.numberOfPeople} Members
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Calendar className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {format(
-                                        new Date(event?.date),
-                                        "yyyy-MM-dd"
-                                      )}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Clock className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.slotDetails?.startTime}-
-                                      {event?.slotDetails?.endTime}
-                                    </span>
+              <TabsList className="grid h-14 col-span-3 border-b-1.5 w-full mt-4 grid-cols-5  bg-white z-10 px-2">
+                <Badge
+                  color="danger"
+                  content={
+                    Selectbookingsid !== "all"
+                      ? Theaterbooking?.counts?.active
+                      : AllTheaterbooking?.counts?.active
+                  }
+                  isInvisible={
+                    Selectbookingsid !== "all"
+                      ? !Theaterbooking?.counts?.active
+                      : !AllTheaterbooking?.counts?.active
+                  }
+                  size="md"
+                >
+                  <TabsTrigger className="w-full" value="Active">
+                    Active
+                  </TabsTrigger>
+                </Badge>
+                <Badge
+                  color="danger"
+                  content={
+                    Selectbookingsid !== "all"
+                      ? Theaterbooking?.counts?.upcoming
+                      : AllTheaterbooking?.counts?.upcoming
+                  }
+                  isInvisible={
+                    Selectbookingsid !== "all"
+                      ? !Theaterbooking?.counts?.upcoming
+                      : !AllTheaterbooking?.counts?.upcoming
+                  }
+                  size="md"
+                >
+                  <TabsTrigger className="w-full" value="upcoming">
+                    Upcoming
+                  </TabsTrigger>
+                </Badge>
+                <Badge
+                  color="danger"
+                  content={
+                    Selectbookingsid !== "all"
+                      ? Theaterbooking?.counts?.cancelled
+                      : AllTheaterbooking?.counts?.cancelled
+                  }
+                  isInvisible={
+                    Selectbookingsid !== "all"
+                      ? !Theaterbooking?.counts?.cancelled
+                      : !AllTheaterbooking?.counts?.cancelled
+                  }
+                  size="md"
+                >
+                  <TabsTrigger className="w-full" value="cancelled">
+                    Cancelled
+                  </TabsTrigger>
+                </Badge>
+                <Badge
+                  color="danger"
+                  content={UnsavedTheaterbooking?.length}
+                  isInvisible={
+                    UnsavedTheatererror === "Nobookings" ||
+                    UnsavedTheaterbooking?.length === 0
+                  }
+                  size="md"
+                >
+                  <TabsTrigger className="w-full" value="unbooked">
+                    Unbooked
+                  </TabsTrigger>
+                </Badge>
+                <Badge
+                  color="danger"
+                  content={
+                    Selectbookingsid !== "all"
+                      ? Theaterbooking?.counts?.all
+                      : AllTheaterbooking?.counts?.all
+                  }
+                  isInvisible={
+                    Selectbookingsid !== "all"
+                      ? !Theaterbooking?.counts?.all
+                      : !AllTheaterbooking?.counts?.all
+                  }
+                  size="md"
+                >
+                  <TabsTrigger className="w-full" value="AllBooking">
+                    All Booking
+                  </TabsTrigger>
+                </Badge>
+              </TabsList>
+              <TabsContent value="upcoming">
+                {(
+                  Selectbookingsid === "all"
+                    ? AllTheaterloading
+                    : Theaterloading
+                ) ? (
+                  <div className="flex justify-center items-center w-full h-[60vh]">
+                    <Spinner color="danger" />
+                  </div>
+                ) : (
+                  <>
+                    {Theaterbooking?.data?.length === 0 ||
+                    AllTheaterbooking?.data?.length === 0 ? (
+                      <div className="flex justify-center items-center w-full h-[60vh]">
+                        <p>No Bookings available</p>
+                      </div>
+                    ) : (
+                      <>
+                        {(Selectbookingsid === "all"
+                          ? AllTheatererror
+                          : Theatererror) === "No bookings found" ? (
+                          <div className="flex justify-center items-center w-full h-[60vh]">
+                            <p>No Bookings available</p>
+                          </div>
+                        ) : (
+                          <div className="space-y-4 mt-4">
+                            {(Selectbookingsid === "all"
+                              ? AllTheaterbooking?.data
+                              : Theaterbooking?.data
+                            )?.map((event) => (
+                              <div
+                                key={event._id}
+                                className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
+                              >
+                                <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
+                                  <Image
+                                    src={
+                                      iconMapping[event?.Occasionobject] || ""
+                                    }
+                                    alt={event?.Occasionobject}
+                                    className="w-8 h-8 object-cover"
+                                  />
+                                </div>
+                                <div className="flex-grow">
+                                  <h2 className="text-xl font-semibold">
+                                    {event?.Occasionobject}
+                                  </h2>
+                                  <div className="grid grid-cols-3 gap-4 mt-2">
+                                    <div className="flex items-center text-gray-600">
+                                      <MapPin className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.theater?.name}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <MapPin className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.theater?.location}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Users className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.Occasionobject}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Users className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.numberOfPeople} Members
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Calendar className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {format(
+                                          new Date(event?.date),
+                                          "yyyy-MM-dd"
+                                        )}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Clock className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.slotDetails?.startTime}-
+                                        {event?.slotDetails?.endTime}
+                                      </span>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                              {/* <div className="flex-shrink-0 space-y-2 text-blue-600 text-sm">
+                                {/* <div className="flex-shrink-0 space-y-2 text-blue-600 text-sm">
                                 {event?.selectedCakes &&
                                   Object.values(event?.selectedCakes)
                                     ?.slice(0, 1)
@@ -835,511 +1095,496 @@ export default function ActiveEvents() {
                                     </p>
                                   ))}
                               </div> */}
-                              <Button
-                                onPress={() => {
-                                  setIsModalOpen(!isModalOpen),
-                                    Setbookid(event?._id);
-                                }}
-                                className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-                              >
-                                View Details
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </>
-                  )}
-                </>
-              )}
-            </TabsContent>
-            <TabsContent value="Active">
-              {(Selectbookingsid === "all" ? AllTheaterloading : Theaterloading) ? (
-                <div className="flex justify-center items-center w-full h-[60vh]">
-                  <Spinner color="danger" />
-                </div>
-              ) : (
-                <>
-                  {Theaterbooking.data?.length === 0 ||
-                  AllTheaterbooking.data?.length === 0 ? (
-                    <div className="flex justify-center items-center w-full h-[60vh]">
-                      <p>No Bookings available</p>
-                    </div>
-                  ) : (
-                    <>
-                      {(Selectbookingsid === "all"
-                        ? AllTheatererror
-                        : Theatererror) === "No bookings found" ? (
-                        <div className="flex justify-center items-center w-full h-[60vh]">
-                          <p>No Bookings available</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-4 mt-4">
-                          {(Selectbookingsid === "all"
-                            ? AllTheaterbooking?.data
-                            : Theaterbooking?.data
-                          )?.map((event) => (
-                            <div
-                              key={event._id}
-                              className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
-                            >
-                              <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
-                                <Image
-                                  src={iconMapping[event?.Occasionobject] || ""}
-                                  alt={event?.Occasionobject}
-                                  className="w-8 h-8 object-cover"
-                                />
+                                <Button
+                                  onPress={() => {
+                                    setIsModalOpen(!isModalOpen),
+                                      Setbookid(event?._id);
+                                  }}
+                                  className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                                >
+                                  View Details
+                                </Button>
                               </div>
-                              <div className="flex-grow">
-                                <h2 className="text-xl font-semibold">
-                                  {event?.Occasionobject}
-                                </h2>
-                                <div className="grid grid-cols-3 gap-4 mt-2">
-                                  <div className="flex items-center text-gray-600">
-                                    <MapPin className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.theater?.name}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <MapPin className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.theater?.location}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Users className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.Occasionobject}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Users className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.numberOfPeople} Members
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Calendar className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {format(
-                                        new Date(event?.date),
-                                        "yyyy-MM-dd"
-                                      )}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Clock className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.slotDetails?.startTime}-
-                                      {event?.slotDetails?.endTime}
-                                    </span>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </TabsContent>
+              <TabsContent value="Active">
+                {(
+                  Selectbookingsid === "all"
+                    ? AllTheaterloading
+                    : Theaterloading
+                ) ? (
+                  <div className="flex justify-center items-center w-full h-[60vh]">
+                    <Spinner color="danger" />
+                  </div>
+                ) : (
+                  <>
+                    {Theaterbooking.data?.length === 0 ||
+                    AllTheaterbooking.data?.length === 0 ? (
+                      <div className="flex justify-center items-center w-full h-[60vh]">
+                        <p>No Bookings available</p>
+                      </div>
+                    ) : (
+                      <>
+                        {(Selectbookingsid === "all"
+                          ? AllTheatererror
+                          : Theatererror) === "No bookings found" ? (
+                          <div className="flex justify-center items-center w-full h-[60vh]">
+                            <p>No Bookings available</p>
+                          </div>
+                        ) : (
+                          <div className="space-y-4 mt-4">
+                            {(Selectbookingsid === "all"
+                              ? AllTheaterbooking?.data
+                              : Theaterbooking?.data
+                            )?.map((event) => (
+                              <div
+                                key={event._id}
+                                className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
+                              >
+                                <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
+                                  <Image
+                                    src={
+                                      iconMapping[event?.Occasionobject] || ""
+                                    }
+                                    alt={event?.Occasionobject}
+                                    className="w-8 h-8 object-cover"
+                                  />
+                                </div>
+                                <div className="flex-grow">
+                                  <h2 className="text-xl font-semibold">
+                                    {event?.Occasionobject}
+                                  </h2>
+                                  <div className="grid grid-cols-3 gap-4 mt-2">
+                                    <div className="flex items-center text-gray-600">
+                                      <MapPin className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.theater?.name}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <MapPin className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.theater?.location}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Users className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.Occasionobject}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Users className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.numberOfPeople} Members
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Calendar className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {format(
+                                          new Date(event?.date),
+                                          "yyyy-MM-dd"
+                                        )}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Clock className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.slotDetails?.startTime}-
+                                        {event?.slotDetails?.endTime}
+                                      </span>
+                                    </div>
                                   </div>
                                 </div>
+                                <Button
+                                  onPress={() => {
+                                    setIsModalOpen(!isModalOpen),
+                                      Setbookid(event?._id);
+                                  }}
+                                  className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                                >
+                                  View Details
+                                </Button>
                               </div>
-                              <Button
-                                onPress={() => {
-                                  setIsModalOpen(!isModalOpen),
-                                    Setbookid(event?._id);
-                                }}
-                                className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </TabsContent>
+              <TabsContent value="cancelled">
+                {(
+                  Selectbookingsid === "all"
+                    ? AllTheaterloading
+                    : Theaterloading
+                ) ? (
+                  <div className="flex justify-center items-center w-full h-[60vh]">
+                    <Spinner color="danger" />
+                  </div>
+                ) : (
+                  <>
+                    {(Selectbookingsid === "all" &&
+                      AllTheaterbooking?.data?.length === 0) ||
+                    (Selectbookingsid !== "all" &&
+                      Theaterbooking?.data?.length === 0) ? (
+                      <div className="flex justify-center items-center w-full h-[60vh]">
+                        <p>No Bookings available</p>
+                      </div>
+                    ) : (
+                      <>
+                        {(Selectbookingsid === "all"
+                          ? AllTheatererror
+                          : Theatererror) === "No bookings found" ? (
+                          <div className="flex justify-center items-center w-full h-[60vh]">
+                            <p>No Bookings available</p>
+                          </div>
+                        ) : (
+                          <div className="space-y-4 mt-4">
+                            {(Selectbookingsid === "all"
+                              ? AllTheaterbooking?.data
+                              : Theaterbooking?.data
+                            )?.map((event) => (
+                              <div
+                                key={event._id}
+                                className="flex relative items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
                               >
-                                View Details
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </>
-                  )}
-                </>
-              )}
-            </TabsContent>
-            <TabsContent value="cancelled">
-              {(
-                Selectbookingsid === "all" ? AllTheaterloading : Theaterloading
-              ) ? (
-                <div className="flex justify-center items-center w-full h-[60vh]">
-                  <Spinner color="danger" />
-                </div>
-              ) : (
-                <>
-                  {(Selectbookingsid === "all" &&
-                    AllTheaterbooking?.data?.length === 0) ||
-                  (Selectbookingsid !== "all" &&
-                    Theaterbooking?.data?.length === 0) ? (
-                    <div className="flex justify-center items-center w-full h-[60vh]">
-                      <p>No Bookings available</p>
-                    </div>
-                  ) : (
-                    <>
-                      {(Selectbookingsid === "all"
-                        ? AllTheatererror
-                        : Theatererror) === "No bookings found" ? (
-                        <div className="flex justify-center items-center w-full h-[60vh]">
-                          <p>No Bookings available</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-4 mt-4">
-                          {(Selectbookingsid === "all"
-                            ? AllTheaterbooking?.data
-                            : Theaterbooking?.data
-                          )?.map((event) => (
-                            <div
-                              key={event._id}
-                              className="flex relative items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
-                            >
-                              <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
-                                <Image
-                                  src={iconMapping[event?.Occasionobject] || ""}
-                                  alt={event?.Occasionobject}
-                                  className="w-8 h-8 object-cover"
-                                />
-                              </div>
-                              <div className="flex-grow">
-                                <h2 className="text-xl font-semibold">
-                                  {event?.Occasionobject}
-                                </h2>
-                                <div className="grid grid-cols-3 gap-4 mt-2">
-                                  <div className="flex items-center text-gray-600">
-                                    <MapPin className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.theater?.name}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <MapPin className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.theater?.location}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Users className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.Occasionobject}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Users className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.numberOfPeople} Members
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Calendar className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {format(
-                                        new Date(event?.date),
-                                        "yyyy-MM-dd"
-                                      )}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Clock className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.slotDetails?.startTime}-
-                                      {event?.slotDetails?.endTime}
-                                    </span>
+                                <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
+                                  <Image
+                                    src={
+                                      iconMapping[event?.Occasionobject] || ""
+                                    }
+                                    alt={event?.Occasionobject}
+                                    className="w-8 h-8 object-cover"
+                                  />
+                                </div>
+                                <div className="flex-grow">
+                                  <h2 className="text-xl font-semibold">
+                                    {event?.Occasionobject}
+                                  </h2>
+                                  <div className="grid grid-cols-3 gap-4 mt-2">
+                                    <div className="flex items-center text-gray-600">
+                                      <MapPin className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.theater?.name}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <MapPin className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.theater?.location}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Users className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.Occasionobject}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Users className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.numberOfPeople} Members
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Calendar className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {format(
+                                          new Date(event?.date),
+                                          "yyyy-MM-dd"
+                                        )}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Clock className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.slotDetails?.startTime}-
+                                        {event?.slotDetails?.endTime}
+                                      </span>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
 
-                              <Button
-                                onPress={() => {
-                                  setIsModalOpen(!isModalOpen),
-                                    Setbookid(event?._id);
-                                }}
-                                className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-                              >
-                                View Details
-                              </Button>
-                             {event?.status ==="cancelled" && <Button
-                              variant="solid"
-                              size="sm"
-                              color="danger"
-                              radius="none"
-                              className="absolute top-0 right-0 rounded-tr-lg rounded-bl-lg"
-                              >
-                               {event?.status}
-                              </Button>}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </>
-                  )}
-                </>
-              )}
-            </TabsContent>
-            <TabsContent value="unbooked">
-              {UnsavedTheaterloading ? (
-                <div className="flex justify-center items-center w-full h-[60vh]">
-                  <Spinner color="danger" />
-                </div>
-              ) : (
-                <>
-                  {UnsavedTheaterbooking?.length === 0 ? (
-                    <div className="flex justify-center items-center w-full h-[60vh]">
-                      <p>No Bookings available</p>
-                    </div>
-                  ) : (
-                    <>
-                      {UnsavedTheatererror === "Nobookings" ? (
-                        <div className="flex justify-center items-center w-full h-[60vh]">
-                          <p>No Bookings available</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-4 mt-4">
-                          {UnsavedTheaterbooking?.map((event) => (
-                            <div
-                              key={event._id}
-                              className="flex relative items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
-                            >
-                              <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
-                                <Image
-                                  src={iconMapping[event?.Occasionobject] || ""}
-                                  alt={event?.Occasionobject}
-                                  className="w-8 h-8 object-cover"
-                                />
+                                <Button
+                                  onPress={() => {
+                                    setIsModalOpen(!isModalOpen),
+                                      Setbookid(event?._id);
+                                  }}
+                                  className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                                >
+                                  View Details
+                                </Button>
+                                {event?.status === "cancelled" && (
+                                  <Button
+                                    variant="solid"
+                                    size="sm"
+                                    color="danger"
+                                    radius="none"
+                                    className="absolute top-0 right-0 rounded-tr-lg rounded-bl-lg"
+                                  >
+                                    {event?.status}
+                                  </Button>
+                                )}
                               </div>
-                              <div className="flex-grow">
-                                <h2 className="text-xl font-semibold">
-                                  {event?.Occasionobject}
-                                </h2>
-                                <div className="grid grid-cols-3 gap-4 mt-2">
-                                  <div className="flex items-center text-gray-600">
-                                    <MapPin className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.theater?.name}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <MapPin className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.theater?.location}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Users className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.Occasionobject}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Users className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.numberOfPeople} Members
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Calendar className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {format(
-                                        new Date(event?.date),
-                                        "yyyy-MM-dd"
-                                      )}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Clock className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.slotDetails?.startTime}-
-                                      {event?.slotDetails?.endTime}
-                                    </span>
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </TabsContent>
+              <TabsContent value="unbooked">
+                {UnsavedTheaterloading ? (
+                  <div className="flex justify-center items-center w-full h-[60vh]">
+                    <Spinner color="danger" />
+                  </div>
+                ) : (
+                  <>
+                    {UnsavedTheaterbooking?.length === 0 ? (
+                      <div className="flex justify-center items-center w-full h-[60vh]">
+                        <p>No Bookings available</p>
+                      </div>
+                    ) : (
+                      <>
+                        {UnsavedTheatererror === "Nobookings" ? (
+                          <div className="flex justify-center items-center w-full h-[60vh]">
+                            <p>No Bookings available</p>
+                          </div>
+                        ) : (
+                          <div className="space-y-4 mt-4">
+                            {UnsavedTheaterbooking?.map((event) => (
+                              <div
+                                key={event._id}
+                                className="flex relative items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
+                              >
+                                <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
+                                  <Image
+                                    src={
+                                      iconMapping[event?.Occasionobject] || ""
+                                    }
+                                    alt={event?.Occasionobject}
+                                    className="w-8 h-8 object-cover"
+                                  />
+                                </div>
+                                <div className="flex-grow">
+                                  <h2 className="text-xl font-semibold">
+                                    {event?.Occasionobject}
+                                  </h2>
+                                  <div className="grid grid-cols-3 gap-4 mt-2">
+                                    <div className="flex items-center text-gray-600">
+                                      <MapPin className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.theater?.name}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <MapPin className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.theater?.location}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Users className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.Occasionobject}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Users className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.numberOfPeople} Members
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Calendar className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {format(
+                                          new Date(event?.date),
+                                          "yyyy-MM-dd"
+                                        )}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Clock className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.slotDetails?.startTime}-
+                                        {event?.slotDetails?.endTime}
+                                      </span>
+                                    </div>
                                   </div>
                                 </div>
+                                <Button
+                                  size="sm"
+                                  isLoading={loadingEvents[event._id] || false}
+                                  onPress={() => handleSendReminder(event._id)}
+                                  className=" rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                                >
+                                  Send Reminder
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  onPress={() => {
+                                    setIsunbookedModalOpen(
+                                      !isunbookedModalOpen
+                                    ),
+                                      Setunbookid(event?._id);
+                                  }}
+                                  className=" rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                                >
+                                  View Details
+                                </Button>
+                                <Button
+                                  onClick={() => {
+                                    setIsDelete(!isDelete),
+                                      SetUnsavedid(event?._id);
+                                  }}
+                                  isIconOnly
+                                  className="absolute top-0 right-0 rounded-sm text-[#F30278] bg-[#004AAD]/10"
+                                >
+                                  <Trash2 />
+                                </Button>
                               </div>
-                              {/* <div className="flex-shrink-0 space-y-2 text-blue-600 text-sm">
-                                {event?.selectedCakes &&
-                                  Object.values(event?.selectedCakes)
-                                    ?.slice(0, 1)
-                                    .map((cake, index) => (
-                                      <p key={index} className="text-sm">
-                                        •{cake?.name} x{" "}
-                                        <span className="text-[#F30278]">
-                                          {cake?.quantity}
-                                        </span>
-                                      </p>
-                                    ))}
-
-                                {event?.addOns?.decorations &&
-                                  Object.entries(event?.addOns?.decorations)
-                                    ?.slice(0, 1)
-                                    .map(([name, count]) => (
-                                      <p key={name} className="text-sm">
-                                        • {name} x{" "}
-                                        <span className="text-[#F30278]">
-                                          {count}
-                                        </span>
-                                      </p>
-                                    ))}
-
-                                {event?.addOns?.roses &&
-                                  Object.entries(event?.addOns?.roses)
-                                    ?.slice(0, 1)
-                                    .map(([name, count]) => (
-                                      <p key={name} className="text-sm">
-                                        • {name} x{" "}
-                                        <span className="text-[#F30278]">
-                                          {count}
-                                        </span>
-                                      </p>
-                                    ))}
-                                {event?.addOns?.photography
-                                  ?.slice(0, 1)
-                                  .map((item, index) => (
-                                    <p
-                                      key={index}
-                                      className="text-sm text-[#F30278]"
-                                    >
-                                      • {item}
-                                    </p>
-                                  ))}
-                              </div> */}
-                              <Button
-                                size="sm"
-                                isLoading={loadingEvents[event._id] || false}
-                                onPress={() => handleSendReminder(event._id)}
-                                className=" rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </TabsContent>
+              <TabsContent value="AllBooking">
+                {(
+                  Selectbookingsid === "all"
+                    ? AllTheaterloading
+                    : Theaterloading
+                ) ? (
+                  <div className="flex justify-center items-center w-full h-[60vh]">
+                    <Spinner color="danger" />
+                  </div>
+                ) : (
+                  <>
+                    {(Selectbookingsid === "all" &&
+                      AllTheaterbooking?.data?.length === 0) ||
+                    (Selectbookingsid !== "all" &&
+                      Theaterbooking?.data?.length === 0) ? (
+                      <div className="flex justify-center items-center w-full h-[60vh]">
+                        <p>No Bookings available</p>
+                      </div>
+                    ) : (
+                      <>
+                        {(Selectbookingsid === "all"
+                          ? AllTheatererror
+                          : Theatererror) === "No bookings found" ? (
+                          <div className="flex justify-center items-center w-full h-[60vh]">
+                            <p>No Bookings available</p>
+                          </div>
+                        ) : (
+                          <div className="space-y-4 mt-4">
+                            {(Selectbookingsid === "all"
+                              ? AllTheaterbooking?.data
+                              : Theaterbooking?.data
+                            )?.map((event) => (
+                              <div
+                                key={event._id}
+                                className="flex relative items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
                               >
-                                Send Reminder
-                              </Button>
-                              <Button
-                                onClick={() => {
-                                  setIsDelete(!isDelete),
-                                    SetUnsavedid(event?._id);
-                                }}
-                                isIconOnly
-                                className="absolute top-0 right-0 rounded-sm text-[#F30278] bg-[#004AAD]/10"
-                              >
-                                <Trash2 />
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </>
-                  )}
-                </>
-              )}
-            </TabsContent>
-            <TabsContent value="AllBooking">
-              {(
-                Selectbookingsid === "all" ? AllTheaterloading : Theaterloading
-              ) ? (
-                <div className="flex justify-center items-center w-full h-[60vh]">
-                  <Spinner color="danger" />
-                </div>
-              ) : (
-                <>
-                  {(Selectbookingsid === "all" &&
-                    AllTheaterbooking?.data?.length === 0) ||
-                  (Selectbookingsid !== "all" &&
-                    Theaterbooking?.data?.length === 0) ? (
-                    <div className="flex justify-center items-center w-full h-[60vh]">
-                      <p>No Bookings available</p>
-                    </div>
-                  ) : (
-                    <>
-                      {(Selectbookingsid === "all"
-                        ? AllTheatererror
-                        : Theatererror) === "No bookings found" ? (
-                        <div className="flex justify-center items-center w-full h-[60vh]">
-                          <p>No Bookings available</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-4 mt-4">
-                          {(Selectbookingsid === "all"
-                            ? AllTheaterbooking?.data
-                            : Theaterbooking?.data
-                          )?.map((event) => (
-                            <div
-                              key={event._id}
-                              className="flex relative items-center space-x-4 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
-                            >
-                              <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
-                                <Image
-                                  src={iconMapping[event?.Occasionobject] || ""}
-                                  alt={event?.Occasionobject}
-                                  className="w-8 h-8 object-cover"
-                                />
-                              </div>
-                              <div className="flex-grow">
-                                <h2 className="text-xl font-semibold">
-                                  {event?.Occasionobject}
-                                </h2>
-                                <div className="grid grid-cols-3 gap-4 mt-2">
-                                  <div className="flex items-center text-gray-600">
-                                    <MapPin className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.theater?.name}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <MapPin className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.theater?.location}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Users className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.Occasionobject}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Users className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.numberOfPeople} Members
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Calendar className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {format(
-                                        new Date(event?.date),
-                                        "yyyy-MM-dd"
-                                      )}
-                                    </span>
-                                  </div>
-                                  <div className="flex items-center text-gray-600">
-                                    <Clock className="h-4 w-4 mr-2" />
-                                    <span className="text-sm">
-                                      {event?.slotDetails?.startTime}-
-                                      {event?.slotDetails?.endTime}
-                                    </span>
+                                <div className="flex-shrink-0 w-16 h-16 bg-pink-100 rounded-lg flex items-center justify-center text-3xl">
+                                  <Image
+                                    src={
+                                      iconMapping[event?.Occasionobject] || ""
+                                    }
+                                    alt={event?.Occasionobject}
+                                    className="w-8 h-8 object-cover"
+                                  />
+                                </div>
+                                <div className="flex-grow">
+                                  <h2 className="text-xl font-semibold">
+                                    {event?.Occasionobject}
+                                  </h2>
+                                  <div className="grid grid-cols-3 gap-4 mt-2">
+                                    <div className="flex items-center text-gray-600">
+                                      <MapPin className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.theater?.name}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <MapPin className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.theater?.location}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Users className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.Occasionobject}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Users className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.numberOfPeople} Members
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Calendar className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {format(
+                                          new Date(event?.date),
+                                          "yyyy-MM-dd"
+                                        )}
+                                      </span>
+                                    </div>
+                                    <div className="flex items-center text-gray-600">
+                                      <Clock className="h-4 w-4 mr-2" />
+                                      <span className="text-sm">
+                                        {event?.slotDetails?.startTime}-
+                                        {event?.slotDetails?.endTime}
+                                      </span>
+                                    </div>
                                   </div>
                                 </div>
+                                <Button
+                                  onPress={() => {
+                                    setIsModalOpen(!isModalOpen),
+                                      Setbookid(event?._id);
+                                  }}
+                                  className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                                >
+                                  View Details
+                                </Button>
+                                {event?.status === "cancelled" && (
+                                  <Button
+                                    variant="solid"
+                                    size="sm"
+                                    color="danger"
+                                    radius="none"
+                                    className="absolute top-0 right-0 rounded-tr-lg rounded-bl-lg"
+                                  >
+                                    {event?.status}
+                                  </Button>
+                                )}
                               </div>
-                              <Button
-                                onPress={() => {
-                                  setIsModalOpen(!isModalOpen),
-                                    Setbookid(event?._id);
-                                }}
-                                className="px-8 py-0.5 rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-                              >
-                                View Details
-                              </Button>
-                              {event?.status ==="cancelled" && <Button
-                              variant="solid"
-                              size="sm"
-                              color="danger"
-                              radius="none"
-                              className="absolute top-0 right-0 rounded-tr-lg rounded-bl-lg"
-                              >
-                               {event?.status}
-                              </Button>}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </>
-                  )}
-                </>
-              )}
-            </TabsContent>
-          </Tabs>
-        )}
+                            ))}
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </TabsContent>
+            </Tabs>
+          )}
         </div>
       </section>
 

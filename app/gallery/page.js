@@ -16,6 +16,7 @@ const page = () => {
         "https://res.cloudinary.com/dladopmsn/image/upload/v1736346699/Jasmine_3_ktdh24.jpg",
         "https://res.cloudinary.com/dladopmsn/image/upload/v1736346688/Jasmine_4_uapcb7.jpg"
       ],
+      Videourl:"https://res.cloudinary.com/dladopmsn/video/upload/v1736346980/Jasmine_dc4edh.mp4"
     },
     {
       title: "Rose Theatre",
@@ -25,6 +26,8 @@ const page = () => {
         "https://res.cloudinary.com/dladopmsn/image/upload/v1736346699/rose_3_b1aewn.jpg",
         "https://res.cloudinary.com/dladopmsn/image/upload/v1736346695/rose_4_nwulps.jpg"
       ],
+      Videourl:"https://res.cloudinary.com/dladopmsn/video/upload/v1736347007/Rose_yw83sf.mp4"
+
     },
     {
       title: "Lily Theatre",
@@ -34,6 +37,8 @@ const page = () => {
     "https://res.cloudinary.com/dladopmsn/image/upload/v1736346725/Lily_3_yeknnq.jpg",
     "https://res.cloudinary.com/dladopmsn/image/upload/v1736346708/Lily_4_ohmeiq.jpg"
       ],
+      Videourl:"https://res.cloudinary.com/dladopmsn/video/upload/v1736346997/lily_tjey7h.mp4"
+
     },
     {
       title: "Iris Theatre",
@@ -43,6 +48,8 @@ const page = () => {
     "https://res.cloudinary.com/dladopmsn/image/upload/v1736346709/iris_3_j9ihem.jpg",
     "https://res.cloudinary.com/dladopmsn/image/upload/v1736346665/iris_4_bal2ab.jpg"
       ],
+      Videourl:"https://res.cloudinary.com/dladopmsn/video/upload/v1736346964/Iris_c3ef0n.mp4"
+
     },
   ]
 
@@ -55,7 +62,7 @@ const page = () => {
     {/* <Branchselect/> */}
     <div className="w-11/12 mx-auto  md:py-8 py-4">
       {partyCategories.map((category, index) => (
-        <Partycategory key={index} title={category.title} images={category.images} />
+        <Partycategory key={index} title={category.title} video={category.Videourl} images={category.images} />
       ))}
     </div>
    </main>

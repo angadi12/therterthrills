@@ -257,7 +257,6 @@ export default function Contactform() {
                   <SelectItem value="Business Meet">Business Meet</SelectItem>
                   <SelectItem value="Bride to be">Bride to be</SelectItem>
                   <SelectItem value="Groom to be">Groom to be</SelectItem>
-                  <SelectItem value="Bride to be">Bride to be</SelectItem>
                   <SelectItem value="Congratulations">
                     Congratulations
                   </SelectItem>
