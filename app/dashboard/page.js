@@ -39,7 +39,6 @@ export default function BookingDashboard() {
     return <DashboardSkeleton />;
   }
 
-  console.log(branchSummaryerror);
 
   return (
     <ScrollArea className="p-4 bg-gray-100 ">

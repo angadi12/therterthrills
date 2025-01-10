@@ -22,6 +22,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  fetchBookingByBranchId,
   fetchTheaterslotbyid,
   setSelectedtheatreSlotid,
 } from "@/lib/Redux/bookingSlice";
@@ -29,6 +30,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { fetchChangeslot } from "@/lib/Redux/bookingSlice";
 import { fetchBranches } from "@/lib/Redux/BranchSlice";
+import { selectDateRange } from "@/lib/Redux/BookingdateSlice";
 
 const ChangeSlotDialog = ({ booking }) => {
   const { toast } = useToast();
@@ -36,6 +38,10 @@ const ChangeSlotDialog = ({ booking }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const dispatch = useDispatch();
   const { date } = useSelector((state) => state.theater);
+    const { startDate: reduxStartDate, endDate: reduxEndDate } =
+    useSelector(selectDateRange);
+const { selectedBranchId } = useSelector((state) => state.branches);
+
   const {
     Availableslots,
     loadingslots,
@@ -80,6 +86,40 @@ const ChangeSlotDialog = ({ booking }) => {
     date: formattedDate,
   };
 
+  // const handlechangeslot = async () => {
+  //   if (!SelectedtheatreSlotid) {
+  //     toast({
+  //       title: "Slot not selected",
+  //       description: "Please select a slot before proceeding.",
+  //       action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+  //     });
+  //     return;
+  //   }
+
+  //   try {
+  //     await dispatch(fetchChangeslot(data)).unwrap();
+  //     toast({
+  //       title: "Slot Changed Successfully",
+  //       description: "The slot has been updated.",
+  //       action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+  //     });
+  //     dispatch(
+  //       fetchBookingByBranchId({
+  //         BranchId: selectedBranchId,
+  //         status: "Upcoming",
+  //         startDate: reduxStartDate,
+  //         endDate: reduxEndDate,
+  //       })
+  //     );
+  //     setDialogOpen(false);
+  //   } catch (error) {
+  //     toast({
+  //       title: "Error Changing Slot",
+  //       description: Changeslotsserror || "Failed to update the slot.",
+  //       action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+  //     });
+  //   }
+  // };
   const handlechangeslot = async () => {
     if (!SelectedtheatreSlotid) {
       toast({
@@ -89,24 +129,46 @@ const ChangeSlotDialog = ({ booking }) => {
       });
       return;
     }
-
+  
     try {
+      // Attempt to change the slot
       await dispatch(fetchChangeslot(data)).unwrap();
+  
+      // Success toast
       toast({
         title: "Slot Changed Successfully",
         description: "The slot has been updated.",
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
+  
       setDialogOpen(false);
+  
+      // Fetch updated bookings
+      dispatch(
+        fetchBookingByBranchId({
+          BranchId: selectedBranchId,
+          status: "upcoming",
+          startDate: reduxStartDate,
+          endDate: reduxEndDate,
+        })
+      );
     } catch (error) {
+      console.error("Error during slot change:", error);
+  
+      // Extract error message as string
+      const errorMessage = error?.message || error?.toString() || "Failed to update the slot.";
+  
+      // Error toast
       toast({
         title: "Error Changing Slot",
-        description: Changeslotsserror || "Failed to update the slot.",
+        description: errorMessage,
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
     }
   };
-  console.log(Changeslots);
+  
+  
+
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
@@ -179,7 +241,7 @@ const ChangeSlotDialog = ({ booking }) => {
           <div className="w-full h-60 mt-4">
             {loadingslots ? (
               <div className="flex justify-center items-center h-full">
-                <Spinner size="lg" />
+                <Spinner color="danger" size="lg" />
               </div>
             ) : slotsserror ? (
               <div className="flex justify-center items-center h-full">

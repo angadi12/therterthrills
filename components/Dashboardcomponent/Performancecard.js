@@ -152,7 +152,7 @@ const Performancecard = () => {
             </Select>
             <DynamicYearSelect 
         label="Select Year (Current or Previous)" 
-        onChange={(year) => console.log(`Selected year: ${year}`)}
+        // onChange={(year) => console.log(`Selected year: ${year}`)}
       />
           </div>
         </div>

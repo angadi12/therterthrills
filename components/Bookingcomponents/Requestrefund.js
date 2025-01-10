@@ -75,47 +75,103 @@ export default function RefundRequestModal({ booking }) {
 
   
 
+  // const handleSubmit = async () => {
+  //   setIsSubmitting(true);
+  
+  //   try {
+  //     const response = await Requestforcancellation(booking?.bookingId, reason);
+  //     console.log(response);
+  //     if (response.status === "success") {
+  //       toast({
+  //         title: "Refund request submitted successfully.",
+  //         description: "We'll process your request shortly.",
+  //         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+  //       });
+  //       onOpenChange(false);
+  //       dispatch(fetchBookingByUserId(user?._id));
+  //        dispatch(
+  //       fetchBookingByBranchId({
+  //         BranchId: selectedBranchId,
+  //         status: "cancelled",
+  //         startDate: reduxStartDate,
+  //         endDate: reduxEndDate,
+  //       })
+  //     );
+  //       form.reset();
+  //     } else {
+  //       toast({
+  //         title: response?.message || "Unexpected error",
+  //         description: response?.message || "Something went wrong. Please try again.",
+  //         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     toast({
+  //       title: "Error submitting refund request",
+  //       description: "There was an error processing your request. Please try again.",
+  //       action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+  //     });
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+  
+
   const handleSubmit = async () => {
     setIsSubmitting(true);
   
     try {
+      // Make the request for cancellation
       const response = await Requestforcancellation(booking?.bookingId, reason);
-      console.log(response);
-      if (response.status === "success") {
+  
+      // Check if the request was successful
+      if (response?.status === "success") {
         toast({
           title: "Refund request submitted successfully.",
           description: "We'll process your request shortly.",
           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
-        onOpenChange(false);
+  
+        onOpenChange(false); // Close the modal or dialog
+  
+        // Dispatch actions to refresh bookings
         dispatch(fetchBookingByUserId(user?._id));
-         dispatch(
-        fetchBookingByBranchId({
-          BranchId: selectedBranchId,
-          status: selectedTab,
-          startDate: reduxStartDate,
-          endDate: reduxEndDate,
-        })
-      );
-        form.reset();
+        dispatch(
+          fetchBookingByBranchId({
+            BranchId: selectedBranchId,
+            status: "upcoming",
+            startDate: reduxStartDate,
+            endDate: reduxEndDate,
+          })
+        );
+  
       } else {
+        // Handle error response
+        const errorMessage = response?.message || "Something went wrong. Please try again.";
         toast({
-          title: response?.message || "Unexpected error",
-          description: response?.message || "Something went wrong. Please try again.",
+          title: errorMessage,
+          description: errorMessage,
           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
       }
     } catch (error) {
+      console.error("Error during refund request:", error);
+  
+      // Extract error message safely
+      const errorMessage = error?.message || error?.toString() || "There was an error processing your request.";
       toast({
         title: "Error submitting refund request",
-        description: "There was an error processing your request. Please try again.",
+        description: errorMessage,
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // Ensure the button is re-enabled
     }
   };
   
+
+
+
 
   function StepItem({ title, description, status }) {
     return (
@@ -324,7 +380,7 @@ export default function RefundRequestModal({ booking }) {
                 </p>
               </ModalHeader>
               <ModalBody>
-                <div className="space-y-2">
+                <div className="space-y-2 ">
                   <Label htmlFor="reason">Cancellation Reason</Label>
                   {/* <Input
                     id="reason"
@@ -345,7 +401,7 @@ export default function RefundRequestModal({ booking }) {
                     onValueChange={setReason}
                     value={reason}
                     // eslint-disable-next-line no-console
-                    onClear={() => console.log("textarea cleared")}
+                    // onClear={() => console.log("textarea cleared")}
                   />
                 </div>
               </ModalBody>
@@ -433,7 +489,7 @@ export default function RefundRequestModal({ booking }) {
                   </div>
                 </ModalHeader>
                 <ModalBody>
-                  <div className="space-y-6">
+                  <div className="space-y-6 p-4">
                     <div className="space-y-0 divide-y">
                       <InfoRow
                         label="Refund ID"

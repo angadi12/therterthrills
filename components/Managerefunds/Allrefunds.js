@@ -113,8 +113,6 @@ export default function Allrefunds() {
     useSelector(selectDateRange);
   const { selectedBranchId } = useSelector((state) => state.branches);
 
-  console.log("Selectedpaymentid", Selectedpaymentid);
-  console.log(refundDetails);
 
   useEffect(() => {
     dispatch(fetchBranches());

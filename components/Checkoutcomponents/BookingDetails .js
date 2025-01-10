@@ -77,7 +77,7 @@ const BookingDetails = ({ theater }) => {
                 <SelectTrigger className="h-12">
                   <SelectValue placeholder="No. of people" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="h-60">
                   {Array.from(
                     { length: theater?.maxCapacity - theater?.groupSize + 1 },
                     (_, index) => theater?.groupSize + index

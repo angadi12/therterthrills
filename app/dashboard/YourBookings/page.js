@@ -18,6 +18,8 @@ import {
   Calendar,
   Clock,
   Trash2,
+  Gift,
+  CircleX
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSelector, useDispatch } from "react-redux";
@@ -118,8 +120,7 @@ export default function ActiveEvents() {
   const { selectedBranchId } = useSelector((state) => state.branches);
   const { startDate: reduxStartDate, endDate: reduxEndDate } =
     useSelector(selectDateRange);
-  console.log(AllTheaterbooking);
-  console.log(Theaterbooking);
+
 
   useEffect(() => {
     if (Selectbookingsid === "all") {
@@ -287,9 +288,10 @@ export default function ActiveEvents() {
                 </div>
                 <Separator className="bg-[#F30278]" />
                 <div>
-                  <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
-                    Cake Details
-                  </h3>
+                <div className="flex items-center gap-2">
+                  <Cake className="h-4 w-4 text-[#F30278]" />
+                  <h3 className="font-semibold text-[#004AAD]">Cake Details</h3>
+                </div>
                   <p>
                     Eggless:{" "}
                     <span className="text-[#F30278]">
@@ -327,9 +329,10 @@ export default function ActiveEvents() {
               </div>
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg capitalize font-semibold mb-2 text-[#004AAD]">
-                    Add-Ons & decorations
-                  </h3>
+                   <div className="flex items-center gap-2">
+                  <Gift className="h-4 w-4 text-[#F30278]" />
+                  <h3 className="font-semibold text-[#004AAD]">Add-Ons & Decorations</h3>
+                </div>
                   <div className="grid grid-cols-2 gap-2">
                     {singlebooking?.Addons?.decorations &&
                       Object.entries(singlebooking.Addons.decorations).map(
@@ -358,11 +361,11 @@ export default function ActiveEvents() {
                 </div>
                 <Separator className="bg-[#F30278]" />
                 <div>
-                  <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
-                    Payment Details
-                  </h3>
-                  <div className="flex items-center mb-2">
-                    <CreditCard className="w-4 h-4 mr-2 text-[#004AAD]" />
+                <div className="flex items-center mb-2 gap-2">
+                  <CreditCard className="h-4 w-4 text-[#F30278]" />
+                  <h3 className="font-semibold text-[#004AAD]">Payment Details</h3>
+                </div>
+                  <div className="flex items-center ">
                     <span>
                       Status:{" "}
                       <span className="text-[#F30278]">
@@ -398,9 +401,10 @@ export default function ActiveEvents() {
                 <Separator className="bg-[#F30278]" />
                 {singlebooking?.status === "cancelled" && (
                   <div>
-                    <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
-                      Cancellation Details
-                    </h3>
+                    <div className="flex items-center mb-2 gap-2">
+                  <CircleX className="h-4 w-4 text-[#F30278]" />
+                  <h3 className="font-semibold text-[#004AAD]"> Cancellation Details</h3>
+                </div>
                     <div className="flex items-center mb-1">
                       <span>
                         Status:{" "}
@@ -495,9 +499,10 @@ export default function ActiveEvents() {
                 </div>
                 <Separator className="bg-[#F30278]" />
                 <div>
-                  <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
-                    Cake Details
-                  </h3>
+                <div className="flex items-center gap-2">
+                  <Cake className="h-4 w-4 text-[#F30278]" />
+                  <h3 className="font-semibold text-[#004AAD]">Cake Details</h3>
+                </div>
                   <p>
                     Eggless:{" "}
                     <span className="text-[#F30278]">
@@ -537,9 +542,10 @@ export default function ActiveEvents() {
               </div>
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg capitalize font-semibold mb-2 text-[#004AAD]">
-                    Add-Ons & decorations
-                  </h3>
+                <div className="flex items-center gap-2">
+                  <Gift className="h-4 w-4 text-[#F30278]" />
+                  <h3 className="font-semibold text-[#004AAD]">Add-Ons & Decorations</h3>
+                </div>
                   <div className="grid grid-cols-2 gap-2">
                     {singleunbooking?.Addons?.decorations &&
                       Object.entries(singleunbooking.Addons.decorations).map(
@@ -568,9 +574,10 @@ export default function ActiveEvents() {
                 </div>
                 <Separator className="bg-[#F30278]" />
                 <div>
-                  <h3 className="text-lg font-semibold mb-2 text-[#004AAD]">
-                    User Details
-                  </h3>
+                <div className="flex items-center mb-2 gap-2">
+                  <Users className="h-4 w-4 text-[#F30278]" />
+                  <h3 className="font-semibold text-[#004AAD]">User Details</h3>
+                </div>
                   <div className="flex items-center mb-2">
                     <Users className="w-4 h-4 mr-2 text-[#004AAD]" />
                     <span>

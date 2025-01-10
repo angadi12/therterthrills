@@ -68,6 +68,64 @@ const Recentrefunds = () => {
   const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // const handleSubmit = async () => {
+  //   setIsSubmitting(true);
+
+  //   const refundData = {
+  //     paymentId: paymentid,
+  //     amount: amount,
+  //     reason: comment,
+  //   };
+
+  //   try {
+  //     const response = await CreatRefund(refundData);
+  //     if (response.success === true) {
+  //       toast({
+  //         title: "Refund issued successfully!",
+  //         description: "Refund has been issued",
+  //         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+  //       });
+  //       setIsrefundModalOpen(false)
+  //       if(Selectedtheaterbyid==="all"){
+  //         dispatch(
+  //           fetchBookingByBranchId({
+  //             BranchId: selectedBranchId,
+  //             status: "cancelled",
+  //             startDate: reduxStartDate,
+  //             endDate: reduxEndDate,
+  //           })
+  //         );
+
+  //       }else{
+
+  //         dispatch(
+  //           fetchRefundBookingByTheaterId({
+  //             TheaterId: Selectedtheaterbyid,
+  //             status: "cancelled",
+  //             startDate: reduxStartDate,
+  //             endDate: reduxEndDate,
+  //           })
+  //         );
+  //       }
+
+  //     } else {
+  //       toast({
+  //         title: "Failed!",
+  //         description: "Failed to issue refund. Please try again.",
+  //         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     toast({
+  //       title: "An error occurred while issuing the refund.",
+  //       description: error,
+  //       action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
+  //     });
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+
   const handleSubmit = async () => {
     setIsSubmitting(true);
 
@@ -79,13 +137,13 @@ const Recentrefunds = () => {
 
     try {
       const response = await CreatRefund(refundData);
-      if (response.success === true) {
+
+      if (response?.success === true) {
         toast({
           title: "Refund issued successfully!",
-          description: "Refund has been issued",
+          description: "Refund has been issued.",
           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
-        setIsrefundModalOpen(false)
         dispatch(
           fetchBookingByBranchId({
             BranchId: selectedBranchId,
@@ -94,26 +152,23 @@ const Recentrefunds = () => {
             endDate: reduxEndDate,
           })
         );
-        dispatch(
-          fetchRefundBookingByTheaterId({
-            TheaterId: Selectedtheaterbyid,
-            status: "cancelled",
-            startDate: reduxStartDate,
-            endDate: reduxEndDate,
-          })
-        );
-
       } else {
         toast({
           title: "Failed!",
-          description: "Failed to issue refund. Please try again.",
+          description:
+            response?.message || "Failed to issue refund. Please try again.",
           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
       }
     } catch (error) {
+      console.error("Error issuing refund:", error);
+
+      // Extract the error message safely
+      const errorMessage =
+        error?.message || error?.toString() || "An unexpected error occurred.";
       toast({
         title: "An error occurred while issuing the refund.",
-        description: error,
+        description: errorMessage,
         action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
       });
     } finally {
@@ -528,7 +583,10 @@ const Recentrefunds = () => {
                         </Button>
                         {event?.refundStatus === "requested" &&
                           event?.status === "cancelled" && (
-                            <Dialog open={isrefundOpen} onOpenChange={setIsrefundModalOpen}>
+                            <Dialog
+                              open={isrefundOpen}
+                              onOpenChange={setIsrefundModalOpen}
+                            >
                               <DialogTrigger>
                                 <button
                                   onClick={() =>
