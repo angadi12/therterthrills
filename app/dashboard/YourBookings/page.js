@@ -167,7 +167,7 @@ export default function ActiveEvents() {
     if (Selectbookingsid !== "all") {
       dispatch(fetchUnsavedBookingByTheaterId(Selectbookingsid));
     }
-  }, [Selectbookingsid, dispatch]);
+  }, [Selectbookingsid, dispatch,isDelete]);
 
   useEffect(() => {
     if (branchtheatre?.length > 0) {
@@ -700,8 +700,8 @@ export default function ActiveEvents() {
           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
         setDeleteloading(false);
-        setIsDelete(!isDelete);
         dispatch(fetchUnsavedBookingByTheaterId(Selectbookingsid));
+        setIsDelete(!isDelete);
       }
     } catch (error) {
       toast({
