@@ -315,7 +315,7 @@ export default function RefundRequestModal({ booking }) {
               }}
               variant="solid"
               radius="sm"
-              className="text-white rounded-sm"
+              className="text-white rounded-sm md:px-8 px-0"
               color="success"
             >
               Refund Details
