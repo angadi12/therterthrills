@@ -13,10 +13,9 @@ import Upcomingevents from "@/components/Dashboardcomponent/Upcomingevents";
 import Newbooking from "@/components/Dashboardcomponent/Newbooking";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBranches, fetchBranchsummary } from "@/lib/Redux/BranchSlice";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DashboardSkeleton from "@/components/Dashboardcomponent/Dashboardskeleton";
 import HourlyAnalyticsChart from "@/components/Dashboardcomponent/Hourlydata";
-
 export default function BookingDashboard() {
   const dispatch = useDispatch();
   const { selectedBranchId } = useSelector((state) => state.branches);
@@ -38,7 +37,6 @@ export default function BookingDashboard() {
   if (status === "loading") {
     return <DashboardSkeleton />;
   }
-
 
   return (
     <ScrollArea className="p-4 bg-gray-100 ">
