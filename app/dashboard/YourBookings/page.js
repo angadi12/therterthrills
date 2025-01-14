@@ -19,7 +19,7 @@ import {
   Clock,
   Trash2,
   Gift,
-  CircleX
+  CircleX,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useSelector, useDispatch } from "react-redux";
@@ -27,6 +27,7 @@ import {
   fetchBookingById,
   fetchBookingByTheaterId,
   fetchUnsavedBookingByTheaterId,
+  fetchUnsavedBookingByBranchId,
   Setselectedtheaterid,
   fetchBookingByBranchId,
   SetSelectbookingsid,
@@ -103,6 +104,10 @@ export default function ActiveEvents() {
     UnsavedTheaterloading,
     UnsavedTheatererror,
 
+    Unsavedbooking,
+    Unsavedloading,
+    Unsavederror,
+
     singlebooking,
     bookingloading,
     bookingerror,
@@ -121,8 +126,14 @@ export default function ActiveEvents() {
   const { startDate: reduxStartDate, endDate: reduxEndDate } =
     useSelector(selectDateRange);
 
+  console.log("result", Unsavedbooking?.data);
+  console.log(Array.isArray(Unsavedbooking?.data)); // Should log true
 
   useEffect(() => {
+    if (selectedTab === "unbooked") {
+      return;
+    }
+
     if (Selectbookingsid === "all") {
       dispatch(
         fetchBookingByBranchId({
@@ -164,10 +175,33 @@ export default function ActiveEvents() {
   }, [UnsavedTheaterbooking, Selectbookingsid]);
 
   useEffect(() => {
-    if (Selectbookingsid !== "all") {
-      dispatch(fetchUnsavedBookingByTheaterId(Selectbookingsid));
+    if (Selectbookingsid === "all") {
+      dispatch(
+        fetchUnsavedBookingByBranchId({
+          BranchId: selectedBranchId,
+          status: selectedTab,
+          startDate: reduxStartDate,
+          endDate: reduxEndDate,
+        })
+      );
+    } else {
+      dispatch(
+        fetchUnsavedBookingByTheaterId({
+          TheaterId: Selectbookingsid,
+          status: selectedTab,
+          startDate: reduxStartDate,
+          endDate: reduxEndDate,
+        })
+      );
     }
-  }, [Selectbookingsid, dispatch,isDelete]);
+  }, [
+    Selectbookingsid,
+    selectedTab,
+    dispatch,
+    selectedBranchId,
+    reduxEndDate,
+    reduxStartDate,
+  ]);
 
   useEffect(() => {
     if (branchtheatre?.length > 0) {
@@ -288,10 +322,12 @@ export default function ActiveEvents() {
                 </div>
                 <Separator className="bg-[#F30278]" />
                 <div>
-                <div className="flex items-center gap-2">
-                  <Cake className="h-4 w-4 text-[#F30278]" />
-                  <h3 className="font-semibold text-[#004AAD]">Cake Details</h3>
-                </div>
+                  <div className="flex items-center gap-2">
+                    <Cake className="h-4 w-4 text-[#F30278]" />
+                    <h3 className="font-semibold text-[#004AAD]">
+                      Cake Details
+                    </h3>
+                  </div>
                   <p>
                     Eggless:{" "}
                     <span className="text-[#F30278]">
@@ -329,10 +365,12 @@ export default function ActiveEvents() {
               </div>
               <div className="space-y-6">
                 <div>
-                   <div className="flex items-center gap-2">
-                  <Gift className="h-4 w-4 text-[#F30278]" />
-                  <h3 className="font-semibold text-[#004AAD]">Add-Ons & Decorations</h3>
-                </div>
+                  <div className="flex items-center gap-2">
+                    <Gift className="h-4 w-4 text-[#F30278]" />
+                    <h3 className="font-semibold text-[#004AAD]">
+                      Add-Ons & Decorations
+                    </h3>
+                  </div>
                   <div className="grid grid-cols-2 gap-2">
                     {singlebooking?.Addons?.decorations &&
                       Object.entries(singlebooking.Addons.decorations).map(
@@ -361,10 +399,12 @@ export default function ActiveEvents() {
                 </div>
                 <Separator className="bg-[#F30278]" />
                 <div>
-                <div className="flex items-center mb-2 gap-2">
-                  <CreditCard className="h-4 w-4 text-[#F30278]" />
-                  <h3 className="font-semibold text-[#004AAD]">Payment Details</h3>
-                </div>
+                  <div className="flex items-center mb-2 gap-2">
+                    <CreditCard className="h-4 w-4 text-[#F30278]" />
+                    <h3 className="font-semibold text-[#004AAD]">
+                      Payment Details
+                    </h3>
+                  </div>
                   <div className="flex items-center ">
                     <span>
                       Status:{" "}
@@ -402,9 +442,12 @@ export default function ActiveEvents() {
                 {singlebooking?.status === "cancelled" && (
                   <div>
                     <div className="flex items-center mb-2 gap-2">
-                  <CircleX className="h-4 w-4 text-[#F30278]" />
-                  <h3 className="font-semibold text-[#004AAD]"> Cancellation Details</h3>
-                </div>
+                      <CircleX className="h-4 w-4 text-[#F30278]" />
+                      <h3 className="font-semibold text-[#004AAD]">
+                        {" "}
+                        Cancellation Details
+                      </h3>
+                    </div>
                     <div className="flex items-center mb-1">
                       <span>
                         Status:{" "}
@@ -499,10 +542,12 @@ export default function ActiveEvents() {
                 </div>
                 <Separator className="bg-[#F30278]" />
                 <div>
-                <div className="flex items-center gap-2">
-                  <Cake className="h-4 w-4 text-[#F30278]" />
-                  <h3 className="font-semibold text-[#004AAD]">Cake Details</h3>
-                </div>
+                  <div className="flex items-center gap-2">
+                    <Cake className="h-4 w-4 text-[#F30278]" />
+                    <h3 className="font-semibold text-[#004AAD]">
+                      Cake Details
+                    </h3>
+                  </div>
                   <p>
                     Eggless:{" "}
                     <span className="text-[#F30278]">
@@ -542,10 +587,12 @@ export default function ActiveEvents() {
               </div>
               <div className="space-y-6">
                 <div>
-                <div className="flex items-center gap-2">
-                  <Gift className="h-4 w-4 text-[#F30278]" />
-                  <h3 className="font-semibold text-[#004AAD]">Add-Ons & Decorations</h3>
-                </div>
+                  <div className="flex items-center gap-2">
+                    <Gift className="h-4 w-4 text-[#F30278]" />
+                    <h3 className="font-semibold text-[#004AAD]">
+                      Add-Ons & Decorations
+                    </h3>
+                  </div>
                   <div className="grid grid-cols-2 gap-2">
                     {singleunbooking?.Addons?.decorations &&
                       Object.entries(singleunbooking.Addons.decorations).map(
@@ -574,10 +621,12 @@ export default function ActiveEvents() {
                 </div>
                 <Separator className="bg-[#F30278]" />
                 <div>
-                <div className="flex items-center mb-2 gap-2">
-                  <Users className="h-4 w-4 text-[#F30278]" />
-                  <h3 className="font-semibold text-[#004AAD]">User Details</h3>
-                </div>
+                  <div className="flex items-center mb-2 gap-2">
+                    <Users className="h-4 w-4 text-[#F30278]" />
+                    <h3 className="font-semibold text-[#004AAD]">
+                      User Details
+                    </h3>
+                  </div>
                   <div className="flex items-center mb-2">
                     <Users className="w-4 h-4 mr-2 text-[#004AAD]" />
                     <span>
@@ -700,7 +749,12 @@ export default function ActiveEvents() {
           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
         setDeleteloading(false);
-        dispatch(fetchUnsavedBookingByTheaterId(Selectbookingsid));
+        fetchUnsavedBookingByBranchId({
+          BranchId: selectedBranchId,
+          status: "AllBooking",
+          startDate: reduxStartDate,
+          endDate: reduxEndDate,
+        });
         setIsDelete(!isDelete);
       }
     } catch (error) {
@@ -781,26 +835,21 @@ export default function ActiveEvents() {
                   {selectedTab === "AllBooking" && (
                     <Badge
                       color="danger"
-                      content={
-                        Selectbookingsid !== "all"
-                          ? Theaterbooking?.counts?.all
-                          : AllTheaterbooking?.counts?.all
-                      }
+                      content={UnsavedTheaterbooking?.data?.length}
                       isInvisible={
-                        Selectbookingsid !== "all"
-                          ? !Theaterbooking?.counts?.all
-                          : !AllTheaterbooking?.counts?.all
+                        UnsavedTheaterbooking?.data?.length == 0 ||
+                        UnsavedTheatererror === "Nobookings"
                       }
                       size="md"
                     ></Badge>
                   )}
-                  {selectedTab === "Unbooked" && (
+                  {selectedTab === "unbooked" && (
                     <Badge
                       color="danger"
-                      content={UnsavedTheaterbooking?.length}
+                      content={UnsavedTheaterbooking?.data?.length}
                       isInvisible={
-                        UnsavedTheatererror === "Nobookings" ||
-                        UnsavedTheaterbooking?.length === 0
+                        UnsavedTheaterbooking?.data?.length === 0 ||
+                        UnsavedTheatererror === "Nobookings"
                       }
                       size="md"
                     ></Badge>
@@ -811,6 +860,7 @@ export default function ActiveEvents() {
           </div>
           <div className="flex items-center justify-end space-x-2  w-full col-span-2 ">
             {selectedTab === "AllBooking" && <BookingDatePicker />}
+            {selectedTab === "unbooked" && <BookingDatePicker />}
 
             <Select
               onValueChange={(value) => dispatch(SetSelectbookingsid(value))}
@@ -928,10 +978,10 @@ export default function ActiveEvents() {
                 </Badge>
                 <Badge
                   color="danger"
-                  content={UnsavedTheaterbooking?.length}
+                  content={UnsavedTheaterbooking?.data?.length}
                   isInvisible={
-                    UnsavedTheatererror === "Nobookings" ||
-                    UnsavedTheaterbooking?.length === 0
+                    UnsavedTheaterbooking?.data?.length == 0 ||
+                    UnsavedTheatererror === "Nobookings"
                   }
                   size="md"
                 >
@@ -1096,17 +1146,17 @@ export default function ActiveEvents() {
                                   ))}
                               </div> */}
                                 <div className="flex flex-col justify-center items-center gap-2">
-                                <Button
-                                size="md"
-                                  onPress={() => {
-                                    setIsModalOpen(!isModalOpen),
-                                      Setbookid(event?._id);
-                                  }}
-                                  className="px-8  rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
-                                >
-                                  View Details
-                                </Button>
-                                {/* <Button
+                                  <Button
+                                    size="md"
+                                    onPress={() => {
+                                      setIsModalOpen(!isModalOpen),
+                                        Setbookid(event?._id);
+                                    }}
+                                    className="px-8  rounded-sm   border-none hover:bg-[#004AAD] bg-[#004AAD] border-black dark:border-white uppercase text-white  transition duration-200 text-sm shadow-[1px_1px_#F30278,1px_1px_#F30278,1px_1px_#F30278,2px_2px_#F30278,2px_2px_0px_0px_rgba(0,0,0)] dark:shadow-[1px_1px_rgba(255,255,255),2px_2px_rgba(255,255,255),3px_3px_rgba(255,255,255),4px_4px_rgba(255,255,255),5px_5px_0px_0px_rgba(255,255,255)] "
+                                  >
+                                    View Details
+                                  </Button>
+                                  {/* <Button
                                 size="md"
                                 variant="solid"
                                 color="warning"
@@ -1118,9 +1168,8 @@ export default function ActiveEvents() {
                                 >
                                  Change Slot
                                 </Button> */}
-                                <Changeslot booking={event}/>
-                                <RefundRequestModal booking={event}/>
-
+                                  <Changeslot booking={event} />
+                                  <RefundRequestModal booking={event} />
                                 </div>
                               </div>
                             ))}
@@ -1368,7 +1417,7 @@ export default function ActiveEvents() {
                   </div>
                 ) : (
                   <>
-                    {UnsavedTheaterbooking?.length === 0 ? (
+                    {UnsavedTheaterbooking?.data?.length === 0 ? (
                       <div className="flex justify-center items-center w-full h-[60vh]">
                         <p>No Bookings available</p>
                       </div>
@@ -1380,7 +1429,7 @@ export default function ActiveEvents() {
                           </div>
                         ) : (
                           <div className="space-y-4 mt-4">
-                            {UnsavedTheaterbooking?.map((event) => (
+                            {UnsavedTheaterbooking?.data?.map((event) => (
                               <div
                                 key={event._id}
                                 className="flex relative items-center space-x-2 bg-white p-4 rounded-lg shadow ring-1 ring-gray-300"
@@ -1624,7 +1673,6 @@ export default function ActiveEvents() {
               </TabsContent>
             </Tabs>
           )}
-
         </div>
       </section>
 
