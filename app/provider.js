@@ -41,7 +41,7 @@ export function NextuiProviderWrapper({ children }) {
   const { selectedBranchId } = useSelector((state) => state.branches);
 
   useEffect(() => {
-    const socket = io("http://localhost:9100"); // Replace with your backend URL
+    const socket = io("https://test.thetheatrethrills.com"); // Replace with your backend URL
 
     socket.on("connect", () => {
       console.log("connected", socket.id);
