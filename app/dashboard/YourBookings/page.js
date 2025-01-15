@@ -201,6 +201,7 @@ export default function ActiveEvents() {
     selectedBranchId,
     reduxEndDate,
     reduxStartDate,
+    isDelete
   ]);
 
   useEffect(() => {
@@ -749,13 +750,8 @@ export default function ActiveEvents() {
           action: <ToastAction altText="Dismiss">Dismiss</ToastAction>,
         });
         setDeleteloading(false);
-        fetchUnsavedBookingByBranchId({
-          BranchId: selectedBranchId,
-          status: "AllBooking",
-          startDate: reduxStartDate,
-          endDate: reduxEndDate,
-        });
-        setIsDelete(!isDelete);
+        setIsDelete((prev) => !prev);
+
       }
     } catch (error) {
       toast({
